@@ -1,0 +1,25 @@
+<link rel="stylesheet" type="text/css" href="${request.contextPath}/statics/plugins/webuploader/style.css" />
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="uploadBondModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width: 70%; height: 60%">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title"></h4>
+			</div>
+			<div class="modal-body">
+				<form class="form form-horizontal modules" role="form" id="filesAddForm">
+					<div id="container">
+	            		<!--头部，文件选择和格式选择-->
+			            <div id="uploader" data-type="file" data-number="4" data-title="保函文件" data-auto="false" data-extendsion="gif,jpg,jpeg,bmp,png,pdf">
+			                
+			            </div>
+		        	</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消上传</button>
+			</div>
+		</div>
+	</div>
+</div><!-- /.modal -->

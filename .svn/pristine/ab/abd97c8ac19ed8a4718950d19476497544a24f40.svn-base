@@ -1,0 +1,126 @@
+$(function () {
+   
+	if($("#table").length>0){ 
+		console.log($("#table"));
+		$.InitMainTable("#table",vm.fields,function queryCallback(params){
+			params = $.extend(params, vm.q);
+			vm.reload(params);
+		},function pageCallback(params){
+			params = $.extend(params, vm.q);
+			vm.reload(params);
+		});
+		vm.reload(null);
+	}
+	
+    new AjaxUpload('#upload', {
+        action: baseURL + "sys/oss/upload",
+        name: 'file',
+        autoSubmit:true,
+        responseType:"json",
+        onSubmit:function(file, extension){
+            if(vm.config.type == null){
+                alert("云存储配置未配置");
+                return false;
+            }
+            if (!(extension && /^(jpg|jpeg|png|gif)$/.test(extension.toLowerCase()))){
+                alert('只支持jpg、png、gif格式的图片！');
+                return false;
+            }
+        },
+        onComplete : function(file, r){
+            if(r.code == 0){
+                alert(r.url);
+                vm.reload();
+            }else{
+                alert(r.msg);
+            }
+        }
+    });
+});
+
+//每个模块功能权限设置
+function actionFormatter(value, row, index) {
+    var result = "";
+    result += "<a class='btn btn-xs green' onclick=\"select('" + row.id + "')\"  title='查看'><span class='glyphicon glyphicon-search'></span></a>";
+    result += "<a class='btn btn-xs blue' onclick=\"update('" + row.id + "')\" title='编辑'><span class='glyphicon glyphicon-pencil'></span></a>";
+    result += "<a class='btn btn-xs red' onclick=\"del('" + row.id + "')\" title='删除'><span class='glyphicon glyphicon-remove'></span></a>";
+    return result;
+}
+
+var vm = new Vue({
+	el:'#rrapp',
+	data:{
+		showList: true,
+		title: null,
+		fields:[			
+			{field: 'id', title: 'id',  width: 20, key: true },
+            {field: 'url', title: 'URL地址',  width: 160 },
+			{field: 'createDate', title: '创建时间',  width: 40 }
+        ],
+        config: {}
+	},
+    created: function(){
+        this.getConfig();
+    },
+	methods: {
+		query: function () {
+			vm.reload(vm.q);
+		},
+		getConfig: function () {
+            $.getJSON(baseURL + "sys/oss/config", function(r){
+				vm.config = r.config;
+            });
+        },
+		addConfig: function(){
+			vm.showList = false;
+			vm.title = "云存储配置";
+		},
+		saveOrUpdate: function () {
+			var url = baseURL + "sys/oss/saveConfig";
+			$.ajax({
+				type: "POST",
+			    url: url,
+                contentType: "application/json",
+			    data: JSON.stringify(vm.config),
+			    success: function(r){
+			    	if(r.code === 0){
+						alert('操作成功', function(){
+							vm.reload();
+						});
+					}else{
+						alert(r.msg);
+					}
+				}
+			});
+		},
+        del: function () {
+            var ossIds = getSelectedRows();
+            if(ossIds == null){
+                return ;
+            }
+
+            confirm('确定要删除选中的记录？', function(){
+                $.ajax({
+                    type: "POST",
+                    url: baseURL + "sys/oss/delete",
+                    contentType: "application/json",
+                    data: JSON.stringify(ossIds),
+                    success: function(r){
+                        if(r.code === 0){
+                            alert('操作成功', function(){
+                                vm.reload();
+                            });
+                        }else{
+                            alert(r.msg);
+                        }
+                    }
+                });
+            });
+        },
+		reload: function (params) {
+			$.postForm(baseURL + 'sys/oss/list', params, function(request){
+        		$("#table").bootstrapTable('load',request.page);
+        	});
+		}
+	}
+});

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.manage.dao.SaleOrderManagementDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.scbid.manage.entity.SaleOrderManagementEntity" id="saleOrderManagementMap">
+        <result property="listId" column="LIST_ID"/>
+        <result property="creater" column="CREATER"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="operateTime" column="OPERATE_TIME"/>
+        <result property="operator" column="OPERATOR"/>
+        <result property="isDelete" column="IS_DELETE"/>
+        <result property="domainAuth" column="DOMAIN_AUTH"/>
+        <result property="creatorId" column="CREATOR_ID"/>
+        <result property="accountListid" column="ACCOUNT_LISTID"/>
+        <result property="orderCode" column="ORDERCODE"/>
+        <result property="isPayment" column="IS_PAYMENT"/>
+        <result property="status" column="STATUS"/>
+        <result property="endTime" column="END_TIME"/>
+        <result property="money" column="MONEY"/>
+        <result property="supplierId" column="SUPPLIER_ID"/>
+        <result property="linkmanId" column="LINKMAN_ID"/>
+        <result property="postageAddress" column="POSTAGE_ADDRESS"/>
+        <result property="isRefund" column="IS_REFUND"/>
+        <result property="isInvoiceValid" column="IS_INVOICE_VALID"/>
+    </resultMap>
+    
+    
+    <select id="queryOrderByOrderCode" resultMap="saleOrderManagementMap" parameterType="java.lang.String">
+    SELECT
+    t_sale_order_management.*
+    FROM t_sale_order_management
+    WHERE 1=1 AND ORDERCODE = #{orderCode}
+    </select>
+    
+    <!-- 查询列表 -->
+	<select id="saleOrderManagementPage" resultMap="saleOrderManagementMap" parameterType="java.util.Map">
+	SELECT
+    t_sale_order_management.*
+    FROM t_sale_order_management
+    WHERE 1=1
+   <if test="listId != null and listId != ''" >
+       AND LIST_ID = #{listId}
+    </if>
+   <if test="creater != null and creater != ''" >
+       AND CREATER = #{creater}
+    </if>
+   <if test="createTime != null and createTime != ''" >
+       AND CREATE_TIME = #{createTime}
+    </if>
+   <if test="operateTime != null and operateTime != ''" >
+       AND OPERATE_TIME = #{operateTime}
+    </if>
+   <if test="operator != null and operator != ''" >
+       AND OPERATOR = #{operator}
+    </if>
+   <if test="isDelete != null and isDelete != ''" >
+       AND IS_DELETE = #{isDelete}
+    </if>
+   <if test="domainAuth != null and domainAuth != ''" >
+       AND DOMAIN_AUTH = #{domainAuth}
+    </if>
+   <if test="creatorId != null and creatorId != ''" >
+       AND CREATOR_ID = #{creatorId}
+    </if>
+   <if test="accountListid != null and accountListid != ''" >
+       AND ACCOUNT_LISTID = #{accountListid}
+    </if>
+   <if test="orderCode != null and orderCode != ''" >
+       AND ORDERCODE = #{orderCode}
+    </if>
+   <if test="isPayment != null and isPayment != ''" >
+       AND IS_PAYMENT = #{isPayment}
+    </if>
+   <if test="status != null and status != ''" >
+       AND STATUS = #{status}
+    </if>
+   <if test="bondStatus != null and bondStatus != ''" >
+       AND BOND_STATUS = #{bondStatus}
+    </if>
+   <if test="endTime != null and endTime != ''" >
+       AND END_TIME = #{endTime}
+    </if>
+   <if test="money != null and money != ''" >
+       AND MONEY = #{money}
+    </if>
+   <if test="supplierId != null and supplierId != ''" >
+       AND SUPPLIER_ID = #{supplierId}
+    </if>
+   <if test="linkmanId != null and linkmanId != ''" >
+       AND LINKMAN_ID = #{linkmanId}
+    </if>
+   <if test="postageAddress != null and postageAddress != ''" >
+       AND POSTAGE_ADDRESS = #{postageAddress}
+    </if>
+   <if test="isRefund != null and isRefund != ''" >
+       AND IS_REFUND = #{isRefund}
+    </if>
+   <if test="isInvoiceValid != null and isInvoiceValid != ''" >
+       AND IS_INVOICE_VALID = #{isInvoiceValid}
+    </if>
+	</select>
+	
+</mapper>

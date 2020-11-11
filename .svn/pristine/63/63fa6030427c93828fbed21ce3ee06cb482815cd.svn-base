@@ -1,0 +1,28 @@
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="selectGuaratorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+				<div class="form-group">
+                  <div class="col-sm-2 control-label">任务分配</div>
+                  <div class="col-sm-10">
+                  	  <select class="form-control" @change="changeGuarator($event)">
+                  	  	<option value="">选择支行</option>
+                  	  	<option v-for="(itme,key) in bondEnguarators" :value="itme.entUuid">{{itme.userName}}</option>
+                  	  </select>
+                  </div>
+              	</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭 </button>
+				<input type="button" class="btn btn-primary" @click="saveChangeGuarator" value="确定"/>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

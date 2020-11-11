@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.bond.dao.BondEnguaratorDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.scbid.bond.entity.BondEnguaratorEntity" id="bondEnguaratorMap">
+        <result property="guaratorId" column="guarator_id"/>
+        <result property="guaratorUuid" column="guarator_uuid"/>
+        <result property="guaratorName" column="guarator_name"/>
+        <result property="guaratorScale" column="guarator_scale"/>
+        <result property="guaratorPhone" column="guarator_phone"/>
+        <result property="guaratorLicenseNo" column="guarator_license_no"/>
+        <result property="guaratorLicenseImg" column="guarator_license_img"/>
+        <result property="guaratorCapital" column="guarator_capital"/>
+        <result property="guaratorPostcode" column="guarator_postcode"/>
+        <result property="guaratorSort" column="guarator_sort"/>
+        <result property="guaratorTaxpayerNo" column="guarator_taxpayer_no"/>
+        <result property="guaratorRegNumber" column="guarator_reg_number"/>
+        <result property="guaratorLegalPhone" column="guarator_legal_phone"/>
+        <result property="guaratorFaxes" column="guarator_faxes"/>
+        <result property="guaratorBankAccount" column="guarator_bank_account"/>
+        <result property="guaratorBankNumber" column="guarator_bank_number"/>
+        <result property="guaratorAddress" column="guarator_address"/>
+        <result property="guaratorIndustry" column="guarator_industry"/>
+        <result property="guaratorLegalPepre" column="guarator_legal_pepre"/>
+        <result property="guaratorEstabDate" column="guarator_estab_date"/>
+        <result property="guaratorOpenatingPeriod" column="guarator_openating_period"/>
+        <result property="guaratorRegAdress" column="guarator_reg_adress"/>
+        <result property="guaratorCompanyType" column="guarator_company_type"/>
+        <result property="guaratorStatus" column="guarator_status"/>
+        <result property="guaratorRemarks" column="guarator_remarks"/>
+        <result property="guaratorDate" column="guarator_date"/>
+        <result property="guaratorUserId" column="guarator_user_id"/>
+        <result property="updateUesrName" column="update_uesr_name"/>
+        <result property="updateDate" column="update_date"/>
+    </resultMap>
+
+
+</mapper>

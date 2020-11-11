@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.invoice.dao.FpsqbDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+	<resultMap type="com.scbid.invoice.entity.FpsqbEntity"
+		id="fpsqbMap">
+		<result property="listId" column="主申请单ID" />
+		<result property="clientCode" column="客户编码" />
+		<result property="cliengName" column="客户名称" />
+		<result property="dutyParagraph" column="税号" />
+		<result property="addressPhone" column="地址电话" />
+		<result property="bankNum" column="开户行账号" />
+		<result property="applyDate" column="申请日期" />
+		<result property="invoiceCategory" column="发票类别" />
+		<result property="auditor" column="审核人" />
+		<result property="goodCode" column="商品编码" />
+		<result property="goodName" column="商品名称" />
+		<result property="specifications" column="规格" />
+		<result property="company" column="单位" />
+		<result property="unitPrice" column="单价" />
+		<result property="number" column="数量" />
+		<result property="taxRate" column="税率" />
+		<result property="consult" column="价税合计" />
+		<result property="discountAmount" column="折扣金额" />
+		<result property="salesman" column="业务员" />
+		<result property="invoiceDetailId" column="单据明细ID" />
+		<result property="typeCode" column="分类编码" />
+		<result property="invoiceStatus" column="开票状态" />
+		<result property="invoiceCode" column="发票代码" />
+		<result property="invoiceNumber" column="发票号码" />
+		<result property="invoiceRemark" column="发票备注" />
+		<result property="identification" column="开票标识" />
+		<result property="pdfbase64" column="PDFBase64" />
+		<result property="pdfPath" column="PDF路径" />
+		<result property="billingDate" column="开票日期" />
+	</resultMap>
+
+	<!-- 查询列表 -->
+	<select id="fpsqbPage" resultMap="fpsqbMap" parameterType="java.util.Map">
+		SELECT
+		t_fpsqb.*
+		FROM t_fpsqb
+		WHERE 1=1
+		<if test="listId != null and listId != ''">
+			AND 主申请单ID = #{listId}
+		</if>
+		<if test="clientCode!= null and clientCode!= ''">
+			AND 客户编码 = #{clientCode}
+		</if>
+		<if test="cliengName != null and cliengName != ''">
+			AND 客户名称 = #{cliengName}
+		</if>
+		<if test="dutyParagraph != null and dutyParagraph != ''">
+			AND 税号 = #{dutyParagraph}
+		</if>
+		<if test="addressPhone!= null and addressPhone != ''">
+			AND 地址电话 = #{addressPhone}
+		</if>
+		<if test="bankNum!= null and bankNum != ''">
+			AND 开户行账号 = #{bankNum}
+		</if>
+		<if test="applyDate != null and applyDate != ''">
+			AND 申请日期 = #{applyDate}
+		</if>
+		<if test="invoiceCategory != null and invoiceCategory != ''">
+			AND 发票类别 = #{invoiceCategory}
+		</if>
+		<if test="auditor != null and auditor != ''">
+			AND 审核人 = #{auditor}
+		</if>
+		<if test="goodCode != null and goodCode != ''">
+			AND 商品编码 = #{goodCode}
+		</if>
+		<if test="goodName != null and goodName != ''">
+			AND 商品名称 = #{goodName}
+		</if>
+		<if test="specifications != null and specifications != ''">
+			AND 规格 = #{specifications}
+		</if>
+		<if test="company != null and company!= ''">
+			AND 单位 = #{company}
+		</if>
+		<if test="unitPrice != null and unitPrice != ''">
+			AND 单价 = #{unitPrice}
+		</if>
+		<if test="number != null and number != ''">
+			AND 数量 = #{number}
+		</if>
+		<if test="taxRate!= null and taxRate != ''">
+			AND 税率 = #{taxRate}
+		</if>
+		<if test="consult != null and consult!= ''">
+			AND 价税合计 = #{consult}
+		</if>
+		<if test="discountAmount != null and discountAmount!= ''">
+			AND 折扣金额 = #{discountAmount}
+		</if>
+		<if test="salesman!= null and salesman!= ''">
+			AND 业务员 = #{salesman}
+		</if>
+		<if test="invoiceDetailId != null and invoiceDetailId != ''">
+			AND 单据明细ID = #{invoiceDetailId}
+		</if>
+		<if test="typeCode != null and typeCode != ''">
+			AND 分类编码 = #{typeCode}
+		</if>
+		<if test="invoiceStatus!= null and invoiceStatus != ''">
+			AND 开票状态 = #{invoiceStatus}
+		</if>
+		<if test="invoiceCode!= null and invoiceCode != ''">
+			AND 发票代码 = #{invoiceCode}
+		</if>
+		<if test="invoiceNumber != null and invoiceNumber != ''">
+			AND 发票号码 = #{invoiceNumber}
+		</if>
+		<if test="invoiceRemark != null and invoiceRemark != ''">
+			AND 发票备注 = #{invoiceRemark}
+		</if>
+		<if test="identification != null and identification != ''">
+			AND 开票标识 = #{identification}
+		</if>
+		<if test="pdfbase64 != null and pdfbase64 != ''">
+			AND PDFBase64 = #{pdfbase64}
+		</if>
+		<if test="pdfPath!= null and pdfPath!= ''">
+			AND PDF路径 = #{pdfPath}
+		</if>
+		<if test="billingDate != null and billingDate!= ''">
+			AND 开票日期 = #{billingDate}
+		</if>
+	</select>
+
+	<insert id="insertInvoiceBean" keyProperty="主申请单ID" useGeneratedKeys="true" parameterType="com.scbid.invoice.entity.FpsqbEntity">
+		INSERT INTO t_fpsqb (主申请单ID, 客户编码, 客户名称, 税号, 地址电话,
+		开户行账号, 申请日期, 发票类别, 审核人, 商品编码, 商品名称, 规格, 单位, 单价, 数量, 税率, 价税合计, 折扣金额,
+		业务员, 单据明细ID, 分类编码, 开票状态, 发票代码, 发票号码, 发票备注, 开票标识, PDFBase64, PDF路径,
+		开票日期)
+		VALUES (#{listId}, #{clientCode}, #{cliengName}, #{dutyParagraph},
+		#{addressPhone}, #{bankNum}, #{applyDate}, #{invoiceCategory},
+		#{auditor}, #{goodCode}, #{goodName}, #{specifications}, #{company},
+		#{unitPrice}, #{number}, #{taxRate}, #{consult}, #{discountAmount},
+		#{salesman}, #{invoiceDetailId},
+		#{typeCode},#{invoiceStatus}, #{invoiceCode}, #{invoiceNumber}, #{invoiceRemark},
+		#{identification}, #{pdfbase64}, #{pdfPath}, #{billingDate})
+	</insert>
+	
+	<!-- 主键查询数据信息 -->
+	<select id="getInvoice"  resultType="com.scbid.invoice.entity.FpsqbEntity" parameterType="String" >
+	 SELECT 主申请单ID	AS	listId, 客户编码	AS	clientCode, 客户名称	AS	cliengName, 税号 	AS	dutyParagraph, 地址电话	AS	addressPhone,
+		开户行账号	AS	bankNum, 申请日期	AS	applyDate, 发票类别	AS	invoiceCategory, 审核人	AS	auditor, 商品编码	AS	goodCode, 商品名称	AS	goodName, 规格	AS	specifications, 单位	AS	company, 单价	AS	unitPrice, 数量	AS	number, 税率	AS	taxRate, 价税合计	AS	consult, 折扣金额	AS	discountAmount,
+		业务员	AS	salesman, 单据明细ID	AS	invoiceDetailId, 分类编码	AS	typeCode, 开票状态	AS	invoiceStatus, 发票代码	AS	invoiceCode, 发票号码	AS	invoiceNumber, 发票备注	AS	invoiceRemark, 开票标识	AS	identification, PDFBase64	AS	pdfbase64, PDF路径	AS	pdfPath,
+		开票日期	AS	billingDate FROM t_fpsqb WHERE 主申请单ID = #{listId}
+	</select>
+</mapper>

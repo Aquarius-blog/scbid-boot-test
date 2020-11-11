@@ -1,0 +1,101 @@
+.navbar-nav li ul {
+	display: none;
+}
+
+.navbar-nav li:hover ul {
+	display: block;
+}
+
+.navbar-nav li {
+	position: relative;
+}
+
+.subNav {
+	position: absolute;
+	left: 0;
+	top: 80px;
+	width: 100%;
+	padding: 0;
+	background: #3c8dbc;
+}
+
+.subNav li {
+	list-style: none;
+}
+
+.subNav li a {
+	color: #fff;
+	display: block;
+	padding: 25px 30px;
+}
+
+.subNav li a:hover {
+	background: rgba(0, 0, 0, 0.1);
+	color: #f6f6f6;
+}
+
+.skin-blue .main-header .logo {
+	height: 80px;
+	background: #3c8dbc;
+}
+
+.skin-blue .wrapper {
+	background-color: #e67817;
+}
+
+.skin-blue .main-sidebar {
+	min-height: calc(100% - 150px);
+	border-right: 1px solid #ddd;
+	background-color: #fff;
+}
+
+.skin-blue .sidebar-menu>li>.treeview-menu {
+	background: #fff;
+}
+
+.main-sidebar, .left-side {
+	margin-top: 85px;
+	padding-top: 0px;
+}
+
+.main-header .logo {
+	line-height: 80px;
+}
+
+.content-wrapper {
+	margin-top: 5px;
+	min-height: calc(100% - 150px);
+}
+
+.navbar-nav>li>a {
+	padding: 30px 30px;
+	font-size: 16px;
+}
+
+.user-name {
+	float: left;
+	padding: 29px 30px;
+	font-size: 16px;
+	color: #fff;
+}
+
+.skin-blue .sidebar-menu>li.header {
+	color: #1e282c;
+	font-size: 14px;
+	background: #FFF;
+}
+.sidebar-menu .treeview-menu>li>a{
+	padding: 10px 5px 10px 15px;
+}
+.skin-blue .treeview-menu>li.active>a, .skin-blue .treeview-menu>li>a:hover{
+	padding: 10px 5px 10px 15px;
+	color: #fff;
+	background: #feaf41;
+}
+
+.skin-blue .sidebar-menu>li:hover>a, .skin-blue .sidebar-menu>li.active>a{
+	color: #1e282c;
+	background: #ecf0f5;
+	border-left-color: #e67817;
+}
+

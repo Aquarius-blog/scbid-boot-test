@@ -1,0 +1,433 @@
+package com.scbid.bond.controller;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.scbid.bond.entity.BondEnsupplierEntity;
+import com.scbid.bond.entity.BondOrderEntity;
+import com.scbid.bond.entity.BondProjectEntity;
+import com.scbid.bond.service.BondEnagencyService;
+import com.scbid.bond.service.BondEnguaratorService;
+import com.scbid.bond.service.BondEnsupplierService;
+import com.scbid.bond.service.BondOrderService;
+import com.scbid.bond.service.BondProjectService;
+import com.scbid.common.config.AliyunOSSUtils;
+import com.scbid.common.config.AliyunOssConfig;
+import com.scbid.common.utils.Constant;
+import com.scbid.common.utils.DateUtils;
+import com.scbid.common.utils.PageUtils;
+import com.scbid.common.utils.R;
+import com.scbid.manage.entity.CommonAttachmentEntity;
+import com.scbid.manage.entity.CrmSupplierEntity;
+import com.scbid.manage.service.CommonAttachmentService;
+import com.scbid.manage.service.CrmSupplierService;
+import com.scbid.sys.controller.AbstractController;
+import com.scbid.sys.entity.BondUserEntity;
+import com.scbid.sys.service.BondUserService;
+/**
+ * @Title: BondEnsupplierController.java
+ * @Description: 供应商
+ * @Package com.scbid.bond.controller
+ * @Author: wangyun
+ * @Date: 2018年5月14日
+ * @Copyright: 四川国际招标有限责任公司 注意：本内容仅限于必朗科技内部传阅，禁止外泄以及用于其他的商业目的
+ */
+@RestController
+@RequestMapping("bond/bondensupplier")
+public class BondEnsupplierController extends AbstractController {
+	
+	/**
+	 * 供应商服务类
+	 */
+	@Autowired
+	private BondEnsupplierService bondEnsupplierService;
+
+	/**
+	 * 项目服务类
+	 */
+	@Autowired
+	private BondProjectService bondProjectService;
+
+	/**
+	 * 担保机构
+	 */
+	@Autowired
+	private BondEnagencyService bondEnagencyService;
+
+	/**
+	 * 代理机构类
+	 */
+	@Autowired
+	private BondEnguaratorService bondEnguaratorService;
+
+	/**
+	 * 保证金缴纳
+	 */
+	@Autowired
+	private BondOrderService bondOrderService;
+
+	/**
+	 * 供应商列表
+	 */
+	@Autowired
+	private CrmSupplierService crmSupplierService;
+	
+	
+	 /**
+     * 用户服务
+     */
+    @Autowired
+    private BondUserService bondUserService;
+
+    
+    @Autowired
+    private CommonAttachmentService commonAttachmentService;
+    
+    
+    @Autowired
+	private AliyunOssConfig aliyunOssConfig;
+    
+	/**
+	 * 列表
+	 */
+	@RequestMapping("/list")
+	//@RequiresPermissions("bond:bondensupplier:list")
+	public R list(@RequestParam Map<String, Object> params) {
+		PageUtils page = bondEnsupplierService.queryPage(params);
+		return R.ok().put("page", page);
+	}
+
+	/**
+     * 添加和修改的时候获取其他信息(供应商监管人)
+     * @author: chengyun
+     */
+    @RequestMapping("/getOtherInfo")
+    //@RequiresPermissions("bond:bondproject:update")
+    public R getOtherInfo(){
+    		
+    	//添加供应商的时候查询供应商监管人
+    	List<BondUserEntity> BondUserEntityList = bondUserService.selectAll();
+    	
+    	return R.ok().put("BondUserEntityList", BondUserEntityList);
+    }
+
+
+	/**
+	 * 查询供应商项目列表
+	 */
+	@RequestMapping("/projects")
+	// @RequiresPermissions("bond:bondensupplier:list")
+	public R projects(@RequestParam Map<String, Object> params) {
+		
+		PageUtils projects = new PageUtils();
+		if (Constant.RoleType.SYSTEM_ADMIN.getValue()==getRoleId()) {
+			projects = bondProjectService.queryPageProjects(params);
+			return R.ok().put("page", projects);
+		}
+		
+		Map<String, Object> newParams = new HashMap<String, Object>();
+		newParams.put("supplier_uuid", getEntUuid());
+		List<BondEnsupplierEntity> list = bondEnsupplierService.selectByMap(newParams);
+		if (list == null || list.size() == 0) {
+			return R.ok(getUser().getEntName() + "供应商信息不存在");
+		}
+		
+		for (BondEnsupplierEntity entity : list) {
+			params.put("supplierUuid", entity.getSupplierUuid());
+		}
+		
+		projects = bondProjectService.queryPageProjects(params);
+		return R.ok().put("page", projects);
+	}
+
+	/**
+	 * 查询供应商代理机构列表
+	 */
+	@RequestMapping("/agencys")
+	// @RequiresPermissions("bond:bondensupplier:list")
+	public R agencys(@RequestParam Map<String, Object> params) {
+		
+		PageUtils agencys = new PageUtils();
+		if (Constant.RoleType.SYSTEM_ADMIN.getValue()==getRoleId()) {
+			agencys = bondEnagencyService.queryPageAgencys(params);
+			return R.ok().put("page", agencys);
+		}
+		Map<String, Object> newParams = new HashMap<String, Object>();
+		newParams.put("supplier_uuid", getEntUuid());
+		List<BondEnsupplierEntity> list = bondEnsupplierService.selectByMap(newParams);
+		if (list == null || list.size() == 0) {
+			return R.ok().put("page", agencys);
+		}
+		newParams = new HashMap<String, Object>();
+		for (BondEnsupplierEntity entity : list) {
+			newParams.put("supplier_uuid", entity.getSupplierUuid());
+		}
+		List<BondProjectEntity> projects = bondProjectService.selectByMap(newParams);
+		List<Long> agencyIds = new ArrayList<Long>();
+		for (BondProjectEntity project : projects) {
+			agencyIds.add(Long.valueOf(project.getAgencyId()));
+		}
+
+		if (agencyIds.isEmpty()) {
+			return R.ok().put("page", agencys);
+		}
+		params.put("agencyIds", agencyIds);
+		agencys = bondEnagencyService.selectBatchAgencyIds(params);
+		return R.ok().put("page", agencys);
+	}
+
+	/**
+	 * 查询供应商担保机构列表
+	 */
+	@RequestMapping("/guarators")
+	//@RequiresPermissions("bond:bondensupplier:list")
+	public R guarators(@RequestParam Map<String, Object> params) {
+		PageUtils guarators = new PageUtils();
+		if (Constant.RoleType.SYSTEM_ADMIN.getValue()==getRoleId()) {
+			guarators = bondEnguaratorService.queryPageGuarators(params);
+			return R.ok().put("page", guarators);
+		}
+		Map<String, Object> newParams = new HashMap<String, Object>();
+		newParams.put("supplier_uuid", getEntUuid());
+		List<BondEnsupplierEntity> list = bondEnsupplierService.selectByMap(newParams);
+		if (list == null || list.size() == 0) {
+			return R.ok().put("page", guarators);
+		}
+
+		newParams = new HashMap<String, Object>();
+		for (BondEnsupplierEntity entity : list) {
+			newParams.put("supplier_id", entity.getSupplierId());
+		}
+		List<Long> guaratorIds = new ArrayList<Long>();
+		List<BondOrderEntity> orders = bondOrderService.selectByMap(newParams);
+		for (BondOrderEntity order : orders) {
+			if (order.getGuaratorId()!=null) {
+				guaratorIds.add(Long.valueOf(order.getGuaratorId()));
+			}
+		}
+		if (guaratorIds.isEmpty()) {
+			return R.ok().put("page", guarators);
+		}
+		params.put("guaratorIds", guaratorIds);
+		guarators = bondEnguaratorService.selectBatchGuaratorIds(params);
+		return R.ok().put("page", guarators);
+	}
+
+	/**
+	 * 查询供应商担保机构列表
+	 */
+	@RequestMapping("/orders")
+	//@RequiresPermissions("bond:bondensupplier:list")
+	public R orders(@RequestParam Map<String, Object> params) {
+		PageUtils orders = new PageUtils();
+		if (Constant.RoleType.SYSTEM_ADMIN.getValue()==getRoleId()) {
+			orders = bondOrderService.queryPageOrders(params);
+			return R.ok().put("page", orders);
+		}
+		Map<String, Object> newParams = new HashMap<String, Object>();
+		newParams.put("supplier_uuid", getEntUuid());
+		List<BondEnsupplierEntity> list = bondEnsupplierService.selectByMap(newParams);
+		if (list == null || list.size() == 0) {
+			return R.ok(getUser().getEntName() + "供应商信息不存在");
+		}
+		
+		for (BondEnsupplierEntity entity : list) {
+			params.put("supplier_id", entity.getSupplierId());
+		}
+		orders = bondOrderService.queryPageOrders(params);
+		return R.ok().put("page", orders);
+	}
+
+	
+	/**
+	 * 项目保证金申请
+	 */
+	@RequestMapping("bond")
+	//@RequiresPermissions("bond:bondensupplier:bond")
+	public R bond(@RequestParam Map<String, Object> params) {
+		//供应商信息查询
+		Map<String, Object> newParams = new HashMap<String, Object>();
+		newParams.put("supplier_uuid", getEntUuid());
+		List<BondEnsupplierEntity> list = bondEnsupplierService.selectByMap(newParams);
+		if (list == null || list.size() == 0) {
+			return R.ok(getUser().getEntName() + "供应商信息不存在");
+		}
+		Long supplierId = null;
+		for (BondEnsupplierEntity entity : list) {
+			supplierId = entity.getSupplierId();
+		}
+		String bondOrder = (String) params.get("bondOrder");//担保机构主键
+		String bondOrders = (String) params.get("bondOrders");//项目列表
+		
+		JSONObject jsonObject = JSON.parseObject(bondOrder);
+		List<BondOrderEntity> orders = JSON.parseArray(bondOrders,BondOrderEntity.class);
+		//担保机构主键
+		Long guaratorId = null;
+		if (StringUtils.isNotEmpty(jsonObject.getString("guaratorId"))) {
+			guaratorId = Long.valueOf(jsonObject.getString("guaratorId"));
+		}
+		BigDecimal orderMoney = BigDecimal.ZERO;
+		if (StringUtils.isNotEmpty(jsonObject.getString("orderMoney"))) {
+			orderMoney = new BigDecimal(jsonObject.getString("orderMoney"));
+		}
+		List<Long> orderIds = bondEnsupplierService.bondProject(supplierId, guaratorId, orders,orderMoney);
+		System.out.println(orderIds);
+		return R.ok().put("orderIds", orderIds);
+	}
+
+	/**
+	 * 信息
+	 */
+	@RequestMapping("/info/{supplierId}")
+	//@RequiresPermissions("bond:bondensupplier:info")
+	public R info(@PathVariable("supplierId") Long supplierId) {
+		BondEnsupplierEntity bondEnsupplier = bondEnsupplierService.selectById(supplierId);
+		aliyunOssConfig.setBucket("scbid-net");
+		AliyunOSSUtils aliyunOSSUtils = new AliyunOSSUtils(aliyunOssConfig);
+		if (StringUtils.isEmpty(bondEnsupplier.getSupplierLicenseImg())) {
+			Map<String, Object> queryParams = new HashMap<>();
+			queryParams.put("param", 3);
+			queryParams.put("businessId", bondEnsupplier.getSupplierUuid());
+			List<CommonAttachmentEntity> entities = commonAttachmentService.commonAttachmentPage(queryParams);
+			for (CommonAttachmentEntity entity : entities) {
+				String url = aliyunOSSUtils.getUrl(entity.getFieldId());
+				bondEnsupplier.setSupplierLicenseImg(url);
+			}
+		}
+		return R.ok().put("bondEnsupplier", bondEnsupplier);
+	}
+	
+	/**
+	 * 信息
+	 */
+	@RequestMapping("/select")
+	//@RequiresPermissions("bond:bondensupplier:select")
+	public R select() {
+		Map<String, Object> newParams = new HashMap<String, Object>();
+		newParams.put("supplier_uuid", getEntUuid());
+		List<BondEnsupplierEntity> list = bondEnsupplierService.selectByMap(newParams);
+		if (list == null || list.size() == 0) {
+			return R.ok(getUser().getEntName() + "供应商信息不存在");
+		}
+		BondEnsupplierEntity bondEnsupplier = new BondEnsupplierEntity();
+		aliyunOssConfig.setBucket("scbid-net");
+		AliyunOSSUtils aliyunOSSUtils = new AliyunOSSUtils(aliyunOssConfig);
+		for (BondEnsupplierEntity entity : list) {
+			bondEnsupplier = entity;
+		}
+		if (StringUtils.isEmpty(bondEnsupplier.getSupplierLicenseImg())) {
+			Map<String, Object> queryParams = new HashMap<>();
+			queryParams.put("param", 3);
+			queryParams.put("businessId", bondEnsupplier.getSupplierUuid());
+			List<CommonAttachmentEntity> entities = commonAttachmentService.commonAttachmentPage(queryParams);
+			for (CommonAttachmentEntity entity : entities) {
+				String url = aliyunOSSUtils.getUrl(entity.getFieldId());
+				bondEnsupplier.setSupplierLicenseImg(url);
+			}
+		}
+		return R.ok().put("bondEnsupplier", bondEnsupplier);
+	}
+
+	/**
+	 * 保存
+	 * @author: chengyun
+	 */
+	@RequestMapping("/save")
+	//@RequiresPermissions("bond:bondensupplier:save")
+	public R save(@RequestBody BondEnsupplierEntity bondEnsupplier) {
+		if(bondEnsupplier != null) {
+			bondEnsupplier.setSupplierDate(DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
+			bondEnsupplier.setUpdateDate(DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
+			bondEnsupplier.setUpdateUesrName(getUser().getUserName());
+			bondEnsupplierService.insert(bondEnsupplier);
+		}
+		return R.ok();
+	}
+
+	/**
+	 * 修改
+	 * @author: chengyun
+	 */
+	@RequestMapping("/update")
+	//@RequiresPermissions("bond:bondensupplier:update")
+	public R update(@RequestBody BondEnsupplierEntity bondEnsupplier) {
+		if(bondEnsupplier != null) {
+			bondEnsupplier.setUpdateDate(DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
+			bondEnsupplier.setUpdateUesrName(getUser().getUserName());
+			bondEnsupplierService.updateById(bondEnsupplier);
+		}
+		
+		return R.ok();
+	}
+
+	/**
+	 * 删除(逻辑删除)
+	 */
+	@RequestMapping("/delete")
+	//@RequiresPermissions("bond:bondensupplier:delete")
+	public R delete(@RequestBody Long[] supplierIds) {
+		// bondEnsupplierService.deleteBatchIds(Arrays.asList(supplierIds));
+		// bondEnsupplierService.delete();
+
+		List<Long> longs = new ArrayList<Long>();
+		for (Long supplierId : supplierIds) {
+			longs.add(supplierId);
+		}
+		List<BondEnsupplierEntity> lists = bondEnsupplierService.selectBatchIds(longs);
+		for (BondEnsupplierEntity list : lists) {
+			list.setSupplierStatus(Constant.DeleteStatus.DELETED.getValue());
+			list.setUpdateUesrName(getUser().getUserSurname());
+			list.setUpdateDate(DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
+		}
+		bondEnsupplierService.updateBatchById(lists);
+
+		return R.ok();
+	}
+
+	/**
+	 * 导入
+	 */
+	@RequestMapping("/import")
+	//@RequiresPermissions("bond:bondensupplier:import")
+	public R importFile(@RequestParam Map<String, Object> params) {
+		List<BondEnsupplierEntity> bondEnsuppliers = bondEnsupplierService.selectList(null);
+		List<String> supplierIds = new ArrayList<String>();
+		for (BondEnsupplierEntity bondEnsupplier : bondEnsuppliers) {
+			supplierIds.add(bondEnsupplier.getSupplierUuid());
+		}
+		List<CrmSupplierEntity> lists = crmSupplierService.selectList();
+		List<CrmSupplierEntity> crmSuppliers = new ArrayList<CrmSupplierEntity>();
+		for (CrmSupplierEntity crmSupplier : lists) {
+			if (!supplierIds.contains(crmSupplier.getListId())) {
+				crmSuppliers.add(crmSupplier);
+			}
+		}
+		bondEnsupplierService.importCrmSupplier(crmSuppliers);
+		return R.ok();
+	}
+
+	/**
+	 * 导出
+	 */
+	@RequestMapping("/export")
+	//@RequiresPermissions("bond:bondensupplier:export")
+	public R exportFile(@RequestParam Map<String, Object> params) {
+
+		return R.ok();
+	}
+
+}

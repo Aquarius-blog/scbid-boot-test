@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.bond.dao.BondProjectDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.scbid.bond.entity.BondProjectEntity" id="bondProjectMap">
+        <result property="projectId" column="project_id"/>
+        <result property="packageId" column="package_id"/>
+        <result property="projectUuid" column="project_uuid"/>
+        <result property="supplierUuid" column="supplier_uuid"/>
+        <result property="agencyId" column="agency_id"/>
+        <result property="projectCode" column="project_code"/>
+        <result property="projectName" column="project_name"/>
+        <result property="projectType" column="project_type"/>
+        <result property="projectMoney" column="project_money"/>
+        <result property="projectStatus" column="project_status"/>
+        <result property="projectDate" column="project_date"/>
+        <result property="projectUserId" column="project_user_id"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="updateUesrName" column="update_uesr_name"/>
+    </resultMap>
+
+
+</mapper>

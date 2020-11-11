@@ -1,0 +1,93 @@
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="auditModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<div class="col-sm-2 control-label">订单编号</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondOrder.orderNo" placeholder="订单编号" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">订单金额</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondOrder.orderMoney" placeholder="订单金额" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">订单类型</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondOrder.orderType" placeholder="订单类型" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">订单凭证</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondOrder.orderVoucher" placeholder="订单凭证" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">订单状态</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondOrder.orderStatus" placeholder="订单状态" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">支付类型</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondOrder.payType" placeholder="支付类型" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">订单创建时间</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondOrder.orderDate" placeholder="订单创建时间" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">最后修改人</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondOrder.updateUesrName" placeholder="最后修改人" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">最后修改时间</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondOrder.updateDate" placeholder="最后修改时间" />
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<!-- 				<a v-if="bondOrder.guaratorName == '成都银行'" v-bind:href="'${request.contextPath}/bond/templates/cdyh/applicationTable?orderId='+bondOrder.orderId" target="_blank">担保机构：成都银行</a> -->
+				<a v-if="bondOrder.guaratorName == '成都银行'" @click="openCDYH">担保机构：成都银行</a>
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+				</button>
+				<input id="auditTrue" type="button" class="btn btn-primary"
+					@click="auditTrue" value="审核通过" /> <input id="auditFalse"
+					type="button" class="btn btn-primary" @click="auditFalse"
+					value="审核不通过" />
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

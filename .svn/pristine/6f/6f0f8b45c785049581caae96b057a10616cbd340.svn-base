@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>供应商</title>
+<#include "/header.html">
+</head>
+<body>
+<div id="rrapp">
+      <div class="grid-btn">
+       <form id="queryForm" action="">
+      		<div class="form-group col-sm-2">
+			<input type="text" class="form-control" v-model="q.guaratorName" @keyup.enter="query" placeholder="">
+		</div>
+       	<a class="btn btn-default" @click="query">&nbsp;查询</a>
+		<a class="btn btn-primary" @click="add">&nbsp;新增</a>
+		<a class="btn btn-primary" @click="importPage">&nbsp;导入</a>
+		<a class="btn btn-primary" @click="exportPage">&nbsp;导出</a>
+		<a class="btn btn-primary" @click="del">&nbsp;批量删除</a>
+       </form>
+      </div>
+      <table id="table"></table>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+			</div>
+			<div class="modal-body">
+        	<form class="form-horizontal">
+                                                                            <div class="form-group">
+                        <div class="col-sm-2 control-label">供应商uuid 与oa 系统对接</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierUuid" placeholder="供应商uuid 与oa 系统对接"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">公司规模 0微型，1小型，2中型，3大型</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierScale" placeholder="公司规模 0微型，1小型，2中型，3大型"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">供应商全称</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierName" placeholder="供应商全称"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">供应商公司电话</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierPhone" placeholder="供应商公司电话"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">邮编</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierPostcode" placeholder="邮编"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">供应商公司注册资本</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierCapital" placeholder="供应商公司注册资本"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">公司性质</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierSort" placeholder="公司性质"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">纳税人识别号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierTaxpayerNo" placeholder="纳税人识别号"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">传真</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierFaxes" placeholder="传真"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">法人电话</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierLegalPhone" placeholder="法人电话"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">注册证号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierRegNumber" placeholder="注册证号"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">银行账号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierBankNumber" placeholder="银行账号"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">开户行</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierBankAccount" placeholder="开户行"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">公司类型</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierCompanyType" placeholder="公司类型"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">注册地址</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierRegAdress" placeholder="注册地址"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">营业期限</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierOpenatingPeriod" placeholder="营业期限"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">供应商公司成立日期</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierEstabDate" placeholder="供应商公司成立日期"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">法人代表</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierLegalPepre" placeholder="法人代表"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">行业</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierIndustry" placeholder="行业"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">供应商公司地址</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierAddress" placeholder="供应商公司地址"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">供应商执照号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierLicenseNo" placeholder="供应商执照号"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">供应商执照号图片</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierLicenseImg" placeholder="供应商执照号图片"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">供应商备注</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierRemarks" placeholder="供应商备注"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">供应商状态(是否通过审核)</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierStatus" placeholder="供应商状态(是否通过审核)"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">供应商创建时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierDate" placeholder="供应商创建时间"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">供应商监管人ID</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.supplierUserId" placeholder="供应商监管人ID"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">最后修改人</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.updateUesrName" placeholder="最后修改人"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">最后修改时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnsupplier.updateDate" placeholder="最后修改时间"/>
+                        </div>
+                    </div>
+                                    	</form>
+    		</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭 </button>
+				<input id="saveOrUpdate" type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div>
+<script src="${request.contextPath}/statics/js/modules/bond/bondensupplier.js?_${.now?long}"></script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+package com.scbid.bond.service.impl;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.scbid.bond.dao.BondEnsupplierDao;
+import com.scbid.bond.entity.BondEnsupplierEntity;
+import com.scbid.bond.entity.BondOrderEntity;
+import com.scbid.bond.entity.BondOrderItemEntity;
+import com.scbid.bond.entity.BondOrderStatusEntity;
+import com.scbid.bond.entity.BondProjectEntity;
+import com.scbid.bond.service.BondEnsupplierService;
+import com.scbid.bond.service.BondOrderItemService;
+import com.scbid.bond.service.BondOrderService;
+import com.scbid.bond.service.BondOrderStatusService;
+import com.scbid.common.utils.DateUtils;
+import com.scbid.common.utils.PageUtils;
+import com.scbid.common.utils.Query;
+import com.scbid.manage.entity.CrmSupplierEntity;
+
+@Service("bondEnsupplierService")
+public class BondEnsupplierServiceImpl extends ServiceImpl<BondEnsupplierDao, BondEnsupplierEntity> implements BondEnsupplierService {
+
+	@Autowired
+	private BondEnsupplierDao bondEnsupplierDao;
+
+	@Autowired
+	private BondOrderService bondOrderService;
+	
+	@Autowired
+	private BondOrderItemService bondOrderItemService;
+	
+	@Autowired
+	private BondOrderStatusService bondOrderStatusService;
+
+	@Override
+	public PageUtils queryPage(Map<String, Object> params) {
+		Page<BondEnsupplierEntity> page = this.selectPage(new Query<BondEnsupplierEntity>(params).getPage(), new EntityWrapper<BondEnsupplierEntity>());
+
+		return new PageUtils(page);
+	}
+	@Override
+	public PageUtils findSupplierByUser(Map<String, Object> params) {
+		Page<BondEnsupplierEntity> page = new Query<BondEnsupplierEntity>(params).getPage();
+		page.setRecords(baseMapper.findSupplierByUser(page,params));
+		return new PageUtils(page);
+	}
+
+	
+
+	@Override
+	public PageUtils queryGuaranteeSupplier(Map<String, Object> params) {
+		Page<BondEnsupplierEntity> page = new Query<BondEnsupplierEntity>(params).getPage();
+		page.setRecords(bondEnsupplierDao.queryGuaranteeSupplier(page,params));
+		return new PageUtils(page);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public List<Long> bondProject(Long supplierId, Long guaratorId,List<BondOrderEntity> orders,BigDecimal orderMoney) {
+		//订单主键
+		List<Long> orderIds = new ArrayList<Long>();
+		for (BondOrderEntity order : orders) {
+			//order.setAgencyId(agencyId);
+			order.setSupplierId(supplierId);
+			order.setGuaratorId(guaratorId);
+			order.setOrderMoney(orderMoney);
+			bondOrderService.insert(order);
+			Long orderId = order.getOrderId();
+			orderIds.add(orderId);
+			List<BondProjectEntity> projects = order.getProjects();
+			for (BondProjectEntity project : projects) {
+				BondOrderItemEntity itemEntity = new BondOrderItemEntity();
+				itemEntity.setOrderId(orderId);
+				itemEntity.setProjectId(project.getProjectId());
+				itemEntity.setOrderItemDate(DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
+				bondOrderItemService.insert(itemEntity);
+			}
+			BondOrderStatusEntity statusEntity = new BondOrderStatusEntity();
+			statusEntity.setOrderId(order.getOrderId());
+			statusEntity.setOrderNo(order.getOrderNo());
+			statusEntity.setOrderStatus(order.getOrderStatus());
+			statusEntity.setOrderStatusDate(DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
+			bondOrderStatusService.insert(statusEntity);
+		}
+		return orderIds;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public boolean importCrmSupplier(List<CrmSupplierEntity> crmSuppliers) {
+		for (CrmSupplierEntity crmSupplier : crmSuppliers) {
+			BondEnsupplierEntity entity = new BondEnsupplierEntity();
+			entity.setSupplierUuid(crmSupplier.getListId());//供应商主键
+			entity.setSupplierName(crmSupplier.getName());//供应商名称
+			entity.setSupplierScale(crmSupplier.getBusinessScale());//公司规模 0微型，1小型，2中型，3大型
+			entity.setSupplierPhone(crmSupplier.getPhone());//供应商公司电话
+			entity.setSupplierPostcode(crmSupplier.getPostcode());//邮编
+			entity.setSupplierCapital(crmSupplier.getRegCapital());//供应商公司注册资本
+			entity.setSupplierSort(crmSupplier.getCompanySort());//公司性质
+			entity.setSupplierTaxpayerNo(crmSupplier.getTaxpayerId());//纳税人识别号
+			entity.setSupplierFaxes(crmSupplier.getFaxes());//传真
+			entity.setSupplierLegalPhone(crmSupplier.getLegalPhone());//法人电话
+			entity.setSupplierRegNumber(crmSupplier.getRegNumber());//注册证号
+			entity.setSupplierBankNumber(crmSupplier.getBankNumber());//银行账号
+			entity.setSupplierBankAccount(crmSupplier.getBankAccount());//开户行
+			entity.setSupplierCompanyType(crmSupplier.getCompanyType());//公司类型
+			entity.setSupplierRegAdress(crmSupplier.getRegAdress());//注册地址
+			entity.setSupplierOpenatingPeriod(crmSupplier.getOpenatingPeriod());//营业期限
+			entity.setSupplierEstabDate(crmSupplier.getEstabDate());//供应商公司成立日期
+			entity.setSupplierLegalPepre(crmSupplier.getLegalRepre());//法人代表
+			entity.setSupplierIndustry(crmSupplier.getIndustry());//行业
+			entity.setSupplierAddress(crmSupplier.getAddress());//供应商公司地址
+			entity.setSupplierLicenseNo(crmSupplier.getRegNumber());//供应商执照号
+			entity.setSupplierLicenseImg(crmSupplier.getBusinesslicenseurl());//供应商执照号图片
+			entity.setSupplierRemarks(crmSupplier.getRemark());//供应商备注
+			entity.setSupplierStatus(0);//供应商状态(是否通过审核)(0:正常;1:逻辑删除)
+			entity.setSupplierDate(DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));//供应商创建时间
+			//entity.setSupplierUserId("");//供应商监管人ID
+			//entity.setUpdateUesrName("");;//最后修改人
+			//entity.setUpdateDate("");;//最后修改时间
+			baseMapper.insert(entity);
+		}
+		return false;
+	}
+	@Override
+	public PageUtils selectBatchSupplierIds(Map<String, Object> params) {
+		Page<BondEnsupplierEntity> page = new Query<BondEnsupplierEntity>(params).getPage();
+		page.setRecords(baseMapper.selectBatchSupplierIds(page,params));
+		return new PageUtils(page);
+	}
+	@Override
+	public PageUtils selectBatchUuids(Map<String, Object> params) {
+		Page<BondEnsupplierEntity> page = new Query<BondEnsupplierEntity>(params).getPage();
+		page.setRecords(baseMapper.selectBatchUuids(page,params));
+		return new PageUtils(page);
+	}
+	
+//	@Override
+//	public PageUtils findAllSupplier(Map<String, Object> params) {
+//		Page<BondEnsupplierEntity> page = new Query<BondEnsupplierEntity>(params).getPage();
+//		page.setRecords(baseMapper.findAllSupplier(page, params));
+//		return new PageUtils(page);
+//	}
+
+}

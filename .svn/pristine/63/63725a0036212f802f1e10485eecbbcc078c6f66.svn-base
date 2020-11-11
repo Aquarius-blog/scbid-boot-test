@@ -1,0 +1,63 @@
+	<footer>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-3">
+				<div class="widget">
+					<h5 class="widgetheading">联系我们</h5>
+					<address>
+					<strong>公司地址</strong><br>
+					四川省成都市高新区天府大道中段800号天府四街66号航兴国际广场1号楼17楼</address>
+					<p>
+						<i class="icon-phone"></i>总机：028-87797837 87796339 87793103 87793137 87797107 87795756<br>
+						<i class="icon-envelope-alt"></i>电子邮箱：sct@scbid.net
+					</p>
+				</div>
+			</div>
+			<div class="col-lg-3">
+				<div class="widget">
+					<h5 class="widgetheading">快速链接</h5>
+					<ul class="link-list">
+						<li><a href="http://www.sichuanbidding.com/contact.html">网站地图</a></li>
+						<li><a href="http://www.sichuanbidding.com/index.html">四川国际招标有限这人公司官网</a></li>
+						<li><a href="javascript:;">招标信息</a></li>
+						<li><a href="javascript:;">客户服务</a></li>
+						<li><a href="javascript:;">川招学院 </a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-lg-3">
+				<div class="widget">
+					<h5 class="widgetheading">最新帖子</h5>
+					<ul class="link-list">
+						<li><a href="http://www.sichuanbidding.com/news_detail/newsId=7238.html">《BiD·德 招标达人》2018年4月刊</a></li>
+						<li><a href="http://www.sichuanbidding.com/news_detail/newsId=7228.html">传承 创新 发展 | 2017川招年会图集</a></li>
+						<li><a href="http://www.sichuanbidding.com/news_detail/newsId=7239.html">“匠心独运，创智精耕”---记2018年文化日活动！</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-lg-3">
+				<div class="widget">
+					<h5 class="widgetheading">近期新闻</h5>
+					<ul class="link-list">
+						<li><a href="http://www.sichuanbidding.com/tender_detail/newsId=7179.html">财政部关于印发《政府采购代理机构管理暂行办法》的通知</a></li>
+						<li><a href="http://www.sichuanbidding.com/tender_detail/newsId=7237.html">简讯 | <招投标法>修改在即，法规司专场听取企业意见</a></li>
+						<li><a href="http://www.sichuanbidding.com/tender_detail/newsId=7230.html">资讯 | 川招党支部组织召开党组织生活会，学习习近平总书记来川视察重要讲话</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="sub-footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="copyright">
+						<p>
+							<span>版权所有：四川国际招标有限责任公司　备案号：蜀ICP备05022178号
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</footer>

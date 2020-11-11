@@ -1,0 +1,197 @@
+//表格数据查询事件及分页查询事件
+$(function () {
+	if($("#table").length>0){ 
+		console.log($("#table"));
+		$.InitMainTable("#table",vm.fields,function queryCallback(params){
+			params = $.extend(params, vm.q);
+			vm.reload(params);
+		},function pageCallback(params){
+			params = $.extend(params, vm.q);
+			vm.reload(params);
+		});
+		vm.reload(null);
+	}
+});
+
+
+//每个模块功能权限设置
+function actionFormatter(value, row, index) {
+    var result = "";
+    result += "<a class='btn btn-xs green' onclick=\"select('" + row.projectId + "')\"  title='查看'><span class='glyphicon glyphicon-search'></span></a>";
+    result += "<a class='btn btn-xs blue' onclick=\"update('" + row.projectId + "')\" title='编辑'><span class='glyphicon glyphicon-pencil'></span></a>";
+    result += "<a class='btn btn-xs red' onclick=\"del('" + row.projectId + "')\" title='删除'><span class='glyphicon glyphicon-remove'></span></a>";
+    return result;
+}
+
+//Vue函数体
+var vm = new Vue({
+	el:'#rrapp',
+	data:{
+		title: null,
+		q: {
+			projectId:null,
+			packageId:null,
+			projectUuid:null,
+			supplierUuid:null,
+			agencyId:null,
+			projectCode:null,
+			projectName:null,
+			projectType:null,
+			projectMoney:null,
+			projectStatus:null,
+			projectDate:null,
+			projectUserId:null,
+			updateDate:null,
+			updateUesrName:null,
+			},
+		bondProject: {
+				projectId:null,
+				packageId:null,
+				projectUuid:null,
+				supplierUuid:null,
+				agencyId:null,
+				projectCode:null,
+				projectName:null,
+				projectType:null,
+				projectMoney:null,
+				projectStatus:null,
+				projectDate:null,
+				projectUserId:null,
+				updateDate:null,
+				updateUesrName:null,
+				},
+		fields:[
+			//{field:'projectId',title:'projectId', width: 50, key: true},
+			//{field:'packageId',title:'分包 主键ID', width: 80 },
+			//{field:'projectUuid',title:'全局唯一项目主键UUID 与OA系统对接', width: 80 },
+			//{field:'supplierUuid',title:'供应商uuid 与oa 系统对接', width: 80 },
+			//{field:'agencyId',title:'代理机构主键ID', width: 80 },
+			{field:'projectCode',title:'项目编码', width: 80 },
+			{field:'projectName',title:'项目名称', width: 80 },
+			{field:'projectType',title:'项目类型', width: 80 },
+			{field:'projectMoney',title:'项目金额', width: 80 },
+			{field:'projectStatus',title:'项目状态', width: 80 },
+			{field:'projectDate',title:'项目创建时间', width: 80 },
+			//{field:'projectUserId',title:'项目监管人', width: 80 },
+			//{field:'updateDate',title:'最后修改时间', width: 80 },
+			//{field:'updateUesrName',title:'最后修改人', width: 80 },
+		],
+	},
+	methods: {
+		//查询
+		query: function () {
+			vm.reload(vm.q);
+		},
+		//新增
+		add: function(){
+			vm.title = "新增";
+			vm.bondProject = {};
+			$('#itemModal').modal('show');
+		},
+		//导入
+        importPage: function(){
+        	$('#importModal').modal('show');
+        },
+        //导入请求
+        importPost: function(){
+        	$.syncPost(baseURL + "/bond/bondproject/import", JSON.stringify(vm.fields), function(r){
+    			if(r.code === 0){
+    				alert('操作成功', function(){
+    					$('#importModal').modal('hide');
+    	                vm.reload();
+    	            });
+    	        }else{
+    	        	alert(r.msg);
+    	        }
+    		});	
+        },
+        //导出
+        exportPage: function(){
+		   $('#exportModal').modal('show');
+		},
+		//导出请求
+        exportPage: function(){
+        	
+		    $.syncPost(baseURL + "/bond/bondproject/export", JSON.stringify(vm.fields), function(r){
+    			if(r.code === 0){
+    				alert('操作成功', function(){
+    					$('#exportModal').modal('hide');
+    	                vm.reload();
+    	            });
+    	        }else{
+    	        	alert(r.msg);
+    	        }
+    		});	
+		},
+		//修改
+		update: function (event) {
+			var row = getSelectedRow();
+			var projectId = row.projectId;
+			if(projectId == null){
+				return ;
+			}
+            vm.title = "修改";
+            vm.itemPage(projectId);
+		},
+		//详情
+		itemPage: function (projectId) {
+        	 $('#itemModal').modal('show');
+             vm.getInfo(projectId);
+        },
+        //新增OR修改
+		saveOrUpdate: function (event) {
+			var url = vm.bondProject.projectId == null ? "/bond/bondproject/save" : "/bond/bondproject/update";
+			$.syncPost(baseURL + url, JSON.stringify(vm.bondProject), function(r){
+        		if(r.code === 0){
+        			alert('操作成功', function(){
+                        vm.reload();
+                    });
+                }else{
+                	alert(r.msg);
+                }
+        	});
+		},
+		//删除
+		del: function (event) {
+			var rows = getSelectedRows();
+            var projectIds = [];
+            rows.forEach(function(value, index, array) {
+            	projectIds.push(array[index].projectId);
+			});
+            if(projectIds == null){
+                return ;
+            }
+            vm.delPost(projectIds);
+		},
+		//删除请求
+		delPost: function (projectIds) {
+        	confirm('确定要删除选中的记录？', function(){
+        		$.syncPost(baseURL + "/bond/bondproject/delete", JSON.stringify(projectIds), function(r){
+        			if(r.code === 0){
+        				alert('操作成功', function(){
+        	                vm.reload();
+        	            });
+        	        }else{
+        	        	alert(r.msg);
+        	        }
+        		});
+        	});
+        },
+        //明细请求
+		getInfo: function(projectId){
+			$.get(baseURL + "/bond/bondproject/info/"+projectId, function(r){
+                vm.bondProject = r.bondProject;
+            });
+		},
+		//重新加载请求
+		reload: function (params) {
+            $.postForm(baseURL + '/bond/bondproject/list', params, function(request){
+        		$("#table").bootstrapTable('load',request.page);
+        	});
+		}
+	},
+	//创建完毕状态
+    created: function(){
+    	
+    }
+});

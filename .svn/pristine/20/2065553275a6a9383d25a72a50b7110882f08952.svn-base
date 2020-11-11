@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+   	<#include "/header.html">
+</head>
+<body>
+	<div id="rrapp">
+        <div id="toolbar">
+	        <form id="queryForm" action="">
+	       		<div class="form-group col-sm-2">
+					<input type="text" class="form-control" v-model="q.guaratorName" @keyup.enter="query" placeholder="">
+				</div>
+	        	<a class="btn btn-default" @click="query">&nbsp;查询</a>
+				<a class="btn btn-primary" @click="add">&nbsp;新增</a>
+				<a class="btn btn-primary" @click="importPage">&nbsp;导入</a>
+				<a class="btn btn-primary" @click="exportPage">&nbsp;导出</a>
+				<a class="btn btn-primary" @click="del">&nbsp;批量删除</a>
+	        </form>
+        </div>
+        <table id="table"></table>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+			</div>
+			<div class="modal-body">
+        	<form class="form-horizontal">
+                                                                            <div class="form-group">
+                        <div class="col-sm-2 control-label">担保机构UUID</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyUuid" placeholder="担保机构UUID"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">公司规模 0微型，1小型，2中型，3大型</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyScale" placeholder="公司规模 0微型，1小型，2中型，3大型"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">代理机构全称</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyName" placeholder="代理机构全称"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">代理机构公司电话</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyPhone" placeholder="代理机构公司电话"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">代理机构公司邮编</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyPostcode" placeholder="代理机构公司邮编"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">代理机构公司注册资本</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyCapital" placeholder="代理机构公司注册资本"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">代理机构执性质</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencySort" placeholder="代理机构执性质"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">代理机构传真</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyFaxes" placeholder="代理机构传真"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">代理机构纳税人识别号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyTaxpayerNo" placeholder="代理机构纳税人识别号"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">银行账号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyBankNumber" placeholder="银行账号"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">供应商公司地址</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyAddress" placeholder="供应商公司地址"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">执照号图片</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyLicenseImg" placeholder="执照号图片"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">执照号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyLicenseNo" placeholder="执照号"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">行业</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyIndustry" placeholder="行业"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">法人代表</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyLegalPepre" placeholder="法人代表"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">公司成立日期</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyEstabDate" placeholder="公司成立日期"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">营业期限</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyOpenatingPeriod" placeholder="营业期限"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">注册地址</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyRegAdress" placeholder="注册地址"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">公司类型</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyCompanyType" placeholder="公司类型"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">开户行</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyBankAccount" placeholder="开户行"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">注册证号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyRegNumber" placeholder="注册证号"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">法人电话</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyLegalPhone" placeholder="法人电话"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">备注</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyRemarks" placeholder="备注"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">代理机构状态</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyStatus" placeholder="代理机构状态"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">代理机构创建时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyDate" placeholder="代理机构创建时间"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">代理机构监管人id</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.agencyUserId" placeholder="代理机构监管人id"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">最后修改人</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.updateUesrName" placeholder="最后修改人"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">最后修改时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondEnagency.updateDate" placeholder="最后修改时间"/>
+                        </div>
+                    </div>
+                                    	</form>
+    		</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭 </button>
+				<input id="saveOrUpdate" type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div>
+<script src="${request.contextPath}/statics/js/modules/bond/bondenagency.js?_${.now?long}"></script>
+</body>
+</html>

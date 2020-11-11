@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.bond.dao.BondProjectDao">
+
+	<resultMap type="com.scbid.bond.entity.BondProjectEntity" id="bondProjectMap">
+		<result property="projectId" column="project_id" />
+		<result property="packageId" column="package_id" />
+		<result property="projectUuid" column="project_uuid" />
+		<result property="supplierUuid" column="supplier_uuid" />
+		<result property="agencyId" column="agency_id" />
+		<result property="projectCode" column="project_code" />
+		<result property="projectName" column="project_name" />
+		<result property="projectType" column="project_type" />
+		<result property="projectMoney" column="project_money" />
+		<result property="projectStatus" column="project_status" />
+		<result property="projectDate" column="project_date" />
+		<result property="projectUserId" column="project_user_id" />
+		<result property="updateDate" column="update_date" />
+		<result property="updateUesrName" column="update_uesr_name" />
+
+		<!-- 翻译字段 -->
+		<result property="supplierName" column="supplier_name" />
+		<result property="agencyName" column="agency_name" />
+        <result property="guaratorName" column="guarator_name"/>
+	</resultMap>
+
+	<!-- 查询满足条件的数据 ,关联查询 -->
+	<select id="findSupplierProjectByUser" parameterType="java.util.Map"
+		resultMap="bondProjectMap">
+		SELECT
+		p.*,es.supplier_name,ea.agency_name
+
+		FROM
+		t_bond_project p
+		left JOIN t_bond_ent_agency ea ON ea.agency_id = p.agency_id
+		LEFT JOIN t_bond_ent_supplier es ON es.supplier_uuid = p.supplier_uuid
+		LEFT JOIN t_bond_user u ON u.ent_uuid = ea.agency_uuid
+
+		<include refid="whereSql" />
+	</select>
+
+
+	<sql id="whereSql">
+		<where>
+
+			<if test="userId !=null ">
+				and u.user_id=#{userId}
+			</if>
+			<if test="projectName != null and projectName != ''">
+				and (p.project_name like concat('%',#{projectName},'%'))
+			</if>
+
+		</where>
+	</sql>
+
+	<select id="queryGuaranteeProjectList" parameterType="java.util.Map"
+		resultMap="bondProjectMap">
+		SELECT DISTINCT
+		project.*
+		FROM
+		t_bond_user users
+		LEFT JOIN
+		t_bond_ent_guarator
+		guarator
+		on users.ent_uuid = guarator.guarator_uuid
+		LEFT JOIN
+		t_bond_order orders
+		on guarator.guarator_id=orders.guarator_id
+		JOIN
+		t_bond_order_item item
+		on orders.order_id = item.order_id
+		LEFT JOIN
+		t_bond_project project
+		on project.project_id=item.project_id
+		<include refid="whereSq" />
+	</select>
+
+	<select id="queryGuaranteeProjecttByorderId" parameterType="java.lang.String"
+		resultMap="bondProjectMap">
+		SELECT
+		project.*
+		FROM
+		t_bond_order orders
+		LEFT JOIN
+		t_bond_order_item item
+		on
+		orders.order_id = item.order_id
+		LEFT JOIN
+		t_bond_project project
+		on
+		project.project_id=item.project_id
+		WHERE
+		orders.order_id=#{orderId}
+	</select>
+
+
+	<sql id="whereSq">
+		<where>
+			<if test="userId!=null ">
+				users.user_id = #{userId}
+			</if>
+			<if test="projectName!=null ">
+				and project.project_name like
+				CONCAT('%',#{projectName},'%')
+			</if>
+		</where>
+	</sql>
+
+
+
+	<select id="selectBatchProjectIds" resultMap="bondProjectMap"
+		parameterType="java.util.Map">
+		SELECT
+		t_bond_project.*,
+		(SELECT supplier_name from t_bond_ent_supplier WHERE supplier_uuid=
+		t_bond_project.supplier_uuid) as supplier_name,
+		(SELECT agency_name from t_bond_ent_agency WHERE agency_id=
+		t_bond_project.agency_id) as agency_name
+		FROM t_bond_project
+		WHERE project_id IN
+		<foreach collection="projectIds" index="index" item="item"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		<if test="projectName != null and projectName != ''">
+			AND project_name = #{projectName}
+		</if>
+	</select>
+
+	<!-- 查询列表 -->
+	<select id="queryPageProjects" resultMap="bondProjectMap"
+		parameterType="java.util.Map">
+		SELECT
+		t_bond_project.*,
+		(SELECT supplier_name from t_bond_ent_supplier WHERE supplier_uuid=
+		t_bond_project.supplier_uuid) as supplier_name,
+		(SELECT agency_name from t_bond_ent_agency WHERE agency_id=
+		t_bond_project.agency_id) as agency_name
+		FROM t_bond_project
+		WHERE 1=1
+		<if test="projectId != null and projectId != ''">
+			AND project_id = #{projectId}
+		</if>
+		<if test="packageId != null and packageId != ''">
+			AND package_id = #{packageId}
+		</if>
+		<if test="projectUuid != null and projectUuid != ''">
+			AND project_uuid = #{projectUuid}
+		</if>
+		<if test="supplierUuid != null and supplierUuid != ''">
+			AND supplier_uuid = #{supplierUuid}
+		</if>
+		<if test="agencyId != null and agencyId != ''">
+			AND agency_id = #{agencyId}
+		</if>
+		<if test="projectCode != null and projectCode != ''">
+			AND project_code = #{projectCode}
+		</if>
+		<if test="projectName != null and projectName != ''">
+			AND project_name = #{projectName}
+		</if>
+		<if test="projectType != null and projectType != ''">
+			AND project_type = #{projectType}
+		</if>
+		<if test="projectMoney != null and projectMoney != ''">
+			AND project_money = #{projectMoney}
+		</if>
+		<if test="projectStatus != null and projectStatus != ''">
+			AND project_status = #{projectStatus}
+		</if>
+		<if test="projectDate != null and projectDate != ''">
+			AND project_date = #{projectDate}
+		</if>
+		<if test="projectUserId != null and projectUserId != ''">
+			AND project_user_id = #{projectUserId}
+		</if>
+		<if test="updateDate != null and updateDate != ''">
+			AND update_date = #{updateDate}
+		</if>
+		<if test="updateUesrName != null and updateUesrName != ''">
+			AND update_uesr_name = #{updateUesrName}
+		</if>
+	</select>
+  	
+  	<!-- 通过订单查询项目-->
+	<select id="findProjectByOrder" parameterType="java.util.Map" resultMap="bondProjectMap">
+		SELECT
+				p.*
+		FROM
+			t_bond_project p 
+			LEFT JOIN t_bond_ent_supplier es ON es.supplier_uuid = p.supplier_uuid
+			left join t_bond_order o on o.supplier_id = es.supplier_id
+			LEFT JOIN t_bond_ent_guarator eg on eg.guarator_id = o.guarator_id
+			WHERE
+			o.order_id=#{orderId}
+     </select>
+</mapper>

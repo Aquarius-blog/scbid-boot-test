@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.bond.dao.BondOrderDao">
+
+	<resultMap type="com.scbid.bond.entity.BondOrderEntity" id="bondOrderMap">
+		<result property="orderId" column="order_id" />
+		<result property="supplierId" column="supplier_id" />
+		<result property="supplierUuid" column="supplier_uuid" />
+		<result property="agencyId" column="agency_id" />
+		<result property="guaratorId" column="guarator_id" />
+		<result property="orderNo" column="order_no" />
+		<result property="orderMoney" column="order_money" />
+		<result property="orderType" column="order_type" />
+		<result property="orderStatus" column="order_status" />
+		<result property="payType" column="pay_type" />
+		<result property="orderDate" column="order_date" />
+		<result property="updateUesrName" column="update_uesr_name" />
+		<result property="updateDate" column="update_date" />
+		
+		<result property="eigenCode" column="eigen_code" />
+		<result property="person" column="person" />
+		<result property="telephone" column="telephone" />
+		 <result property="saleOrderId" column="sale_order_id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="projectCode" column="project_code"/>
+        <result property="projectName" column="project_name"/>
+        <result property="packageId" column="package_id"/>
+        <result property="packagesNum" column="packages_num"/>
+        <result property="packagesName" column="packages_name"/>
+        <result property="bondMoney" column="bond_money"/>
+		
+		<!-- 翻译字段 -->
+		<result property="supplierName" column="supplier_name" />
+		<result property="agencyName" column="agency_name" />
+		<result property="guaratorName" column="guarator_name" />
+	</resultMap>
+
+
+	<select id="selectOrderByParams" resultMap="bondOrderMap" parameterType="java.lang.String">
+    SELECT
+    t_bond_order.*
+    FROM t_bond_order
+    WHERE 1=1 
+    AND sale_order_id = #{saleOrderId} AND project_id = #{projectId} AND package_id = #{packageId}  AND supplier_uuid = #{supplierId} 
+    </select>
+
+	<!-- 查询满足条件的数据 ,关联查询 -->
+	<select id="findSupplierOrderByUser" parameterType="java.util.Map"
+		resultMap="bondOrderMap">
+		SELECT
+		o.*,es.supplier_name,ea.agency_name,eg.guarator_name
+
+		FROM
+		t_bond_order o
+		LEFT JOIN t_bond_ent_supplier es on o.supplier_id =
+		es.supplier_id
+		LEFT JOIN t_bond_project p ON es.supplier_uuid =
+		p.supplier_uuid
+		LEFT JOIN t_bond_ent_agency ea on p.agency_id =
+		ea.agency_id
+		LEFT JOIN t_bond_user u on ea.agency_uuid = u.ent_uuid
+		left join t_bond_ent_guarator eg on eg.guarator_id = o.guarator_id
+		<include refid="whereSql1"></include>
+	</select>
+
+
+	<update id="updateOrderEntityByUrl">
+		update
+		t_bond_order set
+		order_voucher=#{arg0}
+		where
+		order_id=#{arg1}
+	</update>
+	
+	<update id="updateOrderStatus">
+		update
+		t_bond_order set
+		order_status=#{arg0}
+		where
+		order_id=#{arg1}
+	</update>
+
+
+	<select id="guaranteeOrderList" parameterType="java.util.Map"
+		resultMap="bondOrderMap">
+		SELECT DISTINCT
+		orders.*
+		FROM
+		t_bond_user users
+		LEFT JOIN
+		t_bond_ent_guarator
+		guarator
+		on users.ent_uuid = guarator.guarator_uuid
+		JOIN
+		t_bond_order orders
+		on guarator.guarator_id=orders.guarator_id
+		<include refid="whereSql" />
+	</select>
+
+
+	<sql id="whereSql">
+		<where>
+			<if test="userId!=null ">
+				users.user_id = #{userId}
+			</if>
+			<if test="orderNo!=null ">
+				and orders.order_no like
+				CONCAT('%',#{orderNo},'%')
+			</if>
+		</where>
+	</sql>
+	<sql id="whereSql1">
+		<where>
+			<if test="userId!=null ">
+				and u.user_id = #{userId}
+			</if>
+			<if test="orderNo!=null ">
+				and o.order_no like CONCAT('%',#{orderNo},'%')
+			</if>
+		</where>
+	</sql>
+
+	<select id="selectBatchOrderIds" resultMap="bondOrderMap"
+		parameterType="java.util.Map">
+		SELECT
+		t_bond_order.*,
+		(SELECT supplier_name from t_bond_ent_supplier
+		WHERE supplier_id=
+		t_bond_order.supplier_id) as supplier_name,
+		(SELECT
+		agency_name from t_bond_ent_agency WHERE agency_id=
+		t_bond_order.agency_id) as agency_name,
+		(SELECT guarator_name from
+		t_bond_ent_guarator WHERE guarator_id=
+		t_bond_order.guarator_id) as
+		guarator_name
+		FROM t_bond_order
+		WHERE 1=1
+		<if test="orderIds != null and orderIds.size>0" >
+			AND order_id IN
+			<foreach collection="orderIds" index="index" item="item" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="orderNo != null and orderNo != ''">
+			AND order_no = #{orderNo}
+		</if>
+	</select>
+
+
+	<resultMap type="com.scbid.bond.entity.BondOrderEntity" id="newBondOrderMap">
+		<result property="orderId" column="order_id" />
+		<result property="supplierId" column="supplier_id" />
+		<result property="supplierUuid" column="supplier_uuid" />
+		<result property="agencyId" column="agency_id" />
+		<result property="guaratorId" column="guarator_id" />
+		<result property="orderNo" column="order_no" />
+		<result property="orderMoney" column="order_money" />
+		<result property="orderType" column="order_type" />
+		<result property="orderStatus" column="order_status" />
+		<result property="payType" column="pay_type" />
+		<result property="orderDate" column="order_date" />
+		<result property="updateUesrName" column="update_uesr_name" />
+		<result property="updateDate" column="update_date" />
+		<!-- 翻译字段 -->
+		<result property="supplierName" column="supplier_name" />
+		<result property="agencyName" column="agency_name" />
+		<result property="guaratorName" column="guarator_name" />
+		<result property="projectName" column="project_name" />
+	</resultMap>
+
+
+	<select id="selectByOrderNo" resultMap="newBondOrderMap" parameterType="java.lang.String">
+		SELECT
+		t_bond_order.*,
+		(SELECT supplier_name from t_bond_ent_supplier WHERE supplier_id = t_bond_order.supplier_id) as supplier_name,
+		(SELECT agency_name from t_bond_ent_agency WHERE agency_id= t_bond_order.agency_id) as agency_name,
+		(SELECT guarator_name from t_bond_ent_guarator WHERE guarator_id= t_bond_order.guarator_id) as guarator_name
+		FROM t_bond_order
+		WHERE
+		t_bond_order.order_no= #{orderNo}
+	</select>
+
+
+	<!-- 查询列表 -->
+	<select id="queryPageOrders" resultMap="bondOrderMap" parameterType="java.util.Map">
+		SELECT
+		t_bond_order.*,
+		(SELECT supplier_name from t_bond_ent_supplier WHERE supplier_id = t_bond_order.supplier_id) as supplier_name,
+		(SELECT agency_name from t_bond_ent_agency WHERE agency_id= t_bond_order.agency_id) as agency_name,
+		(SELECT guarator_name from t_bond_ent_guarator WHERE guarator_id= t_bond_order.guarator_id) as guarator_name
+		FROM t_bond_order
+		WHERE 1=1 
+		<if test="guaratorIds != null and guaratorIds.size>0" >
+			AND guarator_id IN 
+			<foreach collection="guaratorIds" index="index" item="item" open="(" separator="," close=")">
+	           #{item}
+	       	</foreach>
+		</if>
+		<if test="orderId != null and orderId != ''">
+			AND order_id = #{orderId}
+		</if>
+		<if test="supplierId != null and supplierId != ''">
+			AND supplier_id = #{supplierId}
+		</if>
+		<if test="supplierUuid != null and supplierUuid != ''">
+			AND supplier_uuid = #{supplierUuid}
+		</if>
+		<if test="agencyId != null and agencyId != ''">
+			AND agency_id = #{agencyId}
+		</if>
+		<if test="guaratorId != null and guaratorId != ''">
+			AND guarator_id = #{guaratorId}
+		</if>
+		<if test="orderNo != null and orderNo != ''">
+			AND order_no = #{orderNo}
+		</if>
+		<if test="orderMoney != null and orderMoney != ''">
+			AND order_money = #{orderMoney}
+		</if>
+		<if test="orderType != null and orderType != ''">
+			AND order_type = #{orderType}
+		</if>
+		<if test="orderStatus != null and orderStatus != ''">
+			AND order_status = #{orderStatus}
+		</if>
+		<if test="payType != null and payType != ''">
+			AND pay_type = #{payType}
+		</if>
+		<if test="orderDate != null and orderDate != ''">
+			AND order_date = #{orderDate}
+		</if>
+		<if test="updateUesrName != null and updateUesrName != ''">
+			AND update_uesr_name = #{updateUesrName}
+		</if>
+		<if test="updateDate != null and updateDate != ''">
+			AND update_date = #{updateDate}
+		</if>
+		ORDER BY order_date DESC
+	</select>
+</mapper>

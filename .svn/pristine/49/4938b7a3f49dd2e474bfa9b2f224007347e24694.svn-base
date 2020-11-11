@@ -1,0 +1,66 @@
+package com.scbid.manage.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.scbid.common.datasources.DataSourceNames;
+import com.scbid.common.datasources.TargetDataSource;
+import com.scbid.common.utils.PageUtils;
+import com.scbid.common.utils.Query;
+import com.scbid.manage.dao.TenderBidBookSaleRecordDao;
+import com.scbid.manage.entity.TenderBidBookSaleRecordEntity;
+import com.scbid.manage.service.TenderBidBookSaleRecordService;
+
+
+@Service("tenderBidBookSaleRecordService")
+public class TenderBidBookSaleRecordServiceImpl extends ServiceImpl<TenderBidBookSaleRecordDao, TenderBidBookSaleRecordEntity> implements TenderBidBookSaleRecordService {
+
+    @Override
+    @TargetDataSource(name=DataSourceNames.SECOND)
+    public PageUtils queryPage(Map<String, Object> params) {
+        Page<TenderBidBookSaleRecordEntity> page = this.selectPage(
+                new Query<TenderBidBookSaleRecordEntity>(params).getPage(),
+                new EntityWrapper<TenderBidBookSaleRecordEntity>()
+        );
+
+        return new PageUtils(page);
+    }
+
+	@Override
+	@TargetDataSource(name=DataSourceNames.SECOND)
+	public List<TenderBidBookSaleRecordEntity> selectList() {
+		return baseMapper.selectList(null);
+	}
+
+	@Override
+	@TargetDataSource(name=DataSourceNames.SECOND)
+	public PageUtils bidBookSaleRecordPage(Map<String, Object> params) {
+		Page<TenderBidBookSaleRecordEntity> page = new Query<TenderBidBookSaleRecordEntity>(params).getPage();
+		page.setRecords(baseMapper.tenderBidBookSaleRecordPage(page,params));
+		return new PageUtils(page);
+	}
+
+	@Override
+	@TargetDataSource(name=DataSourceNames.SECOND)
+	public List<TenderBidBookSaleRecordEntity> selectBatchIds(List<String> idList) {
+		return baseMapper.selectBatchIds(idList);
+	}
+
+	@Override
+	@TargetDataSource(name=DataSourceNames.SECOND)
+	public boolean updatePayTheDeposit(Map<String, Object> params) {
+		return baseMapper.updatePayTheDeposit(params);
+	}
+
+	@Override
+	@TargetDataSource(name=DataSourceNames.SECOND)
+	public List<TenderBidBookSaleRecordEntity> selectByMapIn(Map<String, Object> params) {
+		return baseMapper.selectByMapIn(params);
+	}
+
+}

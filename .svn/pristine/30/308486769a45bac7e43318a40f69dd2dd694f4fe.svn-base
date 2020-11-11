@@ -1,0 +1,198 @@
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="itemModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<div class="col-sm-2 control-label">担保机构全称</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorName" placeholder="担保机构全称" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">公司规模 0微型，1小型，2中型，3大型</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorScale"
+								placeholder="公司规模 0微型，1小型，2中型，3大型" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">担保机构公司电话</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorPhone" placeholder="担保机构公司电话" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">担保机构执照号</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorLicenseNo" placeholder="担保机构执照号" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">担保机构执照号图片</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorLicenseImg"
+								placeholder="担保机构执照号图片" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">公司注册资本</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorCapital" placeholder="公司注册资本" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">邮编</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorPostcode" placeholder="邮编" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">公司性质</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorSort" placeholder="公司性质" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">纳税人识别号</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorTaxpayerNo" placeholder="纳税人识别号" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">注册证号</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorRegNumber" placeholder="注册证号" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">法人电话</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorLegalPhone" placeholder="法人电话" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">传真</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorFaxes" placeholder="传真" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">开户行</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorBankAccount" placeholder="开户行" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">银行账号</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorBankNumber" placeholder="银行账号" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">公司地址</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorAddress" placeholder="公司地址" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">行业</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorIndustry" placeholder="行业" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">法人代表</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorLegalPepre" placeholder="法人代表" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">建立时间</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorEstabDate" placeholder="建立时间" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">营业期限</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorOpenatingPeriod"
+								placeholder="营业期限" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">注册地址</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorRegAdress" placeholder="注册地址" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">公司类型</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorCompanyType" placeholder="公司类型" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">担保机构状态</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorStatus" placeholder="担保机构状态" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">备注</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorRemarks" placeholder="备注" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">担保机构创建时间</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control"
+								v-model="bondEnguarator.guaratorDate" placeholder="担保机构创建时间" />
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+				</button>
+				<input id="saveOrUpdate" type="button" class="btn btn-primary"
+					@click="saveOrUpdate" value="确定" />
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

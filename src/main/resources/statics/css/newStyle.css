@@ -1,0 +1,44 @@
+.btn-primary, .btn-success, .btn-info, .btn-warning {
+	background-color: #fff;
+}
+
+.btn-primary {
+	color: #337ab7;
+}
+
+.btn-primary:hover {
+	color: #286090;
+	background-color: rgba(40, 96, 144, .2);
+}
+
+.btn-success {
+	color: #5cb85c;
+}
+
+.btn-success:hover {
+	color: #449d44;
+	background-color: rgba(68, 159, 68, .2);
+}
+
+.btn-info {
+	color: #5bc0de;
+}
+
+.btn-info:hover {
+	color: #31b0d5;
+	background-color: rgba(49, 176, 213, .2);
+}
+
+.btn-warning {
+	color: #f0ad4e;
+}
+
+.btn-warning:hover {
+	color: #ec971f;
+	background-color: rgba(236, 151, 31, .2);
+}
+
+.voucher-body{
+	width:630px;
+	margin:0 auto;
+}

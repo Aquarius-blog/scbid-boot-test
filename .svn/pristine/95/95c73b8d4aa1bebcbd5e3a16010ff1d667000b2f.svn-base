@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.manage.dao.CrmSupplierLinkmanDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.scbid.manage.entity.CrmSupplierLinkmanEntity" id="crmSupplierLinkmanMap">
+        <result property="listId" column="LIST_ID"/>
+        <result property="name" column="NAME"/>
+        <result property="phone" column="PHONE"/>
+        <result property="company" column="COMPANY"/>
+        <result property="password" column="PASSWORD"/>
+        <result property="isDelete" column="IS_DELETE"/>
+        <result property="operator" column="OPERATOR"/>
+        <result property="operateTime" column="OPERATE_TIME"/>
+        <result property="creater" column="CREATER"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="domainAuth" column="DOMAIN_AUTH"/>
+        <result property="identCardUrl" column="IDENT_CARD_URL"/>
+        <result property="remark" column="REMARK"/>
+        <result property="mail" column="MAIL"/>
+        <result property="creatorId" column="CREATOR_ID"/>
+        <result property="authorizationUrl" column="AUTHORIZATION_URL"/>
+        <result property="goodsSite" column="GOODS_SITE"/>
+        <result property="jobPost" column="JOB_POST"/>
+    </resultMap>
+    
+    <!-- 查询列表 -->
+	<select id="crmSupplierLinkmanPage" resultMap="crmSupplierLinkmanMap" parameterType="java.util.Map">
+	SELECT
+    t_crm_supplier_linkman.*
+    FROM t_crm_supplier_linkman
+    WHERE 1=1
+   <if test="listId != null" >
+       AND LIST_ID = #{listId}
+    </if>
+   <if test="name != null" >
+       AND NAME = #{name}
+    </if>
+   <if test="phone != null" >
+       AND PHONE = #{phone}
+    </if>
+   <if test="company != null" >
+       AND COMPANY = #{company}
+    </if>
+   <if test="password != null" >
+       AND PASSWORD = #{password}
+    </if>
+   <if test="isDelete != null" >
+       AND IS_DELETE = #{isDelete}
+    </if>
+   <if test="operator != null" >
+       AND OPERATOR = #{operator}
+    </if>
+   <if test="operateTime != null" >
+       AND OPERATE_TIME = #{operateTime}
+    </if>
+   <if test="creater != null" >
+       AND CREATER = #{creater}
+    </if>
+   <if test="createTime != null" >
+       AND CREATE_TIME = #{createTime}
+    </if>
+   <if test="domainAuth != null" >
+       AND DOMAIN_AUTH = #{domainAuth}
+    </if>
+   <if test="identCardUrl != null" >
+       AND IDENT_CARD_URL = #{identCardUrl}
+    </if>
+   <if test="remark != null" >
+       AND REMARK = #{remark}
+    </if>
+   <if test="mail != null" >
+       AND MAIL = #{mail}
+    </if>
+   <if test="creatorId != null" >
+       AND CREATOR_ID = #{creatorId}
+    </if>
+   <if test="authorizationUrl != null" >
+       AND AUTHORIZATION_URL = #{authorizationUrl}
+    </if>
+   <if test="goodsSite != null" >
+       AND GOODS_SITE = #{goodsSite}
+    </if>
+   <if test="jobPost != null" >
+       AND JOB_POST = #{jobPost}
+    </if>
+	</select>
+</mapper>

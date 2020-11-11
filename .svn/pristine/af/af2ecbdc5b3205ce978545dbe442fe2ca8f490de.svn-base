@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.sys.dao.BondDictDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.scbid.sys.entity.BondDictEntity" id="bondDictMap">
+        <result property="dictId" column="dict_id"/>
+        <result property="dictName" column="dict_name"/>
+        <result property="dictType" column="dict_type"/>
+        <result property="dictCode" column="dict_code"/>
+        <result property="dictValue" column="dict_value"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="remark" column="remark"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+
+</mapper>

@@ -1,0 +1,25 @@
+package com.scbid;
+
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
+
+/**
+ * @Title: BondAdminApplication.java
+ * @Description: BondAdmin项目启动类
+ * @Package com.scbid.bond
+ * @Author: wangyun
+ * @Date: 2018年5月11日
+ * @Copyright: 四川国际招标有限责任公司 注意：本内容仅限于必朗科技内部传阅，禁止外泄以及用于其他的商业目的
+ */
+@SpringBootApplication
+@MapperScan(basePackages = {"com.scbid.*.dao"})
+//@EnableDiscoveryClient
+@EnableFeignClients
+public class BondAdminApplication{
+	
+	public static void main(String[] args) {
+		SpringApplication.run(BondAdminApplication.class, args);
+	}
+}

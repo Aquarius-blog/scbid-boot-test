@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Home</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<#include "/web/common/css.html">
+
+
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+	<div id="wrapper" class="home-page">
+		<!-- start header -->
+		<#include "/web/common/header.html">
+		<!-- end header -->
+		<section id="banner">
+
+			<!-- Slider -->
+			<div id="main-slider" class="flexslider">
+				<ul class="slides">
+					<li><img
+						src="${request.contextPath}/statics/web/img/slides/1.jpg" alt="" />
+						<div class="flex-caption">
+							<h3>自律公约签订</h3>
+							<p>政府采购行业自律公约签订，助力透明度提升</p>
+
+						</div></li>
+					<li><img
+						src="${request.contextPath}/statics/web/img/slides/2.jpg" alt="" />
+						<div class="flex-caption">
+							<h3>荣誉证书</h3>
+							<p>殊荣再续，精进不止。</p>
+
+						</div></li>
+				</ul>
+			</div>
+			<!-- end slider -->
+
+		</section>
+		<section id="call-to-action-2">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-10 col-sm-9">
+						<h3>欢迎来到四川国际招标有限责任公司</h3>
+						<p>四川国际招标有限责任公司于2002年经原四川省对外贸易经济合作厅（现四川省商务厅）批准成立。业务链目前已涵盖招标采购代理、进出口贸易、商务咨询、投融资咨询、采购管理咨询、培训等服务类别，为客户提供个性化服务及项目全案解决方案。</p>
+					</div>
+					<div class="col-md-2 col-sm-3">
+						<a href="http://www.sichuanbidding.com/index.html"
+							class="btn btn-primary">前往首页</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section id="content">
+			
+
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="aligncenter">
+							<h2 class="aligncenter">业务介绍</h2>
+							招标代理 ①政府采购代理：为各级政府部门、公共事业单位、国企等提供财政资金采购代理服务。
+							②国际招标代理：为各级政府部门、公共事业单位、各类企业提供各种国际投资采购代理服务。
+							③中央投资项目招标代理：全部或部分使用中央预算内投资资金（含国债）、专项建设基金、国家主权外债资金和其他中央财政性投资资金的固定资产投资项目的招标代理业务。
+							④工程招标代理：代理各类土木工程、建筑工程、线路管道工程、设备安装工程和装饰装修工程、道路桥梁、园林绿化等项目的勘察、设计、施工、监理以及与工程建设有关的重要设备（进口机电产品除外）、材料采购的招标业务。
+							⑤PPP采购代理
+						</div>
+						<br />
+					</div>
+				</div>
+				<div class="row">
+					<div class="skill-home">
+						<div class="skill-home-solid clearfix">
+							<div class="col-md-3 text-center">
+								<a
+									href="http://www.sichuanbidding.com/zzry/&FrontNews_list01-1449044617553_pageNo=1&FrontNews_list01-1449044617553_pageSize=9.html">
+									<span class="icons c1"><i class="fa fa-trophy"></i></span>
+									<div class="box-area">
+										<h3>荣誉故事</h3>
+										<p>中国招标投标协会企业信用评价AAA级、2016年度中国政府采购优秀PPP咨询机构奖、2016年度中国政府采购优秀代理机构奖</p>
+									</div>
+								</a>
+							</div>
+							<div class="col-md-3 text-center">
+								<a
+									href="http://www.sichuanbidding.com/abouts/i=12&comContentId=12.html">
+									<span class="icons c2"><i class="fa fa-picture-o"></i></span>
+									<div class="box-area">
+										<h3>企业文化</h3>
+										<p>川招企业文化是由企业愿景、使命、核心价值观和核心理念所共同构成。愿景是目标，使命是责任，五大根本理念支撑“以德为本，从我做起”的核心价值观，并作为川招人不变的秉持，以达成我们的愿景，并践行我们的使命。</p>
+									</div>
+								</a>
+							</div>
+							<div class="col-md-3 text-center">
+								<a
+									href="http://www.sichuanbidding.com/abouts/i=15&comContentId=15.html">
+									<span class="icons c3"><i class="fa fa-desktop"></i></span>
+									<div class="box-area">
+										<h3>组织机构</h3>
+									</div>
+								</a>
+							</div>
+
+							<div class="col-md-3 text-center">
+								<a
+									href="http://www.sichuanbidding.com/abouts/i=27&comContentId=27.html">
+									<span class="icons c4"><i class="fa fa-globe"></i></span>
+									<div class="box-area">
+										<h3>分支机构</h3>
+										<p>四川国际招标有限责任公司青海分公司、四川国际招标有限责任公司海南分公司、四川国际招标有限责任公司陕西分公司、攀枝花办事处、攀枝花办事处、甘孜办事处、凉山办事处</p>
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+		</section>
+
+		<section class="section-padding gray-bg">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="section-title text-center">
+							<h2>关于我们</h2>
+							<p>
+								四川国际招标有限责任公司于2002年经原四川省对外贸易经济合作厅（现四川省商务厅）批准成立。业务链目前已涵盖招标采购代理、进出口贸易、商务咨询、投融资咨询、采购管理咨询、培训等服务类别，为客户提供个性化服务及项目全案解决方案。
+
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6 col-sm-6">
+						<div class="about-text">
+							<p>本着“以德为本，从我做起”的核心价值观，“用心服务，追求卓越”的经营理念，迄今已为政府机构部门、公共事业及科研单位、国企、外资及各类私营企业等数万家客户提供了优质服务，得到了各方人士一致好评。川招成长至今，累计业绩近千亿，并先后荣获“中国招投标30年杰出企业”、“招标代理机构全国十大品牌”、“中国政府采购全国十大优秀代理机构”、“诚信创优5A级先进单位”、“中国招标投标协会企业信用评价AAA级”“招标采购文化研究与实践基地”、“中国招标代理机构五星级优质服务奖”、“中国政府采购优秀PPP咨询机构奖”等多项荣誉，公司董事长张红女士荣获社会代理机构首个“中国政府采购奖年度人物奖”。</p>
+
+							<ul>
+								<li>公司地址：四川省成都市高新区天府大道中段天府四街66号航兴国际广场1号楼17层</li>
+								<li>公司网站：http://www.sichuanbidding.com/</li>
+								<li>电话：028-87797107</li>
+								<li>传真：028-87793161　</li>
+							</ul>
+							<a href="http://www.sichuanbidding.com/index.html" class="btn btn-primary">前往</a>
+						</div>
+					</div>
+					<div class="col-md-6 col-sm-6">
+						<div class="about-image">
+							<img src="${request.contextPath}/statics/web/img/about.jpg"
+								alt="About Images">
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section id="clients">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="aligncenter">
+							<h2 class="aligncenter">合作伙伴</h2>
+							<!-- Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores
+							quae porro consequatur aliquam, incidunt eius magni provident,
+							doloribus omnis minus ovident, doloribus omnis minus temporibus
+							perferendis nesciunt.. -->
+						</div>
+						<br />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2 col-sm-4 client">
+						<div class="img client1"></div>
+					</div>
+					<!-- <div class="col-md-2 col-sm-4 client">
+						<div class="img client2"></div>
+					</div>
+					<div class="col-md-2 col-sm-4 client">
+						<div class="img client3"></div>
+					</div>
+					<div class="col-md-2 col-sm-4 client">
+						<div class="img client1"></div>
+					</div>
+					<div class="col-md-2 col-sm-4 client">
+						<div class="img client2"></div>
+					</div>
+					<div class="col-md-2 col-sm-4 client">
+						<div class="img client3"></div>
+					</div> -->
+				</div>
+			</div>
+		</section>
+		<#include "/web/common/footer.html">
+	</div>
+	<a href="#" class="scrollup"><i class="fa fa-angle-up active"></i></a>
+	<#include "/web/common/script.html">
+	<script>
+		$(function(){
+			addActive('1')
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="orderItemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+			</div>
+			<div class="modal-body">
+        	<form class="form-horizontal">
+        		<div class=""  v-for="bondOrder in bondOrders">
+					<h4 class="media-heading">代理机构:{{bondOrder.agencyName}}</h4>
+					<p>保证金编号:{{bondOrder.orderNo}}</p>
+					<p>项目金额:{{bondOrder.projectMoney}}</p>
+					<p>项目担保比例:{{bondOrder.projectProportion}}</p>
+					<p>创建时间:{{bondOrder.orderDate}}</p>
+				</div>
+				<div class="form-group">
+                  <div class="col-sm-2 control-label">担保机构</div>
+                  <div class="col-sm-10">
+                  	  <select class="form-control" @change="changeGuarator($event)">
+                  	  	<option value="">请选择担保机构</option>
+                  	  	<option v-for="(itme,key) in bondEnguarators" :value="itme.guaratorId" v-model="bondOrder.guaratorId">{{itme.guaratorName}}</option>
+                  	  </select>
+                  </div>
+              	</div>
+            	<div class="form-group">
+                  <div class="col-sm-2 control-label">申请担保金额</div>
+                  <div class="col-sm-10">
+                      <input type="text" class="form-control" v-model="bondOrder.orderMoney" placeholder="申请担保金额"/>
+                  </div>
+              </div>
+    		  <div class="form-group">
+              <div class="col-sm-2 control-label"></div>
+	    		  <div class="col-sm-10">
+	    			 <a @click="guaranteeAgreement">担保协议书</a>
+	    		  </div>
+    		  </div>
+              </form>
+    		</div>
+    		
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" @click="close">关闭 </button>
+				<input id="saveOrUpdate" type="button" class="btn btn-primary" @click="bondPost" value="确定"/>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

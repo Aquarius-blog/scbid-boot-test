@@ -1,0 +1,29 @@
+package com.scbid.feign.service;
+
+import java.util.Map;
+
+import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.scbid.common.utils.Product;
+
+import io.swagger.annotations.ApiOperation;
+
+@FeignClient("pay-service")
+public interface PayService {
+
+	/**
+	 * 支持支付宝及微信当面付
+	 * @Title: tradePay
+	 * @Description: TODO
+	 * @author: wangyun
+	 * @date: 2018年6月1日 下午2:46:14
+	 * @param product
+	 * @return
+	 */
+	@ApiOperation(value = "当面扫码付")
+	@RequestMapping(value = "/tradePay/pay", method = {RequestMethod.POST, RequestMethod.GET})
+	Map<String, String> tradePay(@RequestBody Product product);
+}

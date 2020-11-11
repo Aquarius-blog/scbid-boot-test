@@ -1,0 +1,96 @@
+package com.scbid.sys.entity;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+
+/**
+ * 角色表
+ * 
+ * @author wangyun
+ * @email 278812723
+ * @date 2018-05-12 08:25:09
+ */
+@TableName("t_bond_role")
+public class BondRoleEntity implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 角色主键ID
+	 */
+	@TableId
+	private Long roleId;
+	/**
+	 * 角色名称
+	 */
+	private String roleName;
+	/**
+	 * 备注
+	 */
+	private String remark;
+	/**
+	 * 创建时间
+	 */
+	private String createTime;
+
+	@TableField(exist = false)
+	private List<Long> menuIdList;
+
+	/**
+	 * 设置：角色主键ID
+	 */
+	public void setRoleId(Long roleId) {
+		this.roleId = roleId;
+	}
+	/**
+	 * 获取：角色主键ID
+	 */
+	public Long getRoleId() {
+		return roleId;
+	}
+	/**
+	 * 设置：角色名称
+	 */
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+	/**
+	 * 获取：角色名称
+	 */
+	public String getRoleName() {
+		return roleName;
+	}
+	/**
+	 * 设置：备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	/**
+	 * 获取：备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	/**
+	 * 设置：创建时间
+	 */
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+	/**
+	 * 获取：创建时间
+	 */
+	public String getCreateTime() {
+		return createTime;
+	}
+	public List<Long> getMenuIdList() {
+		return menuIdList;
+	}
+	public void setMenuIdList(List<Long> menuIdList) {
+		this.menuIdList = menuIdList;
+	}
+}

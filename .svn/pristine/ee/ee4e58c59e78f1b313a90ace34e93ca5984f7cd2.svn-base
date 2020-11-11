@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+   	<#include "/header.html">
+</head>
+<body>
+<div id="rrapp">
+        <div class="grid-btn">
+	        <form id="queryForm" action="">
+	       		<div class="form-group col-sm-2">
+					<input type="text" class="form-control"    v-model="q.projectName" @keyup.enter="query" placeholder="仅支持项目名称搜索">
+				</div>
+	        	<a class="btn btn-default" @click="query">&nbsp;查询</a>
+				<a class="btn btn-primary" @click="add">&nbsp;新增</a>
+				<a class="btn btn-primary" @click="importPage">&nbsp;导入</a>
+				<a class="btn btn-primary" @click="exportPage">&nbsp;导出</a>
+				<a class="btn btn-primary" @click="del">&nbsp;批量删除</a>
+	        </form>
+        </div>
+        <table id="table"></table>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+			</div>
+			<div class="modal-body">
+        	<form class="form-horizontal">
+                                                                            <div class="form-group">
+                        <div class="col-sm-2 control-label">分包 主键ID</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondProject.packageId" placeholder="分包 主键ID"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">全局唯一项目主键UUID 与OA系统对接</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondProject.projectUuid" placeholder="全局唯一项目主键UUID 与OA系统对接"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">供应商uuid 与oa 系统对接</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondProject.supplierUuid" placeholder="供应商uuid 与oa 系统对接"/>
+                        </div>
+                    </div>
+             <!--                                                    <div class="form-group">
+                        <div class="col-sm-2 control-label">代理机构主键ID</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondProject.agencyId" placeholder="代理机构主键ID"/>
+                        </div>
+                    </div> -->
+                    
+                    					 		<div class="form-group"> 
+	                     	<div class="col-sm-2 control-label">请选择代理商</div>
+	                     	<div class="col-sm-10"  >
+		                        <select class="form-control"  @click="selectAgency" v-model="bondProject.agencyId">
+		                        	<option v-for="item in agencys" :value="item.agencyId">{{item.agencyName}}</option>
+		                        </select>
+			                </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">项目编码</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondProject.projectCode" placeholder="项目编码"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">项目名称</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondProject.projectName" placeholder="项目名称"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">项目类型</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondProject.projectType" placeholder="项目类型"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">项目金额</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondProject.projectMoney" placeholder="项目金额"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">项目状态</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondProject.projectStatus" placeholder="项目状态"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">项目创建时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondProject.projectDate" placeholder="项目创建时间"/>
+                        </div>
+                    </div>
+             <!--                                                    <div class="form-group">
+                        <div class="col-sm-2 control-label">项目监管人</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondProject.projectUserName" placeholder="项目监管人"/>
+                        </div>
+                    </div> -->
+                    
+                    
+                  						 <div class="form-group"> 
+	                     	<div class="col-sm-2 control-label">项目监管人</div>
+	                     	<div class="col-sm-10"  >
+		                       <select class="form-control"  @click="selectProjectUser" v-model="bondProject.projectUserId" >
+		                       		<option value="">请选择</option>
+		                        	<option v-for="item in user" :value="item.userId">{{item.userSurname}}</option>
+		                        </select>
+			                </div>
+                    </div>
+                    
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">最后修改时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondProject.updateDate" placeholder="最后修改时间"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">最后修改人</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondProject.updateUesrName" placeholder="最后修改人"/>
+                        </div>
+                    </div>
+                                    	</form>
+    		</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭 </button>
+				<input id="saveOrUpdate" type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div>
+<script src="${request.contextPath}/statics/js/modules/guarator/bondproject.js?_${.now?long}"></script>
+</body>
+</html>

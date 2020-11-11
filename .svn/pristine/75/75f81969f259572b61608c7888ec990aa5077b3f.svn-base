@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+   	<#include "/header.html">
+</head>
+<body>
+	<div id="rrapp">
+        <div id="toolbar">
+	        <form id="queryForm" action="">
+	       		<div class="form-group col-sm-2">
+					<input type="text" class="form-control" v-model="q.guaratorName" @keyup.enter="query" placeholder="">
+				</div>
+	        	<a class="btn btn-default" @click="query">&nbsp;查询</a>
+				<a class="btn btn-primary" @click="add">&nbsp;新增</a>
+				<a class="btn btn-primary" @click="importPage">&nbsp;导入</a>
+				<a class="btn btn-primary" @click="exportPage">&nbsp;导出</a>
+				<a class="btn btn-primary" @click="del">&nbsp;批量删除</a>
+	        </form>
+        </div>
+        <table id="table"></table>
+		<#include "/modules/agency/agency-add.html">
+</div>
+<script src="${request.contextPath}/statics/js/modules/supplier/bondenagency.js?_${.now?long}"></script>
+</body>
+</html>

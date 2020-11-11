@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.bond.dao.BondEnagencyDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.scbid.bond.entity.BondEnagencyEntity" id="bondEnagencyMap">
+        <result property="agencyId" column="agency_id"/>
+        <result property="agencyUuid" column="agency_uuid"/>
+        <result property="agencyScale" column="agency_scale"/>
+        <result property="agencyName" column="agency_name"/>
+        <result property="agencyPhone" column="agency_phone"/>
+        <result property="agencyPostcode" column="agency_postcode"/>
+        <result property="agencyCapital" column="agency_capital"/>
+        <result property="agencySort" column="agency_sort"/>
+        <result property="agencyFaxes" column="agency_faxes"/>
+        <result property="agencyTaxpayerNo" column="agency_taxpayer_no"/>
+        <result property="agencyBankNumber" column="agency_bank_number"/>
+        <result property="agencyAddress" column="agency_address"/>
+        <result property="agencyLicenseImg" column="agency_license_img"/>
+        <result property="agencyLicenseNo" column="agency_license_no"/>
+        <result property="agencyIndustry" column="agency_industry"/>
+        <result property="agencyLegalPepre" column="agency_legal_pepre"/>
+        <result property="agencyEstabDate" column="agency_estab_date"/>
+        <result property="agencyOpenatingPeriod" column="agency_openating_period"/>
+        <result property="agencyRegAdress" column="agency_reg_adress"/>
+        <result property="agencyCompanyType" column="agency_company_type"/>
+        <result property="agencyBankAccount" column="agency_bank_account"/>
+        <result property="agencyRegNumber" column="agency_reg_number"/>
+        <result property="agencyLegalPhone" column="agency_legal_phone"/>
+        <result property="agencyRemarks" column="agency_remarks"/>
+        <result property="agencyStatus" column="agency_status"/>
+        <result property="agencyDate" column="agency_date"/>
+        <result property="agencyUserId" column="agency_user_id"/>
+        <result property="updateUesrName" column="update_uesr_name"/>
+        <result property="updateDate" column="update_date"/>
+    </resultMap>
+
+
+	<!-- 查询所有代理商 -->
+	<select id="selectAll" resultType="com.scbid.bond.entity.BondEnagencyEntity">
+		select * from t_bond_ent_agency
+	</select>
+	
+    <select id="selectBatchAgencyIds" resultMap="bondEnagencyMap" parameterType="java.util.Map">
+       SELECT
+       t_bond_ent_agency.*
+       FROM t_bond_ent_agency
+       WHERE agency_id IN
+       <foreach collection="agencyIds" index="index" item="item" open="(" separator="," close=")">
+           #{item}
+       </foreach>
+       <if test="agencyName != null and agencyName != ''">
+           AND agency_name = #{agencyName}
+       </if>
+   </select>
+
+ <!-- 查询列表 -->
+	<select id="queryPageAgencys" resultMap="bondEnagencyMap" parameterType="java.util.Map">
+	SELECT
+    t_bond_ent_agency.*
+    FROM t_bond_ent_agency
+    WHERE 1=1
+   <if test="agencyId != null and agencyId != ''" >
+       AND agency_id = #{agencyId}
+    </if>
+   <if test="agencyUuid != null and agencyUuid != ''" >
+       AND agency_uuid = #{agencyUuid}
+    </if>
+   <if test="agencyScale != null and agencyScale != ''" >
+       AND agency_scale = #{agencyScale}
+    </if>
+   <if test="agencyName != null and agencyName != ''" >
+       AND agency_name = #{agencyName}
+    </if>
+   <if test="agencyPhone != null and agencyPhone != ''" >
+       AND agency_phone = #{agencyPhone}
+    </if>
+   <if test="agencyPostcode != null and agencyPostcode != ''" >
+       AND agency_postcode = #{agencyPostcode}
+    </if>
+   <if test="agencyCapital != null and agencyCapital != ''" >
+       AND agency_capital = #{agencyCapital}
+    </if>
+   <if test="agencySort != null and agencySort != ''" >
+       AND agency_sort = #{agencySort}
+    </if>
+   <if test="agencyFaxes != null and agencyFaxes != ''" >
+       AND agency_faxes = #{agencyFaxes}
+    </if>
+   <if test="agencyTaxpayerNo != null and agencyTaxpayerNo != ''" >
+       AND agency_taxpayer_no = #{agencyTaxpayerNo}
+    </if>
+   <if test="agencyBankNumber != null and agencyBankNumber != ''" >
+       AND agency_bank_number = #{agencyBankNumber}
+    </if>
+   <if test="agencyAddress != null and agencyAddress != ''" >
+       AND agency_address = #{agencyAddress}
+    </if>
+   <if test="agencyLicenseImg != null and agencyLicenseImg != ''" >
+       AND agency_license_img = #{agencyLicenseImg}
+    </if>
+   <if test="agencyLicenseNo != null and agencyLicenseNo != ''" >
+       AND agency_license_no = #{agencyLicenseNo}
+    </if>
+   <if test="agencyIndustry != null and agencyIndustry != ''" >
+       AND agency_industry = #{agencyIndustry}
+    </if>
+   <if test="agencyLegalPepre != null and agencyLegalPepre != ''" >
+       AND agency_legal_pepre = #{agencyLegalPepre}
+    </if>
+   <if test="agencyEstabDate != null and agencyEstabDate != ''" >
+       AND agency_estab_date = #{agencyEstabDate}
+    </if>
+   <if test="agencyOpenatingPeriod != null and agencyOpenatingPeriod != ''" >
+       AND agency_openating_period = #{agencyOpenatingPeriod}
+    </if>
+   <if test="agencyRegAdress != null and agencyRegAdress != ''" >
+       AND agency_reg_adress = #{agencyRegAdress}
+    </if>
+   <if test="agencyCompanyType != null and agencyCompanyType != ''" >
+       AND agency_company_type = #{agencyCompanyType}
+    </if>
+   <if test="agencyBankAccount != null and agencyBankAccount != ''" >
+       AND agency_bank_account = #{agencyBankAccount}
+    </if>
+   <if test="agencyRegNumber != null and agencyRegNumber != ''" >
+       AND agency_reg_number = #{agencyRegNumber}
+    </if>
+   <if test="agencyLegalPhone != null and agencyLegalPhone != ''" >
+       AND agency_legal_phone = #{agencyLegalPhone}
+    </if>
+   <if test="agencyRemarks != null and agencyRemarks != ''" >
+       AND agency_remarks = #{agencyRemarks}
+    </if>
+   <if test="agencyStatus != null and agencyStatus != ''" >
+       AND agency_status = #{agencyStatus}
+    </if>
+   <if test="agencyDate != null and agencyDate != ''" >
+       AND agency_date = #{agencyDate}
+    </if>
+   <if test="agencyUserId != null and agencyUserId != ''" >
+       AND agency_user_id = #{agencyUserId}
+    </if>
+   <if test="updateUesrName != null and updateUesrName != ''" >
+       AND update_uesr_name = #{updateUesrName}
+    </if>
+   <if test="updateDate != null and updateDate != ''" >
+       AND update_date = #{updateDate}
+    </if>
+	</select>
+</mapper>

@@ -1,0 +1,160 @@
+package com.didispace;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
+import com.google.common.io.Files;
+import com.scbid.BondAdminApplication;
+import com.scbid.common.utils.R;
+import com.scbid.sys.entity.BondUserEntity;
+import com.scbid.sys.service.BondUserService;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest(classes = BondAdminApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@EnableAutoConfiguration
+public class ApplicationTests {
+
+	protected Logger logger = LoggerFactory.getLogger(getClass());
+	
+	@Autowired
+	private BondUserService bondUserService;
+	
+	@Autowired
+    private TestRestTemplate testRestTemplate;
+	
+	@Before
+	public void setUp() {
+
+	}
+
+	/**
+	 * Service测试
+	 * @throws Exception
+	 */
+	@Test
+	public void test() throws Exception {
+		BondUserEntity user = new BondUserEntity();
+		BondUserEntity loginUser = new BondUserEntity();
+		user.setLoginNo("super");
+		user.setPassword("123456");
+		loginUser.setUserSurname("001");
+		
+		bondUserService.save(user, loginUser);
+
+	}
+	/**
+	 * GET请求测试
+	 * @throws Exception
+	 */
+	@Test
+    public void get() throws Exception {
+        Map<String,String> multiValueMap = new HashMap<>();
+        multiValueMap.put("username","lake");//传值，但要在url上配置相应的参数
+        R result = testRestTemplate.getForObject("/sys/user/info/1",R.class,multiValueMap);
+        logger.info(String.valueOf(result));
+    }
+	/**
+	 * POST请求测试
+	 * @throws Exception
+	 */
+	@Test
+    public void post() throws Exception {
+        MultiValueMap<String,Object> multiValueMap = new LinkedMultiValueMap<String,Object>();
+        multiValueMap.add("username","lake");
+        R result = testRestTemplate.postForObject("/test/post",multiValueMap,R.class);
+        logger.info(String.valueOf(result));
+    }
+	
+	/**
+	 * file文件上传测试
+	 * @throws Exception
+	 */
+	@Test
+    public void upload() throws Exception {
+        Resource resource = new FileSystemResource("/home/lake/github/wopi/build.gradle");
+        MultiValueMap<String,Object> multiValueMap = new LinkedMultiValueMap<String,Object>();
+        multiValueMap.add("username","lake");
+        multiValueMap.add("files",resource);
+        R result = testRestTemplate.postForObject("/test/upload",multiValueMap,R.class);
+        logger.info(String.valueOf(result));
+    }
+	
+	/**
+	 * file文件下载测试
+	 * @throws Exception
+	 */
+	@Test
+    public void download() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("token","xxxxxx");
+        HttpEntity formEntity = new HttpEntity(headers);
+        String[] urlVariables = new String[]{"admin"};
+        ResponseEntity<byte[]> response = testRestTemplate.exchange("/test/download?username={1}",HttpMethod.GET,formEntity,byte[].class,urlVariables);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            Files.write(response.getBody(),new File("/home/lake/github/file/test.gradle"));
+        }
+    }
+	/**
+	 * header请求头信息传输测试
+	 * @throws Exception
+	 */
+	@Test
+    public void getHeader() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("token","xxxxxx");
+        HttpEntity formEntity = new HttpEntity(headers);
+        String[] urlVariables = new String[]{"admin"};
+        ResponseEntity<R> result = testRestTemplate.exchange("/test/getHeader?username={username}", HttpMethod.GET,formEntity,R.class,urlVariables);
+        logger.info(String.valueOf(result));
+    }
+	/**
+	 * PUT信息修改
+	 * @throws Exception
+	 */
+	@Test
+    public void putHeader() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("token","xxxxxx");
+        MultiValueMap<String,Object> multiValueMap = new LinkedMultiValueMap<String,Object>();
+        multiValueMap.add("username","lake");
+        HttpEntity formEntity = new HttpEntity(multiValueMap,headers);
+        ResponseEntity<R> result = testRestTemplate.exchange("/test/putHeader", HttpMethod.PUT,formEntity,R.class);
+        logger.info(String.valueOf(result));
+    }
+	/**
+	 * DELETE删除信息
+	 * @throws Exception
+	 */
+	@Test
+    public void delete() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("token","xxxxx");
+        MultiValueMap<String,Object> multiValueMap = new LinkedMultiValueMap<String,Object>();
+        multiValueMap.add("username","lake");
+        HttpEntity formEntity = new HttpEntity(multiValueMap,headers);
+        String[] urlVariables = new String[]{"admin"};
+        ResponseEntity<R> result = testRestTemplate.exchange("/test/delete?username={username}", HttpMethod.DELETE,formEntity,R.class,urlVariables);
+        logger.info(String.valueOf(result));
+    }
+}

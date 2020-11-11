@@ -1,0 +1,225 @@
+//每个模块功能权限设置
+function actionFormatter(value, row, index) {
+    var result = "";
+    result += "<a class='btn btn-xs green' onclick=\"select('" + row.menuId + "')\"  title='查看'><span class='glyphicon glyphicon-search'></span></a>";
+    result += "<a class='btn btn-xs blue' onclick=\"update('" + row.menuId + "')\" title='编辑'><span class='glyphicon glyphicon-pencil'></span></a>";
+    result += "<a class='btn btn-xs red' onclick=\"del('" + row.menuId + "')\" title='删除'><span class='glyphicon glyphicon-remove'></span></a>";
+    return result;
+}
+
+//生成菜单
+var menuItem = Vue.extend({
+    name: 'menu-item',
+    props:{item:{}},
+    template:[
+        '<li>',
+        '	<a v-if="item.type === 0" v-on:click=selectedNodes($event,item.menuId,item.name) href="javascript:;">',
+        '		<i v-if="item.icon != null" :class="item.icon"></i>',
+        '		<span>{{item.name}}</span>',
+        '	</a>',
+        '	<ul v-if="item.type === 0" class="treeview-menu">',
+        '		<menu-item :item="item" v-for="item in item.list"></menu-item>',
+        '	</ul>',
+
+        '	<a v-if="item.type === 1 && item.parentId === 0" v-on:click=selectedNodes($event,item.menuId,item.name) href="javascript:;">',
+        '		<i v-if="item.icon != null" :class="item.icon"></i>',
+        '		<span>{{item.name}}</span>',
+        '	</a>',
+
+        '	<a v-if="item.type === 1 && item.parentId != 0" v-on:click=selectedNodes($event,item.menuId,item.name) href="javascript:;"><i v-if="item.icon != null" :class="item.icon"></i><i v-else class="fa fa-circle-o"></i> {{item.name}}</a>',
+        '</li>'
+    ].join(''),
+    methods: {
+    	selectedNodes:function(event,menuId,name){
+    		vm.menu.parentId = menuId;
+    		vm.menu.parentName = name;
+    		layer.close(layer.index);
+        }
+    }
+});
+//注册菜单组件
+Vue.component('menuItem',menuItem);
+
+var vm = new Vue({
+    el:'#rrapp',
+    data:{
+    	q:{
+    	 name:null,
+		 parentName:null,
+         parentId:0,
+         type:1,
+         orderNum:0
+    	},
+        title: null,
+        menu:{
+        	menuId:null,
+        	type:1,
+        	name:null,
+        	parentId:0,
+        	parentName:null,
+        	icon:null,
+        	orderNum:0,
+        	url:null,
+        	perms:null,
+        },
+        menuList:{},
+    },
+    methods: {
+    	query: function(){
+    		vm.reload(vm.q);
+    	},
+        getMenu: function(){
+            //加载菜单树
+            $.getJSON(baseURL + "sys/menu/select", function(r){
+                vm.menuList = r.menuList;
+            });
+        },
+        add: function(){
+        	vm.title = "新增";
+            vm.menu = {parentName:null,parentId:0,type:1,orderNum:0};
+        	$("#saveOrUpdate").show();
+        	$('#itemModal').modal('show');
+        },
+        update: function () {
+        	vm.title = "修改";
+            var menuId = getMenuId();
+            if(menuId == null){
+                return ;
+            }
+            vm.itemPage(menuId);
+        },
+        //明细页面
+        itemPage: function (menuId) {
+        	 $('#itemModal').modal('show');
+        	 $.get(baseURL + "sys/menu/info/"+menuId, function(r){
+                 vm.title = "修改";
+                 vm.menu = r.bondMenu;
+             });
+        },
+        del: function () {
+            var menuId = getMenuId();
+            if(menuId == null){
+                return ;
+            }
+            confirm('确定要删除选中的记录？', function(){
+            	$.syncPost(baseURL + "sys/menu/delete", "menuId=" + menuId, function(r){
+            		if(r.code === 0){
+            			alert('操作成功', function(){
+                            vm.reload();
+                        });
+                    }else{
+                    	alert(r.msg);
+                    }
+            	});
+            });
+        },
+        saveOrUpdate: function () {
+            if(vm.validator()){
+                return ;
+            }
+            var url = vm.menu.menuId == null ? "sys/menu/save" : "sys/menu/update";
+            
+            $.syncPost(baseURL + url, JSON.stringify(vm.menu), function(r){
+        		if(r.code === 0){
+        			alert('操作成功', function(){
+                        vm.reload();
+                    });
+                }else{
+                	alert(r.msg);
+                }
+        	});
+        },
+        menuTree: function(){
+            layer.open({
+                type: 1,
+                offset: '50px',
+                skin: 'layui-layer-molv',
+                title: "选择菜单",
+                area: ['300px', '450px'],
+                shade: 0,
+                shadeClose: false,
+                content: jQuery("#menuLayer"),
+                btn: ['取消'],
+            });
+        },
+        selectedNodes: function (item) {
+        	consloe.log(item.target);
+        },
+        reload: function () {
+            Menu.table.refresh();
+        },
+        validator: function () {
+            if(isBlank(vm.menu.name)){
+                alert("菜单名称不能为空");
+                return true;
+            }
+            //菜单
+            if(vm.menu.type === 1 && isBlank(vm.menu.url)){
+                alert("菜单URL不能为空");
+                return true;
+            }
+        }
+    },
+    created: function(){
+    	this.getMenu();
+	}
+});
+
+var Menu = {
+    id: "menuTable",
+    table: null,
+    layerIndex: -1
+};
+
+/**
+ * 初始化表格的列
+ */
+Menu.initColumn = function () {
+    var columns = [
+        {field: 'selectItem', radio: true},
+        {title: '菜单ID', field: 'menuId', visible: false, align: 'center', valign: 'middle', width: '80px'},
+        {title: '菜单名称', field: 'name', align: 'center', valign: 'middle', sortable: true, width: '180px'},
+        {title: '上级菜单', field: 'parentName', align: 'center', valign: 'middle', sortable: true, width: '100px'},
+        {title: '图标', field: 'icon', align: 'center', valign: 'middle', sortable: true, width: '80px', formatter: function(item, index){
+            return item.icon == null ? '' : '<i class="'+item.icon+' fa-lg"></i>';
+        }},
+        {title: '类型', field: 'type', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
+            if(item.type === 0){
+                return '<span class="btn btn-success">目录</span>';
+            }
+            if(item.type === 1){
+                return '<span class="btn btn-info">菜单</span>';
+            }
+            if(item.type === 2){
+                return '<span class="btn btn-warning">按钮</span>';
+            }
+        }},
+        {title: '排序号', field: 'orderNum', align: 'center', valign: 'middle', sortable: true, width: '100px'},
+        {title: '菜单URL', field: 'url', align: 'center', valign: 'middle', sortable: true, width: '160px'},
+        {title: '授权标识', field: 'perms', align: 'center', valign: 'middle', sortable: true},
+        {field:'ID',title: '操作',width: 120,align: 'center',valign: 'middle',formatter: actionFormatter}]
+    return columns;
+};
+
+function getMenuId () {
+    var selected = $('#menuTable').bootstrapTreeTable('getSelections');
+    if (selected.length == 0) {
+        alert("请选择一条记录");
+        return null;
+    } else {
+        return selected[0].id;
+    }
+}
+
+
+$(function () {
+    var colunms = Menu.initColumn();
+    var table = new TreeTable(Menu.id, baseURL + "sys/menu/list", colunms);
+    table.setExpandColumn(2);
+    table.setIdField("menuId");
+    table.setCodeField("menuId");
+    table.setParentCodeField("parentId");
+    table.setExpandAll(false);
+    table.init();
+    Menu.table = table;
+});

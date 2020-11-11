@@ -1,0 +1,52 @@
+package com.scbid.bond.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.scbid.bond.dao.BondEnagencyDao;
+import com.scbid.bond.entity.BondEnagencyEntity;
+import com.scbid.bond.service.BondEnagencyService;
+import com.scbid.common.utils.PageUtils;
+import com.scbid.common.utils.Query;
+
+@Service("bondEnagencyService")
+public class BondEnagencyServiceImpl extends ServiceImpl<BondEnagencyDao, BondEnagencyEntity> implements BondEnagencyService {
+
+	@Override
+	public PageUtils queryPage(Map<String, Object> params) {
+		Page<BondEnagencyEntity> page = this.selectPage(new Query<BondEnagencyEntity>(params).getPage(), new EntityWrapper<BondEnagencyEntity>());
+
+		return new PageUtils(page);
+	}
+
+	@Override
+	public List<BondEnagencyEntity> selectAll() {
+		List<BondEnagencyEntity> list = baseMapper.selectAll();
+		return list;
+	}
+
+	@Override
+	public PageUtils queryPageAgencys(Map<String, Object> params) {
+		Page<BondEnagencyEntity> page = new Query<BondEnagencyEntity>(params).getPage();
+		page.setRecords(baseMapper.queryPageAgencys(page, params));
+		return new PageUtils(page);
+	}
+
+	@Override
+	public PageUtils selectBatchAgencyIds(Map<String, Object> params) {
+		Page<BondEnagencyEntity> page = new Query<BondEnagencyEntity>(params).getPage();
+		page.setRecords(baseMapper.selectBatchAgencyIds(page, params));
+		return new PageUtils(page);
+	}
+
+	@Override
+	public BondEnagencyEntity selectByAgencyUuid(String agencyUuid) {
+		return baseMapper.selectByAgencyUuid(agencyUuid);
+	}
+
+}

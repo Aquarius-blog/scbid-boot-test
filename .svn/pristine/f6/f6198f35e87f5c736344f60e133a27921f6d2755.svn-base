@@ -1,0 +1,78 @@
+package com.scbid.bond.service.impl;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.scbid.bond.dao.BondOrderDao;
+import com.scbid.bond.entity.BondOrderEntity;
+import com.scbid.bond.service.BondOrderService;
+import com.scbid.common.utils.PageUtils;
+import com.scbid.common.utils.Query;
+
+@Service("bondOrderService")
+public class BondOrderServiceImpl extends ServiceImpl<BondOrderDao, BondOrderEntity> implements BondOrderService {
+
+	@Autowired
+	private BondOrderDao bondOrderDao;
+
+	
+
+	@Override
+	public PageUtils queryPage(Map<String, Object> params) {
+		Page<BondOrderEntity> page = this.selectPage(new Query<BondOrderEntity>(params).getPage(), new EntityWrapper<BondOrderEntity>());
+		return new PageUtils(page);
+	}
+
+	@Override
+	public PageUtils queryPageOrders(Map<String, Object> params) {
+		Page<BondOrderEntity> page = new Query<BondOrderEntity>(params).getPage();
+		page.setRecords(baseMapper.queryPageOrders(page, params));
+		return new PageUtils(page);
+	}
+
+	@Override
+	public PageUtils guaranteeOrderList(Map<String, Object> params) {
+		Page<BondOrderEntity> page = new Query<BondOrderEntity>(params).getPage();
+		page.setRecords(bondOrderDao.guaranteeOrderList(page, params));
+		return new PageUtils(page);
+	}
+	
+
+	
+	@Override
+	public Boolean updateOrderEntityByUrl(String url, String orderId) {
+	try {
+		bondOrderDao.updateOrderEntityByUrl(url, orderId);
+	} catch (Exception e) {
+		return false;
+	}
+	return true;
+		
+	}
+	
+	
+	@Override
+	public PageUtils findSupplierOrderByUser(Map<String, Object> params) {
+		Page<BondOrderEntity> page = new Query<BondOrderEntity>(params).getPage();
+		page.setRecords(baseMapper.findSupplierOrderByUser(page,params));
+		return new PageUtils(page);
+	}
+
+
+	@Override
+	public BondOrderEntity selectOrdersByOrderNo(Map<String, Object> orderNo) {
+					
+		BondOrderEntity bondOrderEntity=bondOrderDao.selectOrdersByOrderNo(orderNo);
+			
+		return bondOrderEntity;
+	}
+
+
+
+
+}

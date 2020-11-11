@@ -1,0 +1,44 @@
+hikari:
+    first:  #数据源1
+        jdbc-url: jdbc:mysql://172.16.1.112:3306/bond_dev?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+        username: ENC(aWz0yPilX7kGgDJHsq2ZwRjEQJuBshVL)
+        password: ENC(ASgjchiTPd7ecjKzNkqeoUaX8hUiAakg)
+    second:  #数据源2
+        jdbc-url: jdbc:mysql://172.16.1.112:3306/scbid_dev?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+        username: ENC(aWz0yPilX7kGgDJHsq2ZwRjEQJuBshVL)
+        password: ENC(ASgjchiTPd7ecjKzNkqeoUaX8hUiAakg)
+    third:  #数据源3
+        jdbc-url: jdbc:mysql://172.16.1.112:3306/scbid-invoice?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+        username: ENC(aWz0yPilX7kGgDJHsq2ZwRjEQJuBshVL)
+        password: ENC(ASgjchiTPd7ecjKzNkqeoUaX8hUiAakg)
+    minimum-idle: 5
+    hikari.maximum-pool-size: 15    
+    auto-commit: true
+    idle-timeout: 30000
+    pool-name: DatebookHikariCP
+    max-lifetime: 1800000
+    connection-timeout: 30000
+    connection-test-query: SELECT 1
+##eureka注册中心
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:1111/eureka/
+##支付服务接口地址
+admin-alipay-index: http://127.0.0.1:7005/alipay/qcPay
+##支付服务回执地址
+admin-return-alipay: http://127.0.0.1:7002/bond-admin/bond/returnAlipay
+##微信支付接口地址
+admin-weixin-index: http://127.0.0.1:7005/weixin/qcPay2
+##微信支付回执地址
+admin-return-weixin: http://127.0.0.1:7002/bond-admin/bond/returnWeixin
+#阿里云链接地址
+aliyun:
+  oss:
+    endpoint: oss-cn-shanghai.aliyuncs.com
+    access:
+      key: LTAIthmw84OneD5W
+      secret: 3qyxZguXqtU7gEV4hyfZ83YJoldCyJ
+      bucket: scbid-dev
+    extranet:
+      endpoint: oss-cn-shanghai.aliyuncs.com

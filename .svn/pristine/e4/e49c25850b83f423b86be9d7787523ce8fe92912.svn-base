@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.bond.dao.BondEnagencyDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.scbid.bond.entity.BondEnagencyEntity" id="bondEnagencyMap">
+        <result property="agencyId" column="agency_id"/>
+        <result property="agencyUuid" column="agency_uuid"/>
+        <result property="agencyScale" column="agency_scale"/>
+        <result property="agencyName" column="agency_name"/>
+        <result property="agencyPhone" column="agency_phone"/>
+        <result property="agencyPostcode" column="agency_postcode"/>
+        <result property="agencyCapital" column="agency_capital"/>
+        <result property="agencySort" column="agency_sort"/>
+        <result property="agencyFaxes" column="agency_faxes"/>
+        <result property="agencyTaxpayerNo" column="agency_taxpayer_no"/>
+        <result property="agencyBankNumber" column="agency_bank_number"/>
+        <result property="agencyAddress" column="agency_address"/>
+        <result property="agencyLicenseImg" column="agency_license_img"/>
+        <result property="agencyLicenseNo" column="agency_license_no"/>
+        <result property="agencyIndustry" column="agency_industry"/>
+        <result property="agencyLegalPepre" column="agency_legal_pepre"/>
+        <result property="agencyEstabDate" column="agency_estab_date"/>
+        <result property="agencyOpenatingPeriod" column="agency_openating_period"/>
+        <result property="agencyRegAdress" column="agency_reg_adress"/>
+        <result property="agencyCompanyType" column="agency_company_type"/>
+        <result property="agencyBankAccount" column="agency_bank_account"/>
+        <result property="agencyRegNumber" column="agency_reg_number"/>
+        <result property="agencyLegalPhone" column="agency_legal_phone"/>
+        <result property="agencyRemarks" column="agency_remarks"/>
+        <result property="agencyStatus" column="agency_status"/>
+        <result property="agencyDate" column="agency_date"/>
+        <result property="agencyUserId" column="agency_user_id"/>
+        <result property="updateUesrName" column="update_uesr_name"/>
+        <result property="updateDate" column="update_date"/>
+    </resultMap>
+
+
+</mapper>

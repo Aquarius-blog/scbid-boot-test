@@ -1,0 +1,505 @@
+//表格数据查询事件及分页查询事件
+$(function () {
+	if($("#table").length>0){ 
+		$.InitMainTable("#table",vm.fields,function queryCallback(params){
+			params = $.extend(params, vm.q);
+			vm.reload(params);
+		},function pageCallback(params){
+			params = $.extend(params, vm.q);
+			vm.reload(params);
+		});
+		vm.reload(null);
+	}
+});
+
+
+//每个模块功能权限设置
+function actionFormatter(value, row, index) {
+    var result = "";
+    result += "<a class='btn btn-xs green' onclick=\"select('" + row.projectId + "')\"  title='查看'><span class='glyphicon glyphicon-search'></span></a>";
+    result += "<a class='btn btn-xs blue' onclick=\"update('" + row.projectId + "')\" title='编辑'><span class='glyphicon glyphicon-pencil'></span></a>";
+    result += "<a class='btn btn-xs red' onclick=\"del('" + row.projectId + "')\" title='删除'><span class='glyphicon glyphicon-remove'></span></a>";
+    return result;
+}
+
+//Vue函数体
+var vm = new Vue({
+	el:'#rrapp',
+	data:{
+		title: null,
+		q: {
+			projectId:null,
+			packageId:null,
+			projectUuid:null,
+			supplierUuid:null,
+			agencyId:null,
+			projectCode:null,
+			projectName:null,
+			projectType:null,
+			projectMoney:null,
+			projectStatus:null,
+			projectDate:null,
+			projectUserId:null,
+			updateDate:null,
+			updateUesrName:null,
+			},
+			bondEnguarators:[],
+			bondEnsupplier: {
+				supplierId:null,
+				supplierUuid:null,
+				supplierScale:null,
+				supplierName:null,
+				supplierPhone:null,
+				supplierPostcode:null,
+				supplierCapital:null,
+				supplierSort:null,
+				supplierTaxpayerNo:null,
+				supplierFaxes:null,
+				supplierLegalPhone:null,
+				supplierRegNumber:null,
+				supplierBankNumber:null,
+				supplierBankAccount:null,
+				supplierCompanyType:null,
+				supplierRegAdress:null,
+				supplierOpenatingPeriod:null,
+				supplierEstabDate:null,
+				supplierLegalPepre:null,
+				supplierIndustry:null,
+				supplierAddress:null,
+				supplierLicenseNo:null,
+				supplierLicenseImg:null,
+				supplierRemarks:null,
+				supplierStatus:null,
+				supplierDate:null,
+				supplierUserId:null,
+				updateUesrName:null,
+				updateDate:null,
+				},
+		bondProject: {
+				projectId:null,
+				packageId:null,
+				projectUuid:null,
+				supplierUuid:null,
+				agencyId:null,
+				projectCode:null,
+				projectName:null,
+				projectType:null,
+				projectMoney:null,
+				projectStatus:null,
+				projectDate:null,
+				projectUserId:null,
+				updateDate:null,
+				updateUesrName:null,
+				},
+		bondOrders: [{
+			orderId:null,
+			supplierId:null,
+			agencyId:null,
+			guaratorId:null,
+			orderNo:null,
+			projectMoney:null,
+			orderMoney:null,
+			orderType:null,
+			orderVoucher:null,
+			orderStatus:null,
+			payType:null,
+			orderDate:null,
+			updateUesrName:null,
+			updateDate:null,
+			projects:[]
+			}],
+			 bondOrder : {
+		            orderId : null,
+		            supplierId : null,
+		            supplierName : null,
+		            agencyId : null,
+		            agencyName : null,
+		            guaratorId : null,
+		            guaratorName : null,
+		            orderNo : null,
+		            orderMoney : null,
+		            orderType : null,
+		            orderVoucher : null,
+		            orderStatus : null,
+		            payType : null,
+		            orderDate : null,
+		            updateUesrName : null,
+		            updateDate : null,
+		        },
+		fields:[
+			//{field:'projectId',title:'projectId', width: 50, key: true},
+			//{field:'packageId',title:'分包 主键ID', width: 80 },
+			//{field:'projectUuid',title:'全局唯一项目主键UUID 与OA系统对接', width: 80 },
+			//{field:'supplierUuid',title:'供应商uuid 与oa 系统对接', width: 80 },
+			//{field:'agencyId',title:'代理机构主键ID', width: 80 },
+			{field:'agencyName',title:'代理机构', width: 80 },
+			{field:'projectCode',title:'项目编码', width: 80 },
+			{field:'projectName',title:'项目名称', width: 80 },
+			{field:'projectType',title:'项目类型', width: 80 },
+			{field:'projectMoney',title:'项目金额', width: 80 },
+			{field:'projectStatus',title:'项目状态', width: 80 },
+			{field:'projectDate',title:'项目创建时间', width: 80 },
+			//{field:'projectUserId',title:'项目监管人', width: 80 },
+			//{field:'updateDate',title:'最后修改时间', width: 80 },
+			//{field:'updateUesrName',title:'最后修改人', width: 80 }
+		],
+	},
+	methods: {
+		//查询
+		query: function () {
+			vm.reload(vm.q);
+		},
+		//新增
+		add: function(){
+			vm.title = "新增";
+			vm.bondProject = {};
+			$('#itemModal').modal('show');
+		},
+		//导入
+        importPage: function(){
+        	$('#importModal').modal('show');
+        },
+        //导入请求
+        importPost: function(){
+        	$.syncPost(baseURL + "/bond/bondproject/import", JSON.stringify(vm.fields), function(r){
+    			if(r.code === 0){
+    				alert('操作成功', function(){
+    					$('#importModal').modal('hide');
+    	                vm.reload();
+    	            });
+    	        }else{
+    	        	alert(r.msg);
+    	        }
+    		});	
+        },
+        //导出
+        exportPage: function(){
+		   $('#exportModal').modal('show');
+		},
+		//导出请求
+        exportPage: function(){
+        	
+		    $.syncPost(baseURL + "/bond/bondproject/export", JSON.stringify(vm.fields), function(r){
+    			if(r.code === 0){
+    				alert('操作成功', function(){
+    					$('#exportModal').modal('hide');
+    	                vm.reload();
+    	            });
+    	        }else{
+    	        	alert(r.msg);
+    	        }
+    		});	
+		},
+		//修改
+		update: function (event) {
+			var row = getSelectedRow();
+			var projectId = row.projectId;
+			if(projectId == null){
+				return ;
+			}
+            vm.title = "修改";
+            vm.itemPage(projectId);
+		},
+		//详情
+		itemPage: function (projectId) {
+        	 $('#itemModal').modal('show');
+             vm.getInfo(projectId);
+        },
+        //新增OR修改
+		saveOrUpdate: function (event) {
+			var url = vm.bondProject.projectId == null ? "/bond/bondproject/save" : "/bond/bondproject/update";
+			$.syncPost(baseURL + url, JSON.stringify(vm.bondProject), function(r){
+        		if(r.code === 0){
+        			alert('操作成功', function(){
+                        vm.reload();
+                    });
+                }else{
+                	alert(r.msg);
+                }
+        	});
+		},
+		//删除
+		del: function (event) {
+			var rows = getSelectedRows();
+            var projectIds = [];
+            rows.forEach(function(value, index, array) {
+            	projectIds.push(array[index].projectId);
+			});
+            if(projectIds == null){
+                return ;
+            }
+            vm.delPost(projectIds);
+		},
+		//删除请求
+		delPost: function (projectIds) {
+        	confirm('确定要删除选中的记录？', function(){
+        		$.syncPost(baseURL + "/bond/bondproject/delete", JSON.stringify(projectIds), function(r){
+        			if(r.code === 0){
+        				alert('操作成功', function(){
+        	                vm.reload();
+        	            });
+        	        }else{
+        	        	alert(r.msg);
+        	        }
+        		});
+        	});
+        },
+        //明细请求
+		getInfo: function(projectId){
+			$.get(baseURL + "/bond/bondproject/info/"+projectId, function(r){
+                vm.bondProject = r.bondProject;
+            });
+		},
+		
+		//担保机构列表
+		guaratorSelect: function(){
+			$.get(baseURL + "/bond/bondenguarator/select", function(r){
+                vm.bondEnguarators = r.bondEnguarators;
+            });
+		},
+		//选择担保机构
+		changeGuarator:function(event){
+			//console.log(event.target.value);
+			vm.bondOrder.guaratorId = event.target.value;
+		},
+		//明细请求
+		getSupplierInfo: function(){
+			$.get(baseURL + "/bond/bondensupplier/select", function(r){
+                vm.bondEnsupplier = r.bondEnsupplier;
+             
+            });
+		},
+		//先阅读供应商须知
+		read: function(){
+			var rows = getSelectedRow();
+			if(rows.length != 0){
+				$("#notice").removeAttr("checked");
+				$('#supplierNoticeModal').modal('show');
+			}
+			
+		},
+		select: function (){
+			var attr = $("#notice").attr("checked");
+			if(attr == null){
+				$("#notice").attr("checked","checked");
+			}
+			if(attr == "checked"){
+				$("#notice").removeAttr("checked");
+			}
+			
+		},
+		sure: function(){
+			$('#supplierNoticeModal').modal('hide');
+			var attr = $("#notice").attr("checked");
+			if(attr == "checked"){
+				vm.bond();
+			}
+		},
+		//申请保函
+		bond:function(){
+			
+			vm.title = "保证金申请";
+			
+			var rows = getSelectedRows();
+            var projects = [];
+            var orderMoney = 0;
+            var projectMoney = 0;
+            
+            var map = {},dest = [];
+     
+            //项目订单根据代理机构分组
+            for(var i = 0; i < rows.length; i++){
+
+            	var ai = rows[i];
+                if(!map[ai.agencyId]){
+                    dest.push({
+                    	agencyId: ai.agencyId,
+                    	agencyName: ai.agencyName,
+                        data: [ai]
+                    });
+                    map[ai.agencyId] = ai;
+                }else{
+                    for(var j = 0; j < dest.length; j++){
+                        var dj = dest[j];
+                        if(dj.agencyId == ai.agencyId){
+                            dj.data.push(ai);
+                            break;
+                        }
+                    }
+                }
+            }
+  
+            var bondOrders = [];
+            //分组订单
+            dest.forEach(function(value, i, array) {
+        
+            	var bondOrder={};
+            	var data = array[i].data;
+	            data.forEach(function(value, j, array) {
+	            
+	            	projects.push(array[j]);
+	            	orderMoney = orderMoney + array[j].projectMoney*0.02;
+	            	projectMoney = projectMoney + array[j].projectMoney;
+				});
+	            var timestamp =(new Date()).valueOf();
+	            bondOrder.agencyId = array[i].agencyId;//代理机构主键
+	            bondOrder.agencyName = array[i].agencyName;//代理机构
+	            bondOrder.projectMoney = projectMoney;
+	            bondOrder.projectProportion = "2%";
+	            bondOrder.orderDate = new Date().Format("yyyy-MM-dd hh:mm:ss");//订单时间
+	            bondOrder.orderNo = timestamp+""+i;//订单编号
+	            //bondOrder.orderMoney = orderMoney;//订单金额
+	            bondOrder.orderType = 1;
+	            bondOrder.orderStatus = 2;//订单设置为待支付
+	            bondOrder.projects = projects;//项目主键Id集合
+	            bondOrders.push(bondOrder);
+	            
+            });
+            vm.bondOrders = bondOrders;
+            //获取担保机构下拉数据
+            vm.guaratorSelect();
+            $('#orderItemModal').modal('show');
+		},
+		//申请保函请求
+		bondPost:function(){
+			var params ={
+				bondOrder:JSON.stringify(vm.bondOrder),
+				bondOrders:JSON.stringify(vm.bondOrders),
+			}
+    		$.postForm(baseURL + "/bond/bondensupplier/bond", params, function(r){
+    			if(r.code === 0){
+//    				alert('操作成功', function(){
+    					$('#orderItemModal').modal('hide');  					
+    					r.orderIds.forEach(function(e){  
+    						vm.getBondOrderInfo(e);	
+    						vm.bondOrder.orderDate = new Date().Format("yyyy-MM-dd hh:mm:ss");//订单时间
+    					});
+    					$('#orderPayModal').modal('show');    	
+//    	            });
+    	        }else{
+    	        	alert(r.msg);
+    	        }
+    		});
+		},
+		//担保协议
+		guaranteeAgreement: function (params) {
+			layer.open({
+				 type: 2, 
+				 area: ['800px', '760px'],
+				 content: baseURL + 'modules/common/guarantee-agreement.html' //这里content是一个普通的String
+			});
+		},
+		  // 明细请求
+        getBondOrderInfo : function(orderId){
+	        $.get(baseURL + "/bond/bondorder/info/" + orderId, function(r){
+	        	vm.bondOrder = r.bondOrder;
+	        	console.log(vm.bondOrder)
+	        });
+        },
+        //支付宝支付
+        alipay : function(){
+	        $.syncPost(baseURL + "/bond/alipay", JSON.stringify(vm.bondOrder), function(r){
+		        
+		        if(r.message)
+		        {
+			        alert(r.message);
+			        return;
+		        }
+		        
+		        var params = "?dn=1";
+		        var product = r.product;
+		        for( var key in product)
+		        {
+			        params = params + '&' + '' + key + '=' + product[key] + '';
+		        }
+		        var result = Base64.encode(product);
+		        var key = Base64.encode(result);
+		        
+		        var data = {
+		        	key:key,
+		        	result:result
+		        }
+		        var params = "?dn=2";
+		        for( var key in data){
+		        	params = params + '&' + '' + key + '=' + data[key] + '';
+		        }
+		        var form = document.createElement('form');
+		        form.action = r.alipayPayUrl + params;
+		        form.target = '_blank';
+		        form.method = 'POST';
+		        document.body.appendChild(form);
+		        form.submit();
+		        //window.open(r.alipayPayUrl + params);
+		        /*layer.open({
+		            type : 2,
+		            area : [
+		                    '700px', '530px'
+		            ],
+		            content : r.alipayPayUrl + params // 这里content是一个普通的String
+		        });*/
+	        });
+        },
+        // 微信支付
+        weixinpay : function(){
+	        $.syncPost(baseURL + "/bond/weixin", JSON.stringify(vm.bondOrder), function(r){
+		        if(r.message)
+		        {
+			        alert(r.message);
+			        return;
+		        }
+		        var params = "?dn=1";
+		        var product = r.product;
+		        for( var key in product)
+		        {
+			        params = params + '&' + '' + key + '=' + product[key] + '';
+		        }
+		        var result = Base64.encode(product);
+		        var key = Base64.encode(result);
+		        
+		        var data = {
+		        	key:key,
+		        	result:result
+		        }
+		        var params = "?dn=2";
+		        for( var key in data){
+		        	params = params + '&' + '' + key + '=' + data[key] + '';
+		        }
+		        
+		        var form = document.createElement('form');
+		        form.action = r.weixinPayUrl + params;
+		        form.target = '_blank';
+		        form.method = 'POST';
+		        document.body.appendChild(form);
+		        form.submit();
+		        //window.open(r.weixinPayUrl + params);
+		        /*layer.open({
+		            type : 2,
+		            area : [
+		                    '700px', '530px'
+		            ],
+		            content : r.weixinPayUrl + params // 这里content是一个普通的String
+		        });*/
+	        });
+        },
+        // 银联支付
+        unionpay : function(){
+	        alert("支付对接中...");
+        },
+		//重新加载请求
+		reload: function (params) {
+            $.postForm(baseURL + '/bond/bondensupplier/projects', params, function(request){
+        		$("#table").bootstrapTable('load',request.page);
+        	});
+		},
+		//关闭弹出框的时候清除之前填入的数据
+		close: function(){
+			location.reload();
+			this.reload();
+		}
+		
+	},
+	//创建完毕状态
+    created: function(){
+    	this.getSupplierInfo();
+    }
+});

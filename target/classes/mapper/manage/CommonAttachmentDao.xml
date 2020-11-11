@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.manage.dao.CommonAttachmentDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.scbid.manage.entity.CommonAttachmentEntity" id="commonAttachmentMap">
+        <result property="listId" column="LIST_ID"/>
+        <result property="param" column="PARAM"/>
+        <result property="businessId" column="BUSINESS_ID"/>
+        <result property="attachmentName" column="ATTACHMENT_NAME"/>
+        <result property="suffixName" column="SUFFIX_NAME"/>
+        <result property="fieldId" column="FIELD_ID"/>
+        <result property="isDelete" column="IS_DELETE"/>
+        <result property="operator" column="OPERATOR"/>
+        <result property="operateTime" column="OPERATE_TIME"/>
+        <result property="creater" column="CREATER"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="domainAuth" column="DOMAIN_AUTH"/>
+        <result property="creatorId" column="CREATOR_ID"/>
+        <result property="templateId" column="TEMPLATE_ID"/>
+        <result property="makeType" column="MAKE_TYPE"/>
+        <result property="moreFile" column="MORE_FILE"/>
+        <result property="remark" column="REMARK"/>
+    </resultMap>
+    
+    <!-- 查询列表 -->
+	<select id="commonAttachmentPage" resultMap="commonAttachmentMap" parameterType="java.util.Map">
+	SELECT
+    t_common_attachment.*
+    FROM t_common_attachment
+    WHERE 1=1
+   <if test="listId != null and listId != ''" >
+       AND LIST_ID = #{listId}
+    </if>
+   <if test="param != null and param != ''" >
+       AND PARAM = #{param}
+    </if>
+   <if test="businessId != null and businessId != ''" >
+       AND BUSINESS_ID = #{businessId}
+    </if>
+   <if test="attachmentName != null and attachmentName != ''" >
+       AND ATTACHMENT_NAME = #{attachmentName}
+    </if>
+   <if test="suffixName != null and suffixName != ''" >
+       AND SUFFIX_NAME = #{suffixName}
+    </if>
+   <if test="fieldId != null and fieldId != ''" >
+       AND FIELD_ID = #{fieldId}
+    </if>
+   <if test="isDelete != null and isDelete != ''" >
+       AND IS_DELETE = #{isDelete}
+    </if>
+   <if test="operator != null and operator != ''" >
+       AND OPERATOR = #{operator}
+    </if>
+   <if test="operateTime != null and operateTime != ''" >
+       AND OPERATE_TIME = #{operateTime}
+    </if>
+   <if test="creater != null and creater != ''" >
+       AND CREATER = #{creater}
+    </if>
+   <if test="createTime != null and createTime != ''" >
+       AND CREATE_TIME = #{createTime}
+    </if>
+   <if test="domainAuth != null and domainAuth != ''" >
+       AND DOMAIN_AUTH = #{domainAuth}
+    </if>
+   <if test="creatorId != null and creatorId != ''" >
+       AND CREATOR_ID = #{creatorId}
+    </if>
+   <if test="templateId != null and templateId != ''" >
+       AND TEMPLATE_ID = #{templateId}
+    </if>
+   <if test="makeType != null and makeType != ''" >
+       AND MAKE_TYPE = #{makeType}
+    </if>
+   <if test="moreFile != null and moreFile != ''" >
+       AND MORE_FILE = #{moreFile}
+    </if>
+   <if test="remark != null and remark != ''" >
+       AND REMARK = #{remark}
+    </if>
+	</select>
+</mapper>

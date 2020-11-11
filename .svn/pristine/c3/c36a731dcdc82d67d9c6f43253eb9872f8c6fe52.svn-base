@@ -1,0 +1,5 @@
+<!-- css -->
+<link href="${request.contextPath}/statics/web/css/bootstrap.min.css" rel="stylesheet" />
+<link href="${request.contextPath}/statics/web/css/fancybox/jquery.fancybox.css" rel="stylesheet">
+<link href="${request.contextPath}/statics/web/css/flexslider.css" rel="stylesheet" />
+<link href="${request.contextPath}/statics/web/css/style.css" rel="stylesheet" />

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.bond.dao.BondEnsupplierDao">
+
+	<!-- 查询满足条件的数据 ,关联查询-->
+	<select id="findSupplierByUser" parameterType="java.util.Map"
+		resultMap="bondEnsupplierMap">
+		SELECT
+			es.*
+		from t_bond_ent_supplier es 
+			left JOIN t_bond_project p on es.supplier_uuid = p.supplier_uuid 
+			left JOIN t_bond_ent_agency ea on p.agency_id = ea.agency_id
+			left JOIN t_bond_user u on ea.agency_uuid = u.ent_uuid
+			
+			<include refid="whereSql"/>
+     </select>
+     
+    
+	
+	<sql id="whereSql">
+		<where>
+			<if test="userId !=null ">
+				 and u.user_id=#{userId}
+			</if>
+			<if test="supplierName != null and supplierName != ''">
+					and es.supplier_name like
+				CONCAT('%',#{supplierName},'%')
+			</if>
+			
+		</where>
+	</sql>
+	<!-- 可根据自己的需求，是否要使用 -->
+	<resultMap type="com.scbid.bond.entity.BondEnsupplierEntity"
+		id="bondEnsupplierMap">
+		<result property="supplierId" column="supplier_id" />
+		<result property="supplierUuid" column="supplier_uuid" />
+		<result property="supplierScale" column="supplier_scale" />
+		<result property="supplierName" column="supplier_name" />
+		<result property="supplierPhone" column="supplier_phone" />
+		<result property="supplierPostcode" column="supplier_postcode" />
+		<result property="supplierCapital" column="supplier_capital" />
+		<result property="supplierSort" column="supplier_sort" />
+		<result property="supplierTaxpayerNo" column="supplier_taxpayer_no" />
+		<result property="supplierFaxes" column="supplier_faxes" />
+		<result property="supplierLegalPhone" column="supplier_legal_phone" />
+		<result property="supplierRegNumber" column="supplier_reg_number" />
+		<result property="supplierBankNumber" column="supplier_bank_number" />
+		<result property="supplierBankAccount" column="supplier_bank_account" />
+		<result property="supplierCompanyType" column="supplier_company_type" />
+		<result property="supplierRegAdress" column="supplier_reg_adress" />
+		<result property="supplierOpenatingPeriod" column="supplier_openating_period" />
+		<result property="supplierEstabDate" column="supplier_estab_date" />
+		<result property="supplierLegalPepre" column="supplier_legal_pepre" />
+		<result property="supplierIndustry" column="supplier_industry" />
+		<result property="supplierAddress" column="supplier_address" />
+		<result property="supplierLicenseNo" column="supplier_license_no" />
+		<result property="supplierLicenseImg" column="supplier_license_img" />
+		<result property="supplierRemarks" column="supplier_remarks" />
+		<result property="supplierStatus" column="supplier_status" />
+		<result property="supplierDate" column="supplier_date" />
+		<result property="supplierUserId" column="supplier_user_id" />
+		<result property="updateUesrName" column="update_uesr_name" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+	<select id="queryGuaranteeSupplier" parameterType="java.util.Map"
+		resultMap="bondEnsupplierMap">
+	SELECT DISTINCT
+		es.*
+		FROM
+		t_bond_user u
+		LEFT JOIN t_bond_ent_guarator
+		guarator
+		on u.ent_uuid = guarator.guarator_uuid
+		LEFT JOIN
+		t_bond_order orders
+		on guarator.guarator_id=orders.guarator_id
+		 JOIN
+		t_bond_ent_supplier es
+		on orders.supplier_id =es.supplier_id
+		<include refid="whereSql" />
+	</select>
+
+
+	  <select id="selectBatchSupplierIds" resultMap="bondEnsupplierMap" parameterType="java.util.Map">
+	       SELECT
+	       t_bond_ent_supplier.*
+	       FROM t_bond_ent_supplier
+	       WHERE 1=1
+	       <if test="supplierIds != null and supplierIds.size>0" >
+	       		AND	supplier_id IN
+		       <foreach collection="supplierIds" index="index" item="item" open="(" separator="," close=")">
+		           #{item}
+		       </foreach>
+	       </if>
+	       <if test="supplierName != null and supplierName != ''">
+	           AND supplier_name = #{supplierName}
+	       </if>
+	   </select>
+	   
+	   <select id="selectSupplierBySupplierUuid" resultMap="bondEnsupplierMap" parameterType="java.lang.String">
+	       SELECT
+	       t_bond_ent_supplier.*
+	       FROM t_bond_ent_supplier
+	       WHERE supplier_uuid = #{supplierUuid}
+	   </select>
+	   
+	   <select id="selectBatchUuids" resultMap="bondEnsupplierMap" parameterType="java.util.Map">
+	       SELECT
+	       t_bond_ent_supplier.*
+	       FROM t_bond_ent_supplier
+	       WHERE 1=1
+	       <if test="supplierUuids != null and supplierUuids.size>0" >
+	       		AND	supplier_uuid IN
+		       <foreach collection="supplierUuids" index="index" item="item" open="(" separator="," close=")">
+		           #{item}
+		       </foreach>
+	       </if>
+	       <if test="supplierName != null and supplierName != ''">
+	           AND supplier_name = #{supplierName}
+	       </if>
+	   </select>
+
+
+<!-- 	<sql id="whereSql">
+		<where>
+			<if test="userId!=null ">
+				users.user_id = #{userId}
+			</if>
+			<if test="supplierName!=null ">
+				and supplier.supplier_name like
+				CONCAT('%',#{supplierName},'%')
+			</if>
+		</where>
+	</sql> -->
+		
+
+ <!-- 查询列表 -->
+	<select id="queryPageEnsuppliers" resultMap="bondEnsupplierMap" parameterType="java.util.Map">
+	SELECT
+    t_bond_ent_supplier.*
+    FROM t_bond_ent_supplier
+    WHERE 1=1
+   <if test="supplierId != null and supplierId != ''" >
+       AND supplier_id = #{supplierId}
+    </if>
+   <if test="supplierUuid != null and supplierUuid != ''" >
+       AND supplier_uuid = #{supplierUuid}
+    </if>
+   <if test="supplierScale != null and supplierScale != ''" >
+       AND supplier_scale = #{supplierScale}
+    </if>
+   <if test="supplierName != null and supplierName != ''" >
+       AND supplier_name = #{supplierName}
+    </if>
+   <if test="supplierPhone != null and supplierPhone != ''" >
+       AND supplier_phone = #{supplierPhone}
+    </if>
+   <if test="supplierPostcode != null and supplierPostcode != ''" >
+       AND supplier_postcode = #{supplierPostcode}
+    </if>
+   <if test="supplierCapital != null and supplierCapital != ''" >
+       AND supplier_capital = #{supplierCapital}
+    </if>
+   <if test="supplierSort != null and supplierSort != ''" >
+       AND supplier_sort = #{supplierSort}
+    </if>
+   <if test="supplierTaxpayerNo != null and supplierTaxpayerNo != ''" >
+       AND supplier_taxpayer_no = #{supplierTaxpayerNo}
+    </if>
+   <if test="supplierFaxes != null and supplierFaxes != ''" >
+       AND supplier_faxes = #{supplierFaxes}
+    </if>
+   <if test="supplierLegalPhone != null and supplierLegalPhone != ''" >
+       AND supplier_legal_phone = #{supplierLegalPhone}
+    </if>
+   <if test="supplierRegNumber != null and supplierRegNumber != ''" >
+       AND supplier_reg_number = #{supplierRegNumber}
+    </if>
+   <if test="supplierBankNumber != null and supplierBankNumber != ''" >
+       AND supplier_bank_number = #{supplierBankNumber}
+    </if>
+   <if test="supplierBankAccount != null and supplierBankAccount != ''" >
+       AND supplier_bank_account = #{supplierBankAccount}
+    </if>
+   <if test="supplierCompanyType != null and supplierCompanyType != ''" >
+       AND supplier_company_type = #{supplierCompanyType}
+    </if>
+   <if test="supplierRegAdress != null and supplierRegAdress != ''" >
+       AND supplier_reg_adress = #{supplierRegAdress}
+    </if>
+   <if test="supplierOpenatingPeriod != null and supplierOpenatingPeriod != ''" >
+       AND supplier_openating_period = #{supplierOpenatingPeriod}
+    </if>
+   <if test="supplierEstabDate != null and supplierEstabDate != ''" >
+       AND supplier_estab_date = #{supplierEstabDate}
+    </if>
+   <if test="supplierLegalPepre != null and supplierLegalPepre != ''" >
+       AND supplier_legal_pepre = #{supplierLegalPepre}
+    </if>
+   <if test="supplierIndustry != null and supplierIndustry != ''" >
+       AND supplier_industry = #{supplierIndustry}
+    </if>
+   <if test="supplierAddress != null and supplierAddress != ''" >
+       AND supplier_address = #{supplierAddress}
+    </if>
+   <if test="supplierLicenseNo != null and supplierLicenseNo != ''" >
+       AND supplier_license_no = #{supplierLicenseNo}
+    </if>
+   <if test="supplierLicenseImg != null and supplierLicenseImg != ''" >
+       AND supplier_license_img = #{supplierLicenseImg}
+    </if>
+   <if test="supplierRemarks != null and supplierRemarks != ''" >
+       AND supplier_remarks = #{supplierRemarks}
+    </if>
+   <if test="supplierStatus != null and supplierStatus != ''" >
+       AND supplier_status = #{supplierStatus}
+    </if>
+   <if test="supplierDate != null and supplierDate != ''" >
+       AND supplier_date = #{supplierDate}
+    </if>
+   <if test="supplierUserId != null and supplierUserId != ''" >
+       AND supplier_user_id = #{supplierUserId}
+    </if>
+   <if test="updateUesrName != null and updateUesrName != ''" >
+       AND update_uesr_name = #{updateUesrName}
+    </if>
+   <if test="updateDate != null and updateDate != ''" >
+       AND update_date = #{updateDate}
+    </if>
+    ORDER BY supplier_date DESC
+	</select>
+
+
+</mapper>

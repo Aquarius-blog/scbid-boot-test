@@ -1,0 +1,428 @@
+package com.scbid.bond.controller;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import com.scbid.bond.entity.BondEnagencyEntity;
+import com.scbid.bond.entity.BondEnguaratorEntity;
+import com.scbid.bond.entity.BondEnsupplierEntity;
+import com.scbid.bond.entity.BondOrderEntity;
+import com.scbid.bond.entity.BondOrderItemEntity;
+import com.scbid.bond.entity.BondProjectEntity;
+import com.scbid.bond.service.BondEnagencyService;
+import com.scbid.bond.service.BondEnguaratorService;
+import com.scbid.bond.service.BondEnsupplierService;
+import com.scbid.bond.service.BondOrderItemService;
+import com.scbid.bond.service.BondOrderService;
+import com.scbid.bond.service.BondProjectService;
+import com.scbid.common.utils.BLUUIDUitls;
+import com.scbid.common.utils.Constant;
+import com.scbid.common.utils.Constant.BLWhetherEnum;
+import com.scbid.common.utils.Constant.InvoiceCategoryEnum;
+import com.scbid.common.utils.Constant.InvoiceStatusEnum;
+import com.scbid.common.utils.Constant.InvoiceTaxRateEnum;
+import com.scbid.common.utils.Constant.InvoiceTypeCodeEnum;
+import com.scbid.common.utils.Constant.OrderStatus;
+import com.scbid.common.utils.Product;
+import com.scbid.feign.service.PayService;
+import com.scbid.invoice.entity.FpsqbEntity;
+import com.scbid.invoice.service.FpsqbService;
+import com.scbid.manage.entity.AccountEntity;
+import com.scbid.manage.entity.CommonOrganizationEntity;
+import com.scbid.manage.entity.TenderImplemenProjectEntity;
+import com.scbid.manage.service.AccountService;
+import com.scbid.manage.service.CommonOrganizationService;
+import com.scbid.manage.service.TenderBidBookSaleRecordService;
+import com.scbid.manage.service.TenderImplemenProjectService;
+@Controller
+@RequestMapping("bond")
+public class PayController {
+	@Value("${admin-alipay-index}")
+	private String alipayPayUrl;
+	
+	@Value("${admin-return-alipay}")
+	private String returnAlipayUrl;
+
+	@Value("${admin-weixin-index}")
+	private String weixinPayUrl;
+	
+	@Value("${admin-return-weixin}")
+	private String returnWeixinPayUrl;		
+
+	@Autowired
+	private BondOrderService bondOrderService;
+	@Autowired
+	private BondEnagencyService bondEnagencyService;
+	@Autowired
+	private BondEnguaratorService bondEnguaratorService;
+	@Autowired
+	private BondEnsupplierService bondEnsupplierService;
+	@Autowired
+	private BondOrderItemService bondOrderItemService;
+	/**
+	 * 保函项目
+	 */
+	@Autowired
+	private BondProjectService bondProjectService;
+	
+	 /**
+     * 标书售卖记录
+     */
+    @Autowired
+    private TenderBidBookSaleRecordService bidBookSaleRecordService;
+	
+    @Autowired
+    PayService payService;
+    
+    /**
+     * 发票记录表
+     */
+	@Autowired
+	private FpsqbService fpsqbService;
+	
+	@Autowired
+	private TenderImplemenProjectService tenderImplemenProjectService;
+
+	@Autowired
+	private AccountService accountService;
+
+	@Autowired
+	private CommonOrganizationService commonOrganizationService;
+	
+	// 支付宝支付
+	@ResponseBody
+	@RequestMapping("/alipay")
+	// @RequiresPermissions("bond:bondorder:alipay")
+	public Map<String, Object> alipay(@RequestBody BondOrderEntity bondOrder, ModelMap map) {
+		// 接收到请求，记录请求内容
+		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = attributes.getRequest();
+		bondOrder = bondOrderService.selectById(bondOrder.getOrderId());// 订单信息
+		Map<String, Object> postMap = new HashMap<String, Object>();
+		if (OrderStatus.STATUS_3.getValue()==bondOrder.getOrderStatus()) {
+			postMap.put("message", "订单已经支付！");
+			return postMap;
+		}
+		
+		BondEnagencyEntity enagencyEntity = bondEnagencyService.selectById(bondOrder.getAgencyId());// 代理商信息
+		if (enagencyEntity == null) {
+			return null;
+		}
+
+		BondEnguaratorEntity enguaratorEntity = bondEnguaratorService.selectById(bondOrder.getGuaratorId());// 担保机构信息
+		if (enguaratorEntity == null) {
+			return null;
+		}
+		
+		BondEnsupplierEntity ensupplierEntity = bondEnsupplierService.selectById(bondOrder.getSupplierId());// 供应商信息
+		Map<String, Object> columnMap = new HashMap<String, Object>();
+		columnMap.put("order_id", bondOrder.getOrderId());
+		List<BondOrderItemEntity> itemList = bondOrderItemService.selectByMap(columnMap);
+		List<Long> projectIds = new ArrayList<Long>();
+		for (BondOrderItemEntity orderItem : itemList) {
+			projectIds.add(orderItem.getProjectId());
+		}
+		List<BondProjectEntity> projects = bondProjectService.selectBatchIds(projectIds);
+		List<String> list = new ArrayList<String>();
+		for (BondProjectEntity project : projects) {
+			list.add(project.getProjectName());
+		}
+		// 商品明细信息
+		
+		Product product = new Product();
+		product.setProductId(bondOrder.getOrderId().toString());
+		product.setOutTradeNo(bondOrder.getOrderNo());// 订单编号
+		product.setSubject(ensupplierEntity.getSupplierName());// 供应商名称
+		//支付宝支付单位为元
+		product.setTotalFee(bondOrder.getOrderMoney().toString());// 交易金额
+		product.setBody("支付宝支付");// 项目明细
+		product.setFrontUrl(returnAlipayUrl);
+		product.setSpbillCreateIp(request.getRemoteAddr());
+		product.setPayType((short) 1);
+		product.setPayWay((short) 1);
+		postMap.put("product", product);
+		postMap.put("alipayPayUrl", alipayPayUrl);// 支付系统地址
+		return postMap;
+	}
+
+	/**
+	  * @Title: returnAlipay
+	  * @Description: 支付宝回执信息
+	  * @author: wangyun
+	  * @date: 2018年5月24日 上午9:03:57
+	  * @param params
+	  * @param map
+	 */
+	@RequestMapping(value="/returnAlipay",method = {RequestMethod.POST, RequestMethod.GET})
+	public String returnAlipay(@RequestParam Map<String, Object> params, ModelMap map) {
+		
+		if (null!=params.get("out_trade_no")) {
+			Map<String,Object> newparams = new HashMap<String,Object>();
+			newparams.put("order_no", params.get("out_trade_no"));
+			List<BondOrderEntity> bondOrders  = bondOrderService.selectByMap(newparams);
+			for (BondOrderEntity bondOrder : bondOrders) {
+				
+				BondEnsupplierEntity supplierEntity = bondEnsupplierService.selectById(bondOrder.getSupplierId());// 供应商信息
+				BondEnagencyEntity agencyEntity = bondEnagencyService.selectById(bondOrder.getAgencyId());// 代理商信息
+				
+				Map<String, Object> columnMap = new HashMap<String, Object>();
+				columnMap.put("order_id", bondOrder.getOrderId());
+				List<BondOrderItemEntity> itemList = bondOrderItemService.selectByMap(columnMap);
+				List<Long> projectIds = new ArrayList<Long>();
+				for (BondOrderItemEntity orderItem : itemList) {
+					projectIds.add(orderItem.getProjectId());
+				}
+				List<BondProjectEntity> projects = bondProjectService.selectBatchIds(projectIds);
+				
+				//修改项目缴纳保证金状态
+				String invoiceRemark = null;
+				for (BondProjectEntity project : projects) {
+					columnMap = new HashMap<String, Object>();
+					columnMap.put("supplierId", supplierEntity.getSupplierUuid());
+					columnMap.put("projectId", project.getProjectUuid());
+					columnMap.put("packageId", project.getPackageId());
+					columnMap.put("isPayTheDeposit", BLWhetherEnum.YES.getValue());
+					bidBookSaleRecordService.updatePayTheDeposit(columnMap);
+					invoiceRemark = invoiceRemark(project.getProjectUuid());
+				}
+				//更新订单状态
+				bondOrder.setOrderStatus(Constant.OrderStatus.STATUS_3.getValue());
+				bondOrder.setPayType(Constant.PayType.STATUS_1.getValue());
+				//发票主键
+				String invoiceUuid =  BLUUIDUitls.generateUUID();
+				bondOrder.setInvoiceUuid(invoiceUuid);
+				//生成发票
+				createInvoice(supplierEntity,agencyEntity,bondOrder,invoiceRemark);
+			}
+			bondOrderService.updateBatchById(bondOrders);
+		}
+		return "modules/supplier/pay-return";
+	}
+	
+	/**
+	  * @Title: invoiceRemark
+	  * @Description: TODO
+	  * @author: wangyun
+	  * @date: 2018年5月24日 下午1:11:45
+	  * @param projectId
+	  * @return
+	 */
+	private String invoiceRemark(String projectId) {
+		StringBuffer invoiceRemarkBuf = new StringBuffer("商务服务/标书服务费");
+		TenderImplemenProjectEntity projectModel = tenderImplemenProjectService.selectById(projectId);
+		if (projectModel != null) {
+			invoiceRemarkBuf.append(subFinanceCode(projectModel.getFinanceCode()));
+			invoiceRemarkBuf.append(projectModel.getProjectName());
+			AccountEntity accountModel = accountService.selectById(projectModel.getAchievementId());
+			String departName = "";
+			if (accountModel != null) {
+				CommonOrganizationEntity organizationModel = commonOrganizationService.selectById(accountModel.getDepartment());
+				if (organizationModel != null) {
+					departName = organizationModel.getName();
+				}
+			}
+			if (StringUtils.isNotEmpty(departName)) {
+				invoiceRemarkBuf.append("/");
+				invoiceRemarkBuf.append(departName);
+			}
+		}
+		return invoiceRemarkBuf.toString();
+	}
+
+	/**
+	 * @Title: subFinanceCode
+	 * @Description: 截取财务项目编号
+	 * @date: 2018年2月1日 下午3:03:27
+	 * @param financeCode
+	 * @return
+	 */
+	private String subFinanceCode(String financeCode) {
+		String financeCodeStr = "";
+		if (StringUtils.isNotEmpty(financeCode)) {
+			int length = financeCode.length();
+			if (length > 5) {
+				if (financeCode.contains("L")) {
+					financeCodeStr = financeCode.substring(length - 7, length);
+				} else {
+					financeCodeStr = financeCode.substring(length - 5, length);
+				}
+			} else {
+				financeCodeStr = financeCode;
+			}
+		}
+		return financeCodeStr;
+	}
+	/**
+	  * @Title: createInvoice
+	  * @Description: 创建发票
+	  * @author: wangyun
+	  * @date: 2018年5月24日 下午3:44:23
+	  * @param supplierEntity
+	  * @param agencyEntity
+	  * @param bondOrder
+	  * @param invoiceRemark
+	  * @return
+	 */
+	private boolean createInvoice(BondEnsupplierEntity supplierEntity, BondEnagencyEntity agencyEntity, BondOrderEntity bondOrder, String invoiceRemark) {
+		FpsqbEntity invoiceBean = new FpsqbEntity();
+		invoiceBean.setListId(bondOrder.getInvoiceUuid());
+		invoiceBean.setCliengName(supplierEntity.getSupplierName());
+		invoiceBean.setDutyParagraph(supplierEntity.getSupplierTaxpayerNo());
+		invoiceBean.setAddressPhone(supplierEntity.getSupplierRegAdress());
+		invoiceBean.setBankNum(supplierEntity.getSupplierBankAccount() + " " + supplierEntity.getSupplierBankNumber());
+		invoiceBean.setApplyDate(new Date());
+		invoiceBean.setInvoiceCategory(InvoiceCategoryEnum.INVOICE_CATEGORY_ORDINARY.getCategory());
+		invoiceBean.setInvoiceStatus(InvoiceStatusEnum.INVOICE_STATUS_PENDING_INVOICE.getStatus());
+		invoiceBean.setGoodName(InvoiceTypeCodeEnum.INVOICE_TYPE_CODE_BID_BOOK.getName());
+		invoiceBean.setNumber(1f);
+		invoiceBean.setUnitPrice(Float.valueOf(bondOrder.getOrderMoney().toString()));
+		invoiceBean.setConsult(Float.valueOf(bondOrder.getOrderMoney().toString()));
+		invoiceBean.setTaxRate(InvoiceTaxRateEnum.INVOICE_TAX_RATE_SIX.getTaxRate());
+		invoiceBean.setTypeCode(InvoiceTypeCodeEnum.INVOICE_TYPE_CODE_BID_BOOK.getCode());
+		invoiceBean.setInvoiceDetailId("1");
+		invoiceBean.setInvoiceRemark(invoiceRemark);
+		fpsqbService.insertInvoiceBean(invoiceBean);
+		return true;
+	}
+	
+	// 微信支付
+	@ResponseBody
+	@RequestMapping("/weixin")
+	// @RequiresPermissions("bond:bondorder:alipay")
+	public Map<String, Object> weixin(@RequestBody BondOrderEntity bondOrder, ModelMap map) {
+		// 接收到请求，记录请求内容
+		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = attributes.getRequest();
+		Map<String, Object> postMap = new HashMap<String, Object>();
+		bondOrder = bondOrderService.selectById(bondOrder.getOrderId());// 订单信息
+		if (OrderStatus.STATUS_3.getValue()==bondOrder.getOrderStatus()) {
+			postMap.put("message", "订单已经支付！");
+			return postMap;
+		}
+		BondEnagencyEntity enagencyEntity = bondEnagencyService.selectById(bondOrder.getAgencyId());// 代理商信息
+		if (enagencyEntity == null) {
+			return null;
+		}
+		BondEnguaratorEntity enguaratorEntity = bondEnguaratorService.selectById(bondOrder.getGuaratorId());// 担保机构信息
+		if (enguaratorEntity == null) {
+			return null;
+		}
+		BondEnsupplierEntity ensupplierEntity = bondEnsupplierService.selectById(bondOrder.getSupplierId());// 供应商信息
+		Map<String, Object> columnMap = new HashMap<String, Object>();
+		columnMap.put("order_id", bondOrder.getOrderId());
+		List<BondOrderItemEntity> itemList = bondOrderItemService.selectByMap(columnMap);
+		List<Long> projectIds = new ArrayList<Long>();
+		for (BondOrderItemEntity orderItem : itemList) {
+			projectIds.add(orderItem.getProjectId());
+		}
+		List<BondProjectEntity> projects = bondProjectService.selectBatchIds(projectIds);
+		List<String> list = new ArrayList<String>();
+		for (BondProjectEntity project : projects) {
+			list.add(project.getProjectName());
+		}
+		// 商品明细信息
+		
+		Product product = new Product();
+		product.setProductId(bondOrder.getOrderId().toString());
+		product.setOutTradeNo(bondOrder.getOrderNo());// 订单编号
+		product.setSubject(ensupplierEntity.getSupplierName());// 供应商名称
+		//微信支付单位为分
+		BigDecimal decimal = new BigDecimal(bondOrder.getOrderMoney().toString());
+		product.setTotalFee(decimal.toString());// 交易金额
+		product.setBody("微信支付");// 项目明细
+		product.setFrontUrl(returnWeixinPayUrl);
+		product.setSpbillCreateIp(request.getRemoteAddr());
+		product.setPayType((short) 1);
+		product.setPayWay((short) 1);
+		postMap.put("product", product);
+		postMap.put("weixinPayUrl", weixinPayUrl);// 支付系统地址
+		return postMap;
+	}
+	
+	/**
+	  * @Title: returnAlipay
+	  * @Description: 支付宝回执信息
+	  * @author: wangyun
+	  * @date: 2018年5月24日 上午9:03:57
+	  * @param params
+	  * @param map
+	 */
+	@RequestMapping(value="/returnWeixin",method = {RequestMethod.POST, RequestMethod.GET})
+	public String returnWeixin(@RequestParam Map<String, Object> params, ModelMap map) {
+		if (null!=params.get("out_trade_no")) {
+			Map<String,Object> newparams = new HashMap<String,Object>();
+			newparams.put("order_no", params.get("out_trade_no"));
+			List<BondOrderEntity> bondOrders  = bondOrderService.selectByMap(newparams);
+			for (BondOrderEntity bondOrder : bondOrders) {
+				
+				BondEnsupplierEntity supplierEntity = bondEnsupplierService.selectById(bondOrder.getSupplierId());// 供应商信息
+				BondEnagencyEntity agencyEntity = bondEnagencyService.selectById(bondOrder.getAgencyId());// 代理商信息
+				
+				Map<String, Object> columnMap = new HashMap<String, Object>();
+				columnMap.put("order_id", bondOrder.getOrderId());
+				List<BondOrderItemEntity> itemList = bondOrderItemService.selectByMap(columnMap);
+				List<Long> projectIds = new ArrayList<Long>();
+				for (BondOrderItemEntity orderItem : itemList) {
+					projectIds.add(orderItem.getProjectId());
+				}
+				List<BondProjectEntity> projects = bondProjectService.selectBatchIds(projectIds);
+				
+				//修改项目缴纳保证金状态
+				String invoiceRemark = null;
+				for (BondProjectEntity project : projects) {
+					columnMap = new HashMap<String, Object>();
+					columnMap.put("supplierId", supplierEntity.getSupplierUuid());
+					columnMap.put("projectId", project.getProjectUuid());
+					columnMap.put("packageId", project.getPackageId());
+					columnMap.put("isPayTheDeposit", BLWhetherEnum.YES.getValue());
+					bidBookSaleRecordService.updatePayTheDeposit(columnMap);
+					invoiceRemark = invoiceRemark(project.getProjectUuid());
+				}
+				//更新订单状态
+				bondOrder.setOrderStatus(Constant.OrderStatus.STATUS_3.getValue());
+				bondOrder.setPayType(Constant.PayType.STATUS_2.getValue());//微信支付
+				//发票主键
+				String invoiceUuid =  BLUUIDUitls.generateUUID();
+				bondOrder.setInvoiceUuid(invoiceUuid);
+				//生成发票
+				createInvoice(supplierEntity,agencyEntity,bondOrder,invoiceRemark);
+			}
+			bondOrderService.updateBatchById(bondOrders);
+		}
+		
+		return "modules/supplier/pay-return";
+	}
+	/**
+	 * 当面付
+	  * @Title: tradePay
+	  * @Description: TODO
+	  * @author: wangyun
+	  * @date: 2018年6月1日 下午2:49:14
+	  * @return
+	 */
+	@RequestMapping(value = "/tradePay")
+	public Map<String, String> tradePay() {
+		Product product = new Product();
+		return payService.tradePay(product);
+	}
+	
+}

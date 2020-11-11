@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.manage.dao.AccountDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.scbid.manage.entity.AccountEntity" id="accountMap">
+        <result property="listId" column="LIST_ID"/>
+        <result property="accountName" column="ACCOUNT_NAME"/>
+        <result property="password" column="PASSWORD"/>
+        <result property="isAdmin" column="IS_ADMIN"/>
+        <result property="status" column="STATUS"/>
+        <result property="remark" column="REMARK"/>
+        <result property="isDelete" column="IS_DELETE"/>
+        <result property="operator" column="OPERATOR"/>
+        <result property="operateTime" column="OPERATE_TIME"/>
+        <result property="creater" column="CREATER"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="domainAuth" column="DOMAIN_AUTH"/>
+        <result property="rankId" column="RANK_ID"/>
+        <result property="passwordTime" column="PASSWORD_TIME"/>
+        <result property="loginTime" column="LOGIN_TIME"/>
+        <result property="companyId" column="COMPANY_ID"/>
+        <result property="department" column="DEPARTMENT"/>
+        <result property="phone" column="PHONE"/>
+        <result property="telPhone" column="TEL_PHONE"/>
+        <result property="email" column="EMAIL"/>
+        <result property="sex" column="SEX"/>
+        <result property="username" column="USERNAME"/>
+        <result property="faxes" column="FAXES"/>
+        <result property="cardNumber" column="CARD_NUMBER"/>
+        <result property="jobNumber" column="JOB_NUMBER"/>
+        <result property="hiredate" column="HIREDATE"/>
+        <result property="photo" column="PHOTO"/>
+        <result property="administrativeRank" column="ADMINISTRATIVE_RANK"/>
+        <result property="creatorId" column="CREATOR_ID"/>
+        <result property="jobType" column="JOB_TYPE"/>
+        <result property="userDataPrivilege" column="USER_DATA_PRIVILEGE"/>
+        <result property="tencentNum" column="TENCENT_NUM"/>
+        <result property="wxNum" column="WX_NUM"/>
+        <result property="extensionPhone" column="EXTENSION_PHONE"/>
+    </resultMap>
+
+
+</mapper>

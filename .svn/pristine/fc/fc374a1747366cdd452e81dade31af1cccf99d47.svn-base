@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.bond.dao.BondOrderFileDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.scbid.bond.entity.BondOrderFileEntity" id="bondOrderFileMap">
+        <result property="fileId" column="file_id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="orderVoucher" column="order_voucher"/>
+    </resultMap>
+    
+    <!-- 查询列表 -->
+	<select id="bondOrderFilePage" resultMap="bondOrderFileMap" parameterType="java.util.Map">
+	SELECT
+    t_bond_order_file.*
+    FROM t_bond_order_file
+    WHERE 1=1
+   <if test="fileId != null and fileId != ''" >
+       AND file_id = #{fileId}
+    </if>
+   <if test="orderId != null and orderId != ''" >
+       AND order_id = #{orderId}
+    </if>
+   <if test="orderVoucher != null and orderVoucher != ''" >
+       AND order_voucher = #{orderVoucher}
+    </if>
+	</select>
+</mapper>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.manage.dao.TenderBidBookSaleRecordDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.scbid.manage.entity.TenderBidBookSaleRecordEntity" id="tenderBidBookSaleRecordMap">
+        <result property="listId" column="LIST_ID"/>
+        <result property="isDelete" column="IS_DELETE"/>
+        <result property="operator" column="OPERATOR"/>
+        <result property="operateTime" column="OPERATE_TIME"/>
+        <result property="creater" column="CREATER"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="domainAuth" column="DOMAIN_AUTH"/>
+        <result property="remark" column="REMARK"/>
+        <result property="projectId" column="PROJECT_ID"/>
+        <result property="packageId" column="PACKAGE_ID"/>
+        <result property="supplierId" column="SUPPLIER_ID"/>
+        <result property="supplierLinkmanId" column="SUPPLIER_LINKMAN_ID"/>
+        <result property="invoiceNumber" column="INVOICE_NUMBER"/>
+        <result property="type" column="TYPE"/>
+        <result property="receiptNumber" column="RECEIPT_NUMBER"/>
+        <result property="isPayTheDeposit" column="IS_PAY_THE_DEPOSIT"/>
+        <result property="marginSource" column="MARGIN_SOURCE"/>
+        <result property="tenderNewSource" column="TENDER_NEW_SOURCE"/>
+        <result property="marginOther" column="MARGIN_OTHER"/>
+        <result property="tenderNewOther" column="TENDER_NEW_OTHER"/>
+        <result property="depositAmount" column="DEPOSIT_AMOUNT"/>
+        <result property="isPending" column="IS_PENDING"/>
+        <result property="enderNewOther" column="ENDER_NEW_OTHER"/>
+        <result property="creatorId" column="CREATOR_ID"/>
+        <result property="billsStatus" column="BILLS_STATUS"/>
+        <result property="isJoinOpenBid" column="IS_JOIN_OPEN_BID"/>
+        <result property="channelSerialNo" column="CHANNEL_SERIAL_NO"/>
+        <result property="payStyle" column="PAY_STYLE"/>
+        <result property="saleOrderId" column="SALE_ORDER_ID"/>
+        <result property="bondStatus" column="BOND_STATUS"/>
+        <result property="bondOrderNo" column="BOND_ORDER_NO"/>
+        <result property="bondOrderMoney" column="BOND_ORDER_MONEY"/>
+        
+        <!-- 翻译字段 -->
+        <result property="projectName" column="project_name"/>
+        <result property="supplierName" column="supplier_name"/>
+        <result property="supplierLinkman" column="supplier_linkman"/>
+        <result property="saleOrder" column="sale_order"/>
+        
+    </resultMap>
+    
+    
+    <select id="selectSalesByOrderId" resultMap="tenderBidBookSaleRecordMap" parameterType="java.lang.String">
+    SELECT
+    t_tender_bid_book_sale_record.*
+    FROM t_tender_bid_book_sale_record
+    WHERE 1=1 AND SALE_ORDER_ID = #{saleOrderId}
+    </select>
+    
+    <select id="slectSlaeByBondOrderNo" resultMap="tenderBidBookSaleRecordMap" parameterType="java.lang.String">
+    SELECT
+    t_tender_bid_book_sale_record.*
+    FROM t_tender_bid_book_sale_record
+    WHERE 1=1 AND BOND_ORDER_NO = #{bondOrderNo}
+    </select>
+    
+    <select id="selectSaleByParams" resultMap="tenderBidBookSaleRecordMap" parameterType="java.lang.String">
+    SELECT
+    t_tender_bid_book_sale_record.*
+    FROM t_tender_bid_book_sale_record
+    WHERE 1=1 
+    AND SALE_ORDER_ID = #{saleOrderId} AND PROJECT_ID = #{projectId} AND PACKAGE_ID = #{packageId}  AND SUPPLIER_ID = #{supplierId} 
+    </select>
+    
+    <select id="selectByMapIn" resultMap="tenderBidBookSaleRecordMap" parameterType="java.util.Map">
+       SELECT
+       t_tender_bid_book_sale_record.*
+       FROM t_tender_bid_book_sale_record
+       WHERE PROJECT_ID IN
+       <foreach collection="projectIds" index="index" item="item" open="(" separator="," close=")">
+           #{item}
+       </foreach>
+   </select>
+    
+    
+    <!-- 查询列表 -->
+	<select id="tenderBidBookSaleRecordPage" resultMap="tenderBidBookSaleRecordMap" parameterType="java.util.Map">
+    SELECT t_tender_bid_book_sale_record.*,
+    (SELECT PROJECT_NAME FROM t_sale_project WHERE PROJECT_ID = t_tender_bid_book_sale_record.PROJECT_ID) AS project_name,
+    (SELECT NAME FROM t_crm_supplier WHERE LIST_ID = t_tender_bid_book_sale_record.SUPPLIER_ID) AS supplier_name,
+    (SELECT NAME FROM t_crm_supplier_linkman WHERE LIST_ID = t_tender_bid_book_sale_record.SUPPLIER_LINKMAN_ID) AS supplier_linkman,
+    (SELECT ORDER_NO FROM t_sale_purchase_order WHERE LIST_ID = t_tender_bid_book_sale_record.SALE_ORDER_ID) AS sale_order
+    FROM t_tender_bid_book_sale_record
+    WHERE 1=1
+   <if test="LIST_ID != null" >
+       AND LIST_ID = #{LIST_ID}
+    </if>
+   <if test="IS_DELETE != null" >
+       AND IS_DELETE = #{IS_DELETE}
+    </if>
+   <if test="OPERATOR != null" >
+       AND OPERATOR = #{OPERATOR}
+    </if>
+   <if test="OPERATE_TIME != null" >
+       AND OPERATE_TIME = #{OPERATE_TIME}
+    </if>
+   <if test="CREATER != null" >
+       AND CREATER = #{CREATER}
+    </if>
+   <if test="CREATE_TIME != null" >
+       AND CREATE_TIME = #{CREATE_TIME}
+    </if>
+   <if test="DOMAIN_AUTH != null" >
+       AND DOMAIN_AUTH = #{DOMAIN_AUTH}
+    </if>
+   <if test="REMARK != null" >
+       AND REMARK = #{REMARK}
+    </if>
+   <if test="PROJECT_ID != null" >
+       AND PROJECT_ID = #{PROJECT_ID}
+    </if>
+   <if test="PACKAGE_ID != null" >
+       AND PACKAGE_ID = #{PACKAGE_ID}
+    </if>
+   <if test="SUPPLIER_ID != null" >
+       AND SUPPLIER_ID = #{SUPPLIER_ID}
+    </if>
+   <if test="SUPPLIER_LINKMAN_ID != null" >
+       AND SUPPLIER_LINKMAN_ID = #{SUPPLIER_LINKMAN_ID}
+    </if>
+   <if test="INVOICE_NUMBER != null" >
+       AND INVOICE_NUMBER = #{INVOICE_NUMBER}
+    </if>
+   <if test="TYPE != null" >
+       AND TYPE = #{TYPE}
+    </if>
+   <if test="RECEIPT_NUMBER != null" >
+       AND RECEIPT_NUMBER = #{RECEIPT_NUMBER}
+    </if>
+   <if test="IS_PAY_THE_DEPOSIT != null" >
+       AND IS_PAY_THE_DEPOSIT = #{IS_PAY_THE_DEPOSIT}
+    </if>
+   <if test="MARGIN_SOURCE != null" >
+       AND MARGIN_SOURCE = #{MARGIN_SOURCE}
+    </if>
+   <if test="TENDER_NEW_SOURCE != null" >
+       AND TENDER_NEW_SOURCE = #{TENDER_NEW_SOURCE}
+    </if>
+   <if test="MARGIN_OTHER != null" >
+       AND MARGIN_OTHER = #{MARGIN_OTHER}
+    </if>
+   <if test="TENDER_NEW_OTHER != null" >
+       AND TENDER_NEW_OTHER = #{TENDER_NEW_OTHER}
+    </if>
+   <if test="DEPOSIT_AMOUNT != null" >
+       AND DEPOSIT_AMOUNT = #{DEPOSIT_AMOUNT}
+    </if>
+   <if test="IS_PENDING != null" >
+       AND IS_PENDING = #{IS_PENDING}
+    </if>
+   <if test="ENDER_NEW_OTHER != null" >
+       AND ENDER_NEW_OTHER = #{ENDER_NEW_OTHER}
+    </if>
+   <if test="CREATOR_ID != null" >
+       AND CREATOR_ID = #{CREATOR_ID}
+    </if>
+   <if test="BILLS_STATUS != null" >
+       AND BILLS_STATUS = #{BILLS_STATUS}
+    </if>
+   <if test="IS_JOIN_OPEN_BID != null" >
+       AND IS_JOIN_OPEN_BID = #{IS_JOIN_OPEN_BID}
+    </if>
+   <if test="CHANNEL_SERIAL_NO != null" >
+       AND CHANNEL_SERIAL_NO = #{CHANNEL_SERIAL_NO}
+    </if>
+   <if test="PAY_STYLE != null" >
+       AND PAY_STYLE = #{PAY_STYLE}
+    </if>
+   <if test="SALE_ORDER_ID != null" >
+       AND SALE_ORDER_ID = #{SALE_ORDER_ID}
+    </if>
+	</select>
+	
+	<!-- 修改保证金缴纳状态 -->
+	<update id="updatePayTheDeposit" parameterType="java.util.Map">
+		UPDATE t_tender_bid_book_sale_record 
+		SET IS_PAY_THE_DEPOSIT = #{isPayTheDeposit} 
+		WHERE 
+		SUPPLIER_ID = #{supplierId} AND PROJECT_ID=#{projectId} AND PACKAGE_ID = #{packageId};
+	</update>
+	
+	<update id="updateBondData" parameterType="java.util.Map">
+		update t_tender_bid_book_sale_record 
+		set 
+		BOND_STATUS = #{bondStatus},
+		BOND_ORDER_NO = #{bondOrderNo},
+		BOND_ORDER_MONEY = #{bondOrderMoney}
+		where LIST_ID = #{listId}
+	</update>
+	
+	<update id="updateStatusById" parameterType="java.util.Map">
+		update t_tender_bid_book_sale_record set BOND_STATUS = #{bondStatus} where LIST_ID = #{listId}
+	</update>
+	
+</mapper>

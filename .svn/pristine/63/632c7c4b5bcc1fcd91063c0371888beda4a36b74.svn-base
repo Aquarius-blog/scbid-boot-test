@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.manage.dao.CrmSupplierAccountDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.scbid.manage.entity.CrmSupplierAccountEntity" id="crmSupplierAccountMap">
+        <result property="listId" column="LIST_ID"/>
+        <result property="creater" column="CREATER"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="operateTime" column="OPERATE_TIME"/>
+        <result property="operator" column="OPERATOR"/>
+        <result property="isDelete" column="IS_DELETE"/>
+        <result property="domainAuth" column="DOMAIN_AUTH"/>
+        <result property="creatorId" column="CREATOR_ID"/>
+        <result property="username" column="USERNAME"/>
+        <result property="supplierId" column="SUPPLIER_ID"/>
+        <result property="password" column="PASSWORD"/>
+    </resultMap>
+    
+    <!-- 查询列表 -->
+	<select id="selectSupplierByListId" resultMap="crmSupplierAccountMap" parameterType="java.lang.String">
+	SELECT
+    t_crm_supplier_account.*
+    FROM t_crm_supplier_account
+    WHERE LIST_ID = #{listId}
+    </select>
+    
+    <!-- 查询列表 -->
+	<select id="selectSupplierBySupplierId" resultMap="crmSupplierAccountMap" parameterType="java.lang.String">
+	SELECT
+    t_crm_supplier_account.*
+    FROM t_crm_supplier_account
+    WHERE SUPPLIER_ID = #{supplierId}
+    </select>
+    
+    <!-- 查询列表 -->
+	<select id="crmSupplierAccountPage" resultMap="crmSupplierAccountMap" parameterType="java.util.Map">
+	SELECT
+    t_crm_supplier_account.*
+    FROM t_crm_supplier_account
+    WHERE 1=1
+   <if test="listId != null" >
+       AND LIST_ID = #{listId}
+    </if>
+   <if test="creater != null" >
+       AND CREATER = #{creater}
+    </if>
+   <if test="createTime != null" >
+       AND CREATE_TIME = #{createTime}
+    </if>
+   <if test="operateTime != null" >
+       AND OPERATE_TIME = #{operateTime}
+    </if>
+   <if test="operator != null" >
+       AND OPERATOR = #{operator}
+    </if>
+   <if test="isDelete != null" >
+       AND IS_DELETE = #{isDelete}
+    </if>
+   <if test="domainAuth != null" >
+       AND DOMAIN_AUTH = #{domainAuth}
+    </if>
+   <if test="creatorId != null" >
+       AND CREATOR_ID = #{creatorId}
+    </if>
+   <if test="username != null" >
+       AND USERNAME = #{username}
+    </if>
+   <if test="supplierId != null" >
+       AND SUPPLIER_ID = #{supplierId}
+    </if>
+   <if test="password != null" >
+       AND PASSWORD = #{password}
+    </if>
+	</select>
+</mapper>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.bond.dao.BondEnguaratorDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.scbid.bond.entity.BondEnguaratorEntity" id="bondEnguaratorMap">
+        <result property="guaratorId" column="guarator_id"/>
+        <result property="guaratorUuid" column="guarator_uuid"/>
+        <result property="guaratorName" column="guarator_name"/>
+        <result property="guaratorScale" column="guarator_scale"/>
+        <result property="guaratorPhone" column="guarator_phone"/>
+        <result property="guaratorLicenseNo" column="guarator_license_no"/>
+        <result property="guaratorLicenseImg" column="guarator_license_img"/>
+        <result property="guaratorCapital" column="guarator_capital"/>
+        <result property="guaratorPostcode" column="guarator_postcode"/>
+        <result property="guaratorSort" column="guarator_sort"/>
+        <result property="guaratorTaxpayerNo" column="guarator_taxpayer_no"/>
+        <result property="guaratorRegNumber" column="guarator_reg_number"/>
+        <result property="guaratorLegalPhone" column="guarator_legal_phone"/>
+        <result property="guaratorFaxes" column="guarator_faxes"/>
+        <result property="guaratorBankAccount" column="guarator_bank_account"/>
+        <result property="guaratorBankNumber" column="guarator_bank_number"/>
+        <result property="guaratorAddress" column="guarator_address"/>
+        <result property="guaratorIndustry" column="guarator_industry"/>
+        <result property="guaratorLegalPepre" column="guarator_legal_pepre"/>
+        <result property="guaratorEstabDate" column="guarator_estab_date"/>
+        <result property="guaratorOpenatingPeriod" column="guarator_openating_period"/>
+        <result property="guaratorRegAdress" column="guarator_reg_adress"/>
+        <result property="guaratorCompanyType" column="guarator_company_type"/>
+        <result property="guaratorStatus" column="guarator_status"/>
+        <result property="guaratorRemarks" column="guarator_remarks"/>
+        <result property="guaratorDate" column="guarator_date"/>
+        <result property="guaratorUserId" column="guarator_user_id"/>
+        <result property="updateUesrName" column="update_uesr_name"/>
+        <result property="updateDate" column="update_date"/>
+    </resultMap>
+    
+	<!-- 批量查询 -->
+	<select id="selectBatchGuaratorIds" resultMap="bondEnguaratorMap" parameterType="java.util.Map">
+       SELECT
+       t_bond_ent_guarator.*
+       FROM t_bond_ent_guarator
+       WHERE guarator_id IN
+       <foreach collection="guaratorIds" index="index" item="item" open="(" separator="," close=")">
+           #{item}
+       </foreach>
+       <if test="guaratorName != null and guaratorName != ''">
+           AND guarator_name = #{guaratorName}
+       </if>
+   </select>
+   
+   <!-- 定位查询 -->
+   <select id="selectByGuaratorUuids" resultMap="bondEnguaratorMap" parameterType="java.lang.String">
+       SELECT
+       t_bond_ent_guarator.*
+       FROM t_bond_ent_guarator
+       WHERE guarator_uuid = #{guaratorUuid}
+   </select>
+<!-- 批量查询 -->
+  <select id="queryListByMap" resultMap="bondEnguaratorMap" parameterType="java.util.Map">
+       SELECT
+       t_bond_ent_guarator.*
+       FROM t_bond_ent_guarator
+       WHERE guarator_uuid IN
+       <foreach collection="guaratorUuids" index="index" item="item" open="(" separator="," close=")">
+           #{item}
+       </foreach>
+   </select>
+   
+
+ <!-- 查询列表 -->
+	<select id="queryPageGuarators" resultMap="bondEnguaratorMap" parameterType="java.util.Map">
+	SELECT
+    t_bond_ent_guarator.*
+    FROM t_bond_ent_guarator
+    WHERE 1=1
+   <if test="guaratorId != null and guaratorId != ''" >
+       AND guarator_id = #{guaratorId}
+    </if>
+   <if test="guaratorUuid != null and guaratorUuid != ''" >
+       AND guarator_uuid = #{guaratorUuid}
+    </if>
+   <if test="guaratorName != null and guaratorName != ''" >
+       AND guarator_name = #{guaratorName}
+    </if>
+   <if test="guaratorScale != null and guaratorScale != ''" >
+       AND guarator_scale = #{guaratorScale}
+    </if>
+   <if test="guaratorPhone != null and guaratorPhone != ''" >
+       AND guarator_phone = #{guaratorPhone}
+    </if>
+   <if test="guaratorLicenseNo != null and guaratorLicenseNo != ''" >
+       AND guarator_license_no = #{guaratorLicenseNo}
+    </if>
+   <if test="guaratorLicenseImg != null and guaratorLicenseImg != ''" >
+       AND guarator_license_img = #{guaratorLicenseImg}
+    </if>
+   <if test="guaratorCapital != null and guaratorCapital != ''" >
+       AND guarator_capital = #{guaratorCapital}
+    </if>
+   <if test="guaratorPostcode != null and guaratorPostcode != ''" >
+       AND guarator_postcode = #{guaratorPostcode}
+    </if>
+   <if test="guaratorSort != null and guaratorSort != ''" >
+       AND guarator_sort = #{guaratorSort}
+    </if>
+   <if test="guaratorTaxpayerNo != null and guaratorTaxpayerNo != ''" >
+       AND guarator_taxpayer_no = #{guaratorTaxpayerNo}
+    </if>
+   <if test="guaratorRegNumber != null and guaratorRegNumber != ''" >
+       AND guarator_reg_number = #{guaratorRegNumber}
+    </if>
+   <if test="guaratorLegalPhone != null and guaratorLegalPhone != ''" >
+       AND guarator_legal_phone = #{guaratorLegalPhone}
+    </if>
+   <if test="guaratorFaxes != null and guaratorFaxes != ''" >
+       AND guarator_faxes = #{guaratorFaxes}
+    </if>
+   <if test="guaratorBankAccount != null and guaratorBankAccount != ''" >
+       AND guarator_bank_account = #{guaratorBankAccount}
+    </if>
+   <if test="guaratorBankNumber != null and guaratorBankNumber != ''" >
+       AND guarator_bank_number = #{guaratorBankNumber}
+    </if>
+   <if test="guaratorAddress != null and guaratorAddress != ''" >
+       AND guarator_address = #{guaratorAddress}
+    </if>
+   <if test="guaratorIndustry != null and guaratorIndustry != ''" >
+       AND guarator_industry = #{guaratorIndustry}
+    </if>
+   <if test="guaratorLegalPepre != null and guaratorLegalPepre != ''" >
+       AND guarator_legal_pepre = #{guaratorLegalPepre}
+    </if>
+   <if test="guaratorEstabDate != null and guaratorEstabDate != ''" >
+       AND guarator_estab_date = #{guaratorEstabDate}
+    </if>
+   <if test="guaratorOpenatingPeriod != null and guaratorOpenatingPeriod != ''" >
+       AND guarator_openating_period = #{guaratorOpenatingPeriod}
+    </if>
+   <if test="guaratorRegAdress != null and guaratorRegAdress != ''" >
+       AND guarator_reg_adress = #{guaratorRegAdress}
+    </if>
+   <if test="guaratorCompanyType != null and guaratorCompanyType != ''" >
+       AND guarator_company_type = #{guaratorCompanyType}
+    </if>
+   <if test="guaratorStatus != null and guaratorStatus != ''" >
+       AND guarator_status = #{guaratorStatus}
+    </if>
+   <if test="guaratorRemarks != null and guaratorRemarks != ''" >
+       AND guarator_remarks = #{guaratorRemarks}
+    </if>
+   <if test="guaratorDate != null and guaratorDate != ''" >
+       AND guarator_date = #{guaratorDate}
+    </if>
+   <if test="guaratorUserId != null and guaratorUserId != ''" >
+       AND guarator_user_id = #{guaratorUserId}
+    </if>
+   <if test="updateUesrName != null and updateUesrName != ''" >
+       AND update_uesr_name = #{updateUesrName}
+    </if>
+   <if test="updateDate != null and updateDate != ''" >
+       AND update_date = #{updateDate}
+    </if>
+    ORDER BY guarator_date DESC
+	</select>
+
+</mapper>

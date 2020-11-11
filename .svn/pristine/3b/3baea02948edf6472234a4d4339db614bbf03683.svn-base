@@ -1,0 +1,213 @@
+package com.scbid.api.controller;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.scbid.bond.entity.BondEnagencyEntity;
+import com.scbid.bond.entity.BondEnguaratorEntity;
+import com.scbid.bond.entity.BondEnsupplierEntity;
+import com.scbid.bond.entity.BondOrderEntity;
+import com.scbid.bond.service.BondEnagencyService;
+import com.scbid.bond.service.BondEnguaratorService;
+import com.scbid.bond.service.BondEnsupplierService;
+import com.scbid.bond.service.BondOrderService;
+import com.scbid.common.config.AliyunOSSUtils;
+import com.scbid.common.config.AliyunOssConfig;
+import com.scbid.common.utils.BLUUIDUitls;
+import com.scbid.common.utils.Constant;
+import com.scbid.common.utils.R;
+import com.scbid.manage.entity.CrmSupplierAccountEntity;
+import com.scbid.manage.entity.CrmSupplierEntity;
+import com.scbid.manage.entity.SaleOrderBondStatusEnum;
+import com.scbid.manage.entity.SaleOrderManagementEntity;
+import com.scbid.manage.entity.TenderBidBookSaleRecordEntity;
+import com.scbid.manage.entity.TenderImplemenProjectEntity;
+import com.scbid.manage.entity.TenderImplemenProjectPackagesEntity;
+import com.scbid.manage.service.CrmSupplierAccountService;
+import com.scbid.manage.service.CrmSupplierService;
+import com.scbid.manage.service.SaleOrderManagementService;
+import com.scbid.manage.service.TenderBidBookSaleRecordService;
+import com.scbid.manage.service.TenderImplemenProjectPackagesService;
+import com.scbid.manage.service.TenderImplemenProjectService;
+import com.scbid.sys.controller.AbstractController;
+import com.scbid.sys.entity.BondUserEntity;
+@RestController
+@RequestMapping("bond/api")
+public class BondApiController extends AbstractController {
+	@Autowired
+	private SaleOrderManagementService saleOrderManagementService;
+	@Autowired
+	private TenderImplemenProjectService tenderImplemenProjectService;
+	@Autowired
+	private TenderImplemenProjectPackagesService tenderImplemenProjectPackagesService;
+
+	@Autowired
+	private TenderBidBookSaleRecordService tenderBidBookSaleRecordService;
+
+	@Autowired
+	private BondOrderService bondOrderService;
+
+	@Autowired
+	private BondEnguaratorService bondEnguaratorService;
+
+	@Autowired
+	private BondEnagencyService bondEnagencyService;
+
+	/**
+	 * 供应商服务类
+	 */
+	@Autowired
+	private BondEnsupplierService bondEnsupplierService;
+
+	@Autowired
+	private CrmSupplierAccountService crmSupplierAccountService;
+
+	@Autowired
+	private CrmSupplierService crmSupplierService;
+
+	@Autowired
+	private AliyunOssConfig aliyunOssConfig;
+	/**
+	 * 填写申请资料页面数据信息提交
+	 * 
+	 * @param bean
+	 * @return
+	 */
+	@RequestMapping(value = "/saveApplication", method = {RequestMethod.POST, RequestMethod.GET})
+	public R saveApplication(@RequestParam Map<String, Object> params) {
+		logger.info("saveApplication保函申请数据信息新增");
+		String saleOrderId = (String) params.get("saleOrderId");// 订单ID
+		String saleOrderNo = (String) params.get("saleOrderNo");// 订单编号
+		String projectId = (String) params.get("projectId");// 项目
+		String packageId = (String) params.get("packageId");// 分包
+		String supplierId = (String) params.get("supplierId");// 供应商
+		String eigenCode = (String) params.get("eigenCode");// 企业中征码(贷款卡号)
+		String orderMoney = (String) params.get("orderMoney");// 保函申请金额
+		String person = (String) params.get("person");// 单位负责人
+		String telephone = (String) params.get("telephone");// 单位负责人电话
+
+		// 检查订单是否存在saleOrderNo格式不正确只能做单独查询
+		
+		SaleOrderManagementEntity saleOrder = saleOrderManagementService.queryOrderByOrderCode(saleOrderNo);
+		if (saleOrder == null) {
+			return R.error("保函申请订单查询失败!");
+		}
+		// 检查项目是否存在
+		TenderImplemenProjectEntity project = tenderImplemenProjectService.selectById(projectId);
+		if (project == null) {
+			return R.error("保函申请订单项目查询失败!");
+		}
+		// 检查分包是否存在
+		TenderImplemenProjectPackagesEntity projectPackage = tenderImplemenProjectPackagesService.selectById(packageId);
+		if (projectPackage == null) {
+			return R.error("保函申请订单分包查询失败!");
+		}
+		// 修改售卖成功后的订单记录为申请
+		TenderBidBookSaleRecordEntity saleRecordEntity = tenderBidBookSaleRecordService.selectSaleByParams(params);
+		if (saleRecordEntity == null) {
+			return R.error("保函申请订单售卖记录查询失败!");
+		}
+		// 保存供应商申请信息
+		
+		BondOrderEntity bondOrderEntity = new BondOrderEntity();
+		String bondOrderNo = BLUUIDUitls.generateUUID();
+		bondOrderEntity.setOrderNo(bondOrderNo);
+		bondOrderEntity.setEigenCode(eigenCode);
+		bondOrderEntity.setOrderMoney(new BigDecimal(orderMoney));
+		bondOrderEntity.setPerson(person);
+		bondOrderEntity.setTelephone(telephone);
+		
+		bondOrderEntity.setSaleOrderId(saleOrderId);
+		bondOrderEntity.setProjectId(projectId);
+		bondOrderEntity.setProjectCode(project.getProjectCode());
+		bondOrderEntity.setProjectName(project.getProjectName());
+		bondOrderEntity.setPackageId(packageId);
+		bondOrderEntity.setPackagesNum(projectPackage.getPackagesNum());
+		bondOrderEntity.setPackagesName(projectPackage.getPackagesName());
+		bondOrderEntity.setBondMoney(new BigDecimal(projectPackage.getPackagesMoney()));
+		bondOrderEntity.setSupplierUuid(supplierId);
+		// 担保机构
+		Map<String, Object> queryParams = new HashMap<>();
+		queryParams.put("roleId", Constant.RoleType.GUARATOR_ADMIN.getValue());
+		List<BondUserEntity> list = bondUserService.queryUserList(queryParams);
+		for (BondUserEntity user : list) {
+			BondEnguaratorEntity entity = bondEnguaratorService.selectByGuaratorUuids(user.getEntUuid());
+			bondOrderEntity.setGuaratorId(entity.getGuaratorId());
+		}
+		// 代理机构
+		queryParams = new HashMap<>();
+		queryParams.put("roleId", Constant.RoleType.AGENCY_ADMIN.getValue());
+		list = bondUserService.queryUserList(queryParams);
+		for (BondUserEntity user : list) {
+			BondEnagencyEntity entity = bondEnagencyService.selectByAgencyUuid(user.getEntUuid());
+			bondOrderEntity.setAgencyId(entity.getAgencyId());
+		}
+		//
+		BondUserEntity user = bondUserService.selectUserByEntUuid(supplierId);
+		BondEnsupplierEntity ensupplierEntity = bondEnsupplierService.selectSupplierBySupplierUuid(supplierId);
+		if (user == null) {
+			CrmSupplierAccountEntity accountEntity = crmSupplierAccountService.selectSupplierBySupplierId(supplierId);
+			List<CrmSupplierAccountEntity> accountEntities = new ArrayList<CrmSupplierAccountEntity>();
+			if (accountEntity != null) {
+				accountEntities.add(accountEntity);
+			}
+			bondUserService.importSupplier(getUser(), accountEntities);
+		}
+		if (ensupplierEntity == null) {
+			CrmSupplierEntity supplierEntity = crmSupplierService.selectById(supplierId);
+			if (supplierEntity != null) {
+				List<CrmSupplierEntity> crmSuppliers = new ArrayList<CrmSupplierEntity>();
+				crmSuppliers.add(supplierEntity);
+				bondEnsupplierService.importCrmSupplier(crmSuppliers);
+			}
+		}
+
+		BondEnsupplierEntity entity = bondEnsupplierService.selectSupplierBySupplierUuid(supplierId);
+		bondOrderEntity.setSupplierId(entity.getSupplierId());
+
+		bondOrderEntity.setOrderStatus(SaleOrderBondStatusEnum.TO_BE_TREATED.getValue());
+
+		BondOrderEntity orderEntity = bondOrderService.selectOrderByParams(params);
+		if (orderEntity != null) {
+			return R.error("此订单已经申请过保函办理业务");
+		}
+		if (bondOrderService.insertBondOrder(saleRecordEntity, bondOrderEntity)) {
+			tenderBidBookSaleRecordService.updateBondData(saleRecordEntity.getListId(), SaleOrderBondStatusEnum.TO_BE_TREATED.getValue(),bondOrderNo, new BigDecimal(orderMoney));
+			return R.ok("保函申请数据信息新增成功");
+		} else {
+			return R.error("保函申请数据信息新增失败");
+		}
+	}
+
+	/**
+	 * 下载保函扫描件
+	 * 
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/dowonldVoucher", method = {RequestMethod.POST, RequestMethod.GET})
+	public R dowonldVoucher(@RequestParam Map<String, Object> params) {
+		//String saleOrderId = (String) params.get("saleOrderId");// 订单ID
+		//String projectId = (String) params.get("projectId");// 项目ID
+		//String packageId = (String) params.get("packageId");// 分包ID
+		String bondOrderNo = (String) params.get("bondOrderNo");// 保函订单编号
+		BondOrderEntity orderEntity = bondOrderService.selectByOrderNo(bondOrderNo);
+		if (orderEntity != null) {
+			AliyunOSSUtils aliyunOSSUtils = new AliyunOSSUtils(aliyunOssConfig);
+			String url = aliyunOSSUtils.getUrl(orderEntity.getOrderVoucher());
+			return R.ok(url);
+		} else {
+			return R.error("此订单还未申请过保函办理业务");
+		}
+	}
+
+}

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.bond.dao.BondEnsupplierDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.scbid.bond.entity.BondEnsupplierEntity" id="bondEnsupplierMap">
+        <result property="supplierId" column="supplier_id"/>
+        <result property="supplierUuid" column="supplier_uuid"/>
+        <result property="supplierScale" column="supplier_scale"/>
+        <result property="supplierName" column="supplier_name"/>
+        <result property="supplierPhone" column="supplier_phone"/>
+        <result property="supplierPostcode" column="supplier_postcode"/>
+        <result property="supplierCapital" column="supplier_capital"/>
+        <result property="supplierSort" column="supplier_sort"/>
+        <result property="supplierTaxpayerNo" column="supplier_taxpayer_no"/>
+        <result property="supplierFaxes" column="supplier_faxes"/>
+        <result property="supplierLegalPhone" column="supplier_legal_phone"/>
+        <result property="supplierRegNumber" column="supplier_reg_number"/>
+        <result property="supplierBankNumber" column="supplier_bank_number"/>
+        <result property="supplierBankAccount" column="supplier_bank_account"/>
+        <result property="supplierCompanyType" column="supplier_company_type"/>
+        <result property="supplierRegAdress" column="supplier_reg_adress"/>
+        <result property="supplierOpenatingPeriod" column="supplier_openating_period"/>
+        <result property="supplierEstabDate" column="supplier_estab_date"/>
+        <result property="supplierLegalPepre" column="supplier_legal_pepre"/>
+        <result property="supplierIndustry" column="supplier_industry"/>
+        <result property="supplierAddress" column="supplier_address"/>
+        <result property="supplierLicenseNo" column="supplier_license_no"/>
+        <result property="supplierLicenseImg" column="supplier_license_img"/>
+        <result property="supplierRemarks" column="supplier_remarks"/>
+        <result property="supplierStatus" column="supplier_status"/>
+        <result property="supplierDate" column="supplier_date"/>
+        <result property="supplierUserId" column="supplier_user_id"/>
+        <result property="updateUesrName" column="update_uesr_name"/>
+        <result property="updateDate" column="update_date"/>
+    </resultMap>
+
+
+</mapper>

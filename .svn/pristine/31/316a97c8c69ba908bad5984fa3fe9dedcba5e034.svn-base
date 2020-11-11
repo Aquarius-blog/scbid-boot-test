@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+   	<#include "/header.html">
+</head>
+<body>
+<div id="rrapp">
+        <div class="grid-btn">
+	        <form id="queryForm" action="">
+	       		<div class="form-group col-sm-2">
+					<input type="text" class="form-control"  placeholder="仅支持订单编号搜索"  v-model="q.orderNo" @keyup.enter="query" placeholder="">
+				</div>
+	        	<a class="btn btn-default" @click="query">&nbsp;查询</a>
+	        </form>
+        </div>
+        <table id="table"></table>
+
+</div>
+<script src="${request.contextPath}/statics/js/modules/supplier/bondorderindex.js?_${.now?long}"></script>
+</body>
+</html>

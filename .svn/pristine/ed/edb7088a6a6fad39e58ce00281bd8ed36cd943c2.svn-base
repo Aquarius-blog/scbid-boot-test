@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+   	<#include "/header.html">
+</head>
+<body>
+<#if flag=="success">
+	<script>window.location.href="${message}";</script> 
+</#if>
+<#if flag=="error">
+	<span>${message}</span>
+</#if>
+</body>
+</html>

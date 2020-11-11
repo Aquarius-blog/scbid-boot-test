@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+   	<#include "/header.html">
+</head>
+<body>
+<div id="rrapp">
+	<!-- 数据列表工具栏（toolbar） -->
+	<div id="toolbar">
+        <div class="grid-btn">
+	        <form id="queryForm" action="">
+	       		<div class="form-group col-sm-2">
+					<input type="text" class="form-control" v-model="q.projectName" @keyup.enter="query" placeholder="项目名称">
+				</div>
+	        	<a class="btn btn-default" @click="query">&nbsp;查询</a>
+				<a class="btn btn-primary" @click="add">&nbsp;新增</a>
+				<a class="btn btn-primary" @click="guarantee">&nbsp;设为保函项目</a>
+				<a class="btn btn-primary" @click="importPage">&nbsp;导入</a>
+				<a class="btn btn-primary" @click="exportPage">&nbsp;导出</a>
+				<a class="btn btn-primary" @click="del">&nbsp;批量删除</a>
+	        </form>
+	     </div>
+	  </div>
+	 <!-- 数据列表（table） -->
+     <table id="table"></table>
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+			</div>
+			<div class="modal-body">
+        	<form class="form-horizontal">
+                                                            <div class="form-group">
+            <div class="col-sm-2 control-label">是否被删除</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.isDelete" placeholder="是否被删除"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">操作人</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.operator" placeholder="操作人"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">操作时间</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.operateTime" placeholder="操作时间"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">创建人</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.creater" placeholder="创建人"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">创建时间</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.createTime" placeholder="创建时间"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">域权限</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.domainAuth" placeholder="域权限"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">备注</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.remark" placeholder="备注"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">项目id</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.projectId" placeholder="项目id"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">分包id</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.packageId" placeholder="分包id"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">供应商id</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.supplierId" placeholder="供应商id"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">供应商联系人id</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.supplierLinkmanId" placeholder="供应商联系人id"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">发票号</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.invoiceNumber" placeholder="发票号"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">信息类型,线上售卖还是线下售卖</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.type" placeholder="信息类型,线上售卖还是线下售卖"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">发票号</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.receiptNumber" placeholder="发票号"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">是否缴纳保证金</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.isPayTheDeposit" placeholder="是否缴纳保证金"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">保证金来源</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.marginSource" placeholder="保证金来源"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">标书款来源</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.tenderNewSource" placeholder="标书款来源"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">保证金来源的其他选择</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.marginOther" placeholder="保证金来源的其他选择"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">标书款来源的其他</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.tenderNewOther" placeholder="标书款来源的其他"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">保证金金额</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.depositAmount" placeholder="保证金金额"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">是否是待处理</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.isPending" placeholder="是否是待处理"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">标书款来源其他</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.enderNewOther" placeholder="标书款来源其他"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">创建人ID</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.creatorId" placeholder="创建人ID"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">是否生成了退还单【BLWhetherEnum】</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.billsStatus" placeholder="是否生成了退还单【BLWhetherEnum】"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">是否参加开标 BLWhetherEnum</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.isJoinOpenBid" placeholder="是否参加开标 BLWhetherEnum"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">保证金交易流水</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.channelSerialNo" placeholder="保证金交易流水"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">支付方式 PayTypeEnum</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.payStyle" placeholder="支付方式 PayTypeEnum"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label"></div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="tenderBidBookSaleRecord.saleOrderId" placeholder=""/>
+            </div>
+            </div>
+                                	</form>
+    		</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭 </button>
+				<input id="saveOrUpdate" type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div>
+<script src="${request.contextPath}/statics/js/modules/manage/tenderbidbooksalerecord.js"></script>
+</body>
+</html>

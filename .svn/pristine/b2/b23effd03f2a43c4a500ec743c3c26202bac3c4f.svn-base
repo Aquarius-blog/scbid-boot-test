@@ -1,0 +1,35 @@
+package com.scbid.bond.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
+import com.scbid.bond.entity.BondEnagencyEntity;
+
+/**
+ * 
+ * 
+ * @author wangyun
+ * @email 278812723
+ * @date 2018-05-14 13:00:02
+ */
+@Mapper
+public interface BondEnagencyDao extends BaseMapper<BondEnagencyEntity> {
+
+	List<BondEnagencyEntity> queryPageAgencys(Pagination page, Map<String, Object> params);
+	/**
+	 * @author 程云
+	 * @date 2018-05-18 13:00:02
+	 */
+	List<BondEnagencyEntity> selectAll();
+
+	List<BondEnagencyEntity> selectBatchAgencyIds(Pagination page, Map<String, Object> params);
+	
+	
+	
+	
+
+}

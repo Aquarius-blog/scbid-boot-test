@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.manage.dao.TenderImplemenProjectPackagesDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.scbid.manage.entity.TenderImplemenProjectPackagesEntity" id="tenderImplemenProjectPackagesMap">
+        <result property="listId" column="LIST_ID"/>
+        <result property="projectId" column="PROJECT_ID"/>
+        <result property="vocationId" column="VOCATION_ID"/>
+        <result property="chargeId" column="CHARGE_ID"/>
+        <result property="packagesMoney" column="PACKAGES_MONEY"/>
+        <result property="packagesNum" column="PACKAGES_NUM"/>
+        <result property="packagesName" column="PACKAGES_NAME"/>
+        <result property="remark" column="REMARK"/>
+        <result property="isDelete" column="IS_DELETE"/>
+        <result property="operator" column="OPERATOR"/>
+        <result property="operateTime" column="OPERATE_TIME"/>
+        <result property="creater" column="CREATER"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="domainAuth" column="DOMAIN_AUTH"/>
+        <result property="clientBidNoticeUrl" column="CLIENT_BID_NOTICE_URL"/>
+        <result property="clientBidNoticeNumber" column="CLIENT_BID_NOTICE_NUMBER"/>
+        <result property="supplierBidNoticeUrl" column="SUPPLIER_BID_NOTICE_URL"/>
+        <result property="supplierBidNoticeNumber" column="SUPPLIER_BID_NOTICE_NUMBER"/>
+        <result property="bidSureUrl" column="BID_SURE_URL"/>
+        <result property="bidNoticeTime" column="BID_NOTICE_TIME"/>
+        <result property="bidType" column="BID_TYPE"/>
+        <result property="isAccount" column="IS_ACCOUNT"/>
+        <result property="isUp" column="IS_UP"/>
+        <result property="proportion" column="PROPORTION"/>
+        <result property="quotaMoney" column="QUOTA_MONEY"/>
+        <result property="creatorId" column="CREATOR_ID"/>
+        <result property="moneyNumber" column="MONEY_NUMBER"/>
+        <result property="serviceCharge" column="SERVICE_CHARGE"/>
+        <result property="bondMoney" column="BOND_MONEY"/>
+        <result property="scale" column="SCALE"/>
+        <result property="other" column="OTHER"/>
+        <result property="chargeShowStr" column="CHARGE_SHOW_STR"/>
+        <result property="maxMoney" column="MAX_MONEY"/>
+        <result property="showSort" column="SHOW_SORT"/>
+        <result property="remarks" column="REMARKS"/>
+        <result property="number" column="NUMBER"/>
+    </resultMap>
+    
+    <!-- 查询列表 -->
+	<select id="tenderImplemenProjectPackagesPage" resultMap="tenderImplemenProjectPackagesMap" parameterType="java.util.Map">
+	SELECT
+    t_tender_implement_project_packages.*
+    FROM t_tender_implement_project_packages
+    WHERE 1=1
+   <if test="listId != null and listId != ''" >
+       AND LIST_ID = #{listId}
+    </if>
+   <if test="projectId != null and projectId != ''" >
+       AND PROJECT_ID = #{projectId}
+    </if>
+   <if test="vocationId != null and vocationId != ''" >
+       AND VOCATION_ID = #{vocationId}
+    </if>
+   <if test="chargeId != null and chargeId != ''" >
+       AND CHARGE_ID = #{chargeId}
+    </if>
+   <if test="packagesMoney != null and packagesMoney != ''" >
+       AND PACKAGES_MONEY = #{packagesMoney}
+    </if>
+   <if test="packagesNum != null and packagesNum != ''" >
+       AND PACKAGES_NUM = #{packagesNum}
+    </if>
+   <if test="packagesName != null and packagesName != ''" >
+       AND PACKAGES_NAME = #{packagesName}
+    </if>
+   <if test="remark != null and remark != ''" >
+       AND REMARK = #{remark}
+    </if>
+   <if test="isDelete != null and isDelete != ''" >
+       AND IS_DELETE = #{isDelete}
+    </if>
+   <if test="operator != null and operator != ''" >
+       AND OPERATOR = #{operator}
+    </if>
+   <if test="operateTime != null and operateTime != ''" >
+       AND OPERATE_TIME = #{operateTime}
+    </if>
+   <if test="creater != null and creater != ''" >
+       AND CREATER = #{creater}
+    </if>
+   <if test="createTime != null and createTime != ''" >
+       AND CREATE_TIME = #{createTime}
+    </if>
+   <if test="domainAuth != null and domainAuth != ''" >
+       AND DOMAIN_AUTH = #{domainAuth}
+    </if>
+   <if test="clientBidNoticeUrl != null and clientBidNoticeUrl != ''" >
+       AND CLIENT_BID_NOTICE_URL = #{clientBidNoticeUrl}
+    </if>
+   <if test="clientBidNoticeNumber != null and clientBidNoticeNumber != ''" >
+       AND CLIENT_BID_NOTICE_NUMBER = #{clientBidNoticeNumber}
+    </if>
+   <if test="supplierBidNoticeUrl != null and supplierBidNoticeUrl != ''" >
+       AND SUPPLIER_BID_NOTICE_URL = #{supplierBidNoticeUrl}
+    </if>
+   <if test="supplierBidNoticeNumber != null and supplierBidNoticeNumber != ''" >
+       AND SUPPLIER_BID_NOTICE_NUMBER = #{supplierBidNoticeNumber}
+    </if>
+   <if test="bidSureUrl != null and bidSureUrl != ''" >
+       AND BID_SURE_URL = #{bidSureUrl}
+    </if>
+   <if test="bidNoticeTime != null and bidNoticeTime != ''" >
+       AND BID_NOTICE_TIME = #{bidNoticeTime}
+    </if>
+   <if test="bidType != null and bidType != ''" >
+       AND BID_TYPE = #{bidType}
+    </if>
+   <if test="isAccount != null and isAccount != ''" >
+       AND IS_ACCOUNT = #{isAccount}
+    </if>
+   <if test="isUp != null and isUp != ''" >
+       AND IS_UP = #{isUp}
+    </if>
+   <if test="proportion != null and proportion != ''" >
+       AND PROPORTION = #{proportion}
+    </if>
+   <if test="quotaMoney != null and quotaMoney != ''" >
+       AND QUOTA_MONEY = #{quotaMoney}
+    </if>
+   <if test="creatorId != null and creatorId != ''" >
+       AND CREATOR_ID = #{creatorId}
+    </if>
+   <if test="moneyNumber != null and moneyNumber != ''" >
+       AND MONEY_NUMBER = #{moneyNumber}
+    </if>
+   <if test="serviceCharge != null and serviceCharge != ''" >
+       AND SERVICE_CHARGE = #{serviceCharge}
+    </if>
+   <if test="bondMoney != null and bondMoney != ''" >
+       AND BOND_MONEY = #{bondMoney}
+    </if>
+   <if test="scale != null and scale != ''" >
+       AND SCALE = #{scale}
+    </if>
+   <if test="other != null and other != ''" >
+       AND OTHER = #{other}
+    </if>
+   <if test="chargeShowStr != null and chargeShowStr != ''" >
+       AND CHARGE_SHOW_STR = #{chargeShowStr}
+    </if>
+   <if test="maxMoney != null and maxMoney != ''" >
+       AND MAX_MONEY = #{maxMoney}
+    </if>
+   <if test="showSort != null and showSort != ''" >
+       AND SHOW_SORT = #{showSort}
+    </if>
+   <if test="remarks != null and remarks != ''" >
+       AND REMARKS = #{remarks}
+    </if>
+   <if test="number != null and number != ''" >
+       AND NUMBER = #{number}
+    </if>
+	</select>
+</mapper>

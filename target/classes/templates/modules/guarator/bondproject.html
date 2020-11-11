@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+   	<#include "/header.html">
+</head>
+<body>
+<div id="rrapp">
+        <div class="grid-btn">
+	        <form id="queryForm" action="">
+	       		<div class="form-group col-sm-2">
+					<input type="text" class="form-control" v-model="q.orderNo" @keyup.enter="query" placeholder="仅支持订单编号检索">
+				</div>
+	        	<@shiro.hasPermission name="guarator:order:query">
+	        		<a class="btn btn-default" @click="query">&nbsp;查询</a>
+	        	</@shiro.hasPermission>
+	        	<@shiro.hasPermission name="guarator:order:add">
+				 	<a class="btn btn-primary" @click="add">&nbsp;新增</a>
+				</@shiro.hasPermission>
+				<@shiro.hasPermission name="guarator:order:importPage">
+					<a class="btn btn-primary" @click="importPage">&nbsp;导入</a>
+				</@shiro.hasPermission>
+				<@shiro.hasPermission name="guarator:order:exportPage">
+					<a class="btn btn-primary" @click="exportPage">&nbsp;导出</a>
+					<a href="" download="这里是下载的文件名.xlsx" id="exportPageHref"></a>
+				</@shiro.hasPermission>
+				<@shiro.hasPermission name="guarator:order:del">
+					<a class="btn btn-primary" @click="del">&nbsp;批量删除</a>
+				</@shiro.hasPermission>
+	        </form>
+        </div>
+        <table id="table"></table>
+
+<!-- 为订单分配处理机构 -->
+<#include "select-guarator.html">
+<!-- 上传文件 -->
+<#include "upload-bond.html">
+<!-- 上传文件预览 -->
+<#include "reading-image.html">
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+			</div>
+			<div class="modal-body">
+        	<form class="form-horizontal">
+                                                                            <div class="form-group">
+                        <div class="col-sm-2 control-label">供应商主键ID</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondOrder.supplierId" placeholder="供应商主键ID"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">代理机构主键ID</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondOrder.agencyId" placeholder="代理机构主键ID"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">担保机构主键ID</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondOrder.guaratorId" placeholder="担保机构主键ID"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">订单编号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondOrder.orderNo" placeholder="订单编号"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">订单金额</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondOrder.orderMoney" placeholder="订单金额"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">订单类型</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondOrder.orderType" placeholder="订单类型"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">订单凭证</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondOrder.orderVoucher" placeholder="订单凭证"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">订单状态</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondOrder.orderStatus" placeholder="订单状态"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">支付类型</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondOrder.payType" placeholder="支付类型"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">订单创建时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondOrder.orderDate" placeholder="订单创建时间"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">最后修改人</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondOrder.updateUesrName" placeholder="最后修改人"/>
+                        </div>
+                    </div>
+                                                                <div class="form-group">
+                        <div class="col-sm-2 control-label">最后修改时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="bondOrder.updateDate" placeholder="最后修改时间"/>
+                        </div>
+                    </div>
+                                    	</form>
+    		</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭 </button>
+				<input id="saveOrUpdate" type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div>
+<script src="${request.contextPath}/statics/js/modules/guarator/bondproject.js?_${.now?long}"></script>
+</body>
+</html>

@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.manage.dao.TenderImplemenprojectDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.scbid.manage.entity.TenderImplemenprojectEntity" id="tenderImplemenprojectMap">
+        <result property="listId" column="LIST_ID"/>
+        <result property="bidType" column="BID_TYPE"/>
+        <result property="dataType" column="DATA_TYPE"/>
+        <result property="proportion" column="PROPORTION"/>
+        <result property="isUp" column="IS_UP"/>
+        <result property="riskRemark" column="RISK_REMARK"/>
+        <result property="archivesStatus" column="ARCHIVES_STATUS"/>
+        <result property="projectType" column="PROJECT_TYPE"/>
+        <result property="projectNature" column="PROJECT_NATURE"/>
+        <result property="clientLinkmanId" column="CLIENT_LINKMAN_ID"/>
+        <result property="chargeId" column="CHARGE_ID"/>
+        <result property="payType" column="PAY_TYPE"/>
+        <result property="clientId" column="CLIENT_ID"/>
+        <result property="projectName" column="PROJECT_NAME"/>
+        <result property="responsibleId" column="RESPONSIBLE_ID"/>
+        <result property="changeStepId" column="CHANGE_STEP_ID"/>
+        <result property="stepId" column="STEP_ID"/>
+        <result property="projectRecord" column="PROJECT_RECORD"/>
+        <result property="otherRequire" column="OTHER_REQUIRE"/>
+        <result property="projectRequire" column="PROJECT_REQUIRE"/>
+        <result property="specialRemark" column="SPECIAL_REMARK"/>
+        <result property="judgeType" column="JUDGE_TYPE"/>
+        <result property="fundsType" column="FUNDS_TYPE"/>
+        <result property="areaId" column="AREA_ID"/>
+        <result property="vocationId" column="VOCATION_ID"/>
+        <result property="buyWay" column="BUY_WAY"/>
+        <result property="buyType" column="BUY_TYPE"/>
+        <result property="isRisk" column="IS_RISK"/>
+        <result property="contractNumber" column="CONTRACT_NUMBER"/>
+        <result property="produceTime" column="PRODUCE_TIME"/>
+        <result property="projectMoney" column="PROJECT_MONEY"/>
+        <result property="bidAddress" column="BID_ADDRESS"/>
+        <result property="bidTime" column="BID_TIME"/>
+        <result property="tenderAddress" column="TENDER_ADDRESS"/>
+        <result property="tenderTime" column="TENDER_TIME"/>
+        <result property="tenderBookSaleAddress" column="TENDER_BOOK_SALE_ADDRESS"/>
+        <result property="tenderBookSaleStartTime" column="TENDER_BOOK_SALE_START_TIME"/>
+        <result property="tenderBookSaleEndTime" column="TENDER_BOOK_SALE_END_TIME"/>
+        <result property="remark" column="REMARK"/>
+        <result property="isDelete" column="IS_DELETE"/>
+        <result property="operator" column="OPERATOR"/>
+        <result property="operateTime" column="OPERATE_TIME"/>
+        <result property="creater" column="CREATER"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="domainAuth" column="DOMAIN_AUTH"/>
+        <result property="projectCode" column="PROJECT_CODE"/>
+        <result property="approvalId" column="APPROVAL_ID"/>
+        <result property="bidOpeningType" column="BID_OPENING_TYPE"/>
+        <result property="collateralEndTime" column="COLLATERAL_END_TIME"/>
+        <result property="backType" column="BACK_TYPE"/>
+        <result property="isEx" column="IS_EX"/>
+        <result property="uploadConfirmTime" column="UPLOAD_CONFIRM_TIME"/>
+        <result property="noticeStatus" column="NOTICE_STATUS"/>
+        <result property="bidNoticeAnnounceTime" column="BID_NOTICE_ANNOUNCE_TIME"/>
+        <result property="sellingTime" column="SELLING_TIME"/>
+        <result property="bidNoticeSureTime" column="BID_NOTICE_SURE_TIME"/>
+        <result property="quotaMoney" column="QUOTA_MONEY"/>
+        <result property="projectLevelId" column="PROJECT_LEVEL_ID"/>
+        <result property="creatorId" column="CREATOR_ID"/>
+        <result property="helpPeopleIds" column="HELP_PEOPLE_IDS"/>
+        <result property="againNum" column="AGAIN_NUM"/>
+        <result property="againApprovalParentId" column="AGAIN_APPROVAL_PARENT_ID"/>
+        <result property="stopProject" column="STOP_PROJECT"/>
+        <result property="chargeType" column="CHARGE_TYPE"/>
+        <result property="saleType" column="SALE_TYPE"/>
+        <result property="resultAnnounceTime" column="RESULT_ANNOUNCE_TIME"/>
+        <result property="bidNum" column="BID_NUM"/>
+        <result property="procurementConfirmFileId" column="PROCUREMENT_CONFIRM_FILE_ID"/>
+        <result property="procurementDocumentConfirmUrl" column="PROCUREMENT_DOCUMENT_CONFIRM_URL"/>
+        <result property="expertType" column="EXPERT_TYPE"/>
+        <result property="biddingAnnouncementTime" column="BIDDING_ANNOUNCEMENT_TIME"/>
+        <result property="resultsPreTime" column="RESULTS_PRE_TIME"/>
+        <result property="bidFileCutOffTime" column="BID_FILE_CUT_OFF_TIME"/>
+        <result property="scale" column="SCALE"/>
+        <result property="other" column="OTHER"/>
+        <result property="bidNoticeCheckTime" column="BID_NOTICE_CHECK_TIME"/>
+        <result property="entrustStatus" column="ENTRUST_STATUS"/>
+        <result property="financeStatus" column="FINANCE_STATUS"/>
+        <result property="importedStatus" column="IMPORTED_STATUS"/>
+        <result property="completeTime" column="COMPLETE_TIME"/>
+        <result property="achievementId" column="ACHIEVEMENT_ID"/>
+        <result property="palnNumber" column="PALN_NUMBER"/>
+        <result property="fundStatus" column="FUND_STATUS"/>
+        <result property="lastTime" column="LAST_TIME"/>
+        <result property="bookPriceCny" column="BOOK_PRICE_CNY"/>
+        <result property="bookPriceUsd" column="BOOK_PRICE_USD"/>
+        <result property="bookCostGetWay" column="BOOK_COST_GET_WAY"/>
+        <result property="makeStatus" column="MAKE_STATUS"/>
+        <result property="noticeChangeType" column="NOTICE_CHANGE_TYPE"/>
+        <result property="owner" column="OWNER"/>
+        <result property="adminArea" column="ADMIN_AREA"/>
+        <result property="financeCode" column="FINANCE_CODE"/>
+        <result property="calibrationTime" column="CALIBRATION_TIME"/>
+        <result property="isUploadFileConfirm" column="IS_UPLOAD_FILE_CONFIRM"/>
+        <result property="statusStatement" column="STATUS_STATEMENT"/>
+        <result property="notifySupplier" column="NOTIFY_SUPPLIER"/>
+        <result property="noticeChangeContent" column="NOTICE_CHANGE_CONTENT"/>
+        <result property="noticeType" column="NOTICE_TYPE"/>
+        <result property="preBidData" column="PRE_BID_DATA"/>
+        <result property="qualificationUserType" column="QUALIFICATION_USER_TYPE"/>
+        <result property="isPppProject" column="IS_PPP_PROJECT"/>
+        <result property="isCheckBuyFile" column="IS_CHECK_BUY_FILE"/>
+        <result property="isTransferTechnicalCheck" column="IS_TRANSFER_TECHNICAL_CHECK"/>
+        <result property="qualificationPreNoticeLink" column="QUALIFICATION_PRE_NOTICE_LINK"/>
+        <result property="domesticProcurement" column="DOMESTIC_PROCUREMENT"/>
+        <result property="publicityNoticeLink" column="PUBLICITY_NOTICE_LINK"/>
+        <result property="reasonsExplanations" column="REASONS_EXPLANATIONS"/>
+        <result property="purchaseHeading" column="PURCHASE_HEADING"/>
+        <result property="industryDivision" column="INDUSTRY_DIVISION"/>
+        <result property="noticeExpertTime" column="NOTICE_EXPERT_TIME"/>
+        <result property="cityId" column="CITY_ID"/>
+        <result property="countyId" column="COUNTY_ID"/>
+        <result property="isAgreementFixed" column="IS_AGREEMENT_FIXED"/>
+        <result property="publicityNoticeEndTime" column="PUBLICITY_NOTICE_END_TIME"/>
+        <result property="offerNum" column="OFFER_NUM"/>
+        <result property="consortium" column="CONSORTIUM"/>
+        <result property="bidFileCutOnTime" column="BID_FILE_CUT_ON_TIME"/>
+        <result property="projectManager" column="PROJECT_MANAGER"/>
+        <result property="superviseOfficeRoom" column="SUPERVISE_OFFICE_ROOM"/>
+        <result property="supervisePhone" column="SUPERVISE_PHONE"/>
+        <result property="superviseAddress" column="SUPERVISE_ADDRESS"/>
+        <result property="supervisePostcode" column="SUPERVISE_POSTCODE"/>
+        <result property="superviseOfficeRoomId" column="SUPERVISE_OFFICE_ROOM_ID"/>
+        <result property="mainDevelopUserid" column="MAIN_DEVELOP_USERID"/>
+        <result property="mainBrokerage" column="MAIN_BROKERAGE"/>
+        <result property="currentUserId" column="CURRENT_USER_ID"/>
+        <result property="payTypeRemark" column="PAY_TYPE_REMARK"/>
+        <result property="isAllReturn" column="IS_ALL_RETURN"/>
+    </resultMap>
+    
+    <!-- 查询列表 -->
+	<select id="tenderImplemenprojectPage" resultMap="tenderImplemenprojectMap" parameterType="java.util.Map">
+	SELECT
+    t_tender_implement_project.*
+    FROM t_tender_implement_project
+    WHERE 1=1
+   <if test="LIST_ID != null" >
+       AND LIST_ID = #{LIST_ID}
+    </if>
+   <if test="BID_TYPE != null" >
+       AND BID_TYPE = #{BID_TYPE}
+    </if>
+   <if test="DATA_TYPE != null" >
+       AND DATA_TYPE = #{DATA_TYPE}
+    </if>
+   <if test="PROPORTION != null" >
+       AND PROPORTION = #{PROPORTION}
+    </if>
+   <if test="IS_UP != null" >
+       AND IS_UP = #{IS_UP}
+    </if>
+   <if test="RISK_REMARK != null" >
+       AND RISK_REMARK = #{RISK_REMARK}
+    </if>
+   <if test="ARCHIVES_STATUS != null" >
+       AND ARCHIVES_STATUS = #{ARCHIVES_STATUS}
+    </if>
+   <if test="PROJECT_TYPE != null" >
+       AND PROJECT_TYPE = #{PROJECT_TYPE}
+    </if>
+   <if test="PROJECT_NATURE != null" >
+       AND PROJECT_NATURE = #{PROJECT_NATURE}
+    </if>
+   <if test="CLIENT_LINKMAN_ID != null" >
+       AND CLIENT_LINKMAN_ID = #{CLIENT_LINKMAN_ID}
+    </if>
+   <if test="CHARGE_ID != null" >
+       AND CHARGE_ID = #{CHARGE_ID}
+    </if>
+   <if test="PAY_TYPE != null" >
+       AND PAY_TYPE = #{PAY_TYPE}
+    </if>
+   <if test="CLIENT_ID != null" >
+       AND CLIENT_ID = #{CLIENT_ID}
+    </if>
+   <if test="PROJECT_NAME != null" >
+       AND PROJECT_NAME = #{PROJECT_NAME}
+    </if>
+   <if test="RESPONSIBLE_ID != null" >
+       AND RESPONSIBLE_ID = #{RESPONSIBLE_ID}
+    </if>
+   <if test="CHANGE_STEP_ID != null" >
+       AND CHANGE_STEP_ID = #{CHANGE_STEP_ID}
+    </if>
+   <if test="STEP_ID != null" >
+       AND STEP_ID = #{STEP_ID}
+    </if>
+   <if test="PROJECT_RECORD != null" >
+       AND PROJECT_RECORD = #{PROJECT_RECORD}
+    </if>
+   <if test="OTHER_REQUIRE != null" >
+       AND OTHER_REQUIRE = #{OTHER_REQUIRE}
+    </if>
+   <if test="PROJECT_REQUIRE != null" >
+       AND PROJECT_REQUIRE = #{PROJECT_REQUIRE}
+    </if>
+   <if test="SPECIAL_REMARK != null" >
+       AND SPECIAL_REMARK = #{SPECIAL_REMARK}
+    </if>
+   <if test="JUDGE_TYPE != null" >
+       AND JUDGE_TYPE = #{JUDGE_TYPE}
+    </if>
+   <if test="FUNDS_TYPE != null" >
+       AND FUNDS_TYPE = #{FUNDS_TYPE}
+    </if>
+   <if test="AREA_ID != null" >
+       AND AREA_ID = #{AREA_ID}
+    </if>
+   <if test="VOCATION_ID != null" >
+       AND VOCATION_ID = #{VOCATION_ID}
+    </if>
+   <if test="BUY_WAY != null" >
+       AND BUY_WAY = #{BUY_WAY}
+    </if>
+   <if test="BUY_TYPE != null" >
+       AND BUY_TYPE = #{BUY_TYPE}
+    </if>
+   <if test="IS_RISK != null" >
+       AND IS_RISK = #{IS_RISK}
+    </if>
+   <if test="CONTRACT_NUMBER != null" >
+       AND CONTRACT_NUMBER = #{CONTRACT_NUMBER}
+    </if>
+   <if test="PRODUCE_TIME != null" >
+       AND PRODUCE_TIME = #{PRODUCE_TIME}
+    </if>
+   <if test="PROJECT_MONEY != null" >
+       AND PROJECT_MONEY = #{PROJECT_MONEY}
+    </if>
+   <if test="BID_ADDRESS != null" >
+       AND BID_ADDRESS = #{BID_ADDRESS}
+    </if>
+   <if test="BID_TIME != null" >
+       AND BID_TIME = #{BID_TIME}
+    </if>
+   <if test="TENDER_ADDRESS != null" >
+       AND TENDER_ADDRESS = #{TENDER_ADDRESS}
+    </if>
+   <if test="TENDER_TIME != null" >
+       AND TENDER_TIME = #{TENDER_TIME}
+    </if>
+   <if test="TENDER_BOOK_SALE_ADDRESS != null" >
+       AND TENDER_BOOK_SALE_ADDRESS = #{TENDER_BOOK_SALE_ADDRESS}
+    </if>
+   <if test="TENDER_BOOK_SALE_START_TIME != null" >
+       AND TENDER_BOOK_SALE_START_TIME = #{TENDER_BOOK_SALE_START_TIME}
+    </if>
+   <if test="TENDER_BOOK_SALE_END_TIME != null" >
+       AND TENDER_BOOK_SALE_END_TIME = #{TENDER_BOOK_SALE_END_TIME}
+    </if>
+   <if test="REMARK != null" >
+       AND REMARK = #{REMARK}
+    </if>
+   <if test="IS_DELETE != null" >
+       AND IS_DELETE = #{IS_DELETE}
+    </if>
+   <if test="OPERATOR != null" >
+       AND OPERATOR = #{OPERATOR}
+    </if>
+   <if test="OPERATE_TIME != null" >
+       AND OPERATE_TIME = #{OPERATE_TIME}
+    </if>
+   <if test="CREATER != null" >
+       AND CREATER = #{CREATER}
+    </if>
+   <if test="CREATE_TIME != null" >
+       AND CREATE_TIME = #{CREATE_TIME}
+    </if>
+   <if test="DOMAIN_AUTH != null" >
+       AND DOMAIN_AUTH = #{DOMAIN_AUTH}
+    </if>
+   <if test="PROJECT_CODE != null" >
+       AND PROJECT_CODE = #{PROJECT_CODE}
+    </if>
+   <if test="APPROVAL_ID != null" >
+       AND APPROVAL_ID = #{APPROVAL_ID}
+    </if>
+   <if test="BID_OPENING_TYPE != null" >
+       AND BID_OPENING_TYPE = #{BID_OPENING_TYPE}
+    </if>
+   <if test="COLLATERAL_END_TIME != null" >
+       AND COLLATERAL_END_TIME = #{COLLATERAL_END_TIME}
+    </if>
+   <if test="BACK_TYPE != null" >
+       AND BACK_TYPE = #{BACK_TYPE}
+    </if>
+   <if test="IS_EX != null" >
+       AND IS_EX = #{IS_EX}
+    </if>
+   <if test="UPLOAD_CONFIRM_TIME != null" >
+       AND UPLOAD_CONFIRM_TIME = #{UPLOAD_CONFIRM_TIME}
+    </if>
+   <if test="NOTICE_STATUS != null" >
+       AND NOTICE_STATUS = #{NOTICE_STATUS}
+    </if>
+   <if test="BID_NOTICE_ANNOUNCE_TIME != null" >
+       AND BID_NOTICE_ANNOUNCE_TIME = #{BID_NOTICE_ANNOUNCE_TIME}
+    </if>
+   <if test="SELLING_TIME != null" >
+       AND SELLING_TIME = #{SELLING_TIME}
+    </if>
+   <if test="BID_NOTICE_SURE_TIME != null" >
+       AND BID_NOTICE_SURE_TIME = #{BID_NOTICE_SURE_TIME}
+    </if>
+   <if test="QUOTA_MONEY != null" >
+       AND QUOTA_MONEY = #{QUOTA_MONEY}
+    </if>
+   <if test="PROJECT_LEVEL_ID != null" >
+       AND PROJECT_LEVEL_ID = #{PROJECT_LEVEL_ID}
+    </if>
+   <if test="CREATOR_ID != null" >
+       AND CREATOR_ID = #{CREATOR_ID}
+    </if>
+   <if test="HELP_PEOPLE_IDS != null" >
+       AND HELP_PEOPLE_IDS = #{HELP_PEOPLE_IDS}
+    </if>
+   <if test="AGAIN_NUM != null" >
+       AND AGAIN_NUM = #{AGAIN_NUM}
+    </if>
+   <if test="AGAIN_APPROVAL_PARENT_ID != null" >
+       AND AGAIN_APPROVAL_PARENT_ID = #{AGAIN_APPROVAL_PARENT_ID}
+    </if>
+   <if test="STOP_PROJECT != null" >
+       AND STOP_PROJECT = #{STOP_PROJECT}
+    </if>
+   <if test="CHARGE_TYPE != null" >
+       AND CHARGE_TYPE = #{CHARGE_TYPE}
+    </if>
+   <if test="SALE_TYPE != null" >
+       AND SALE_TYPE = #{SALE_TYPE}
+    </if>
+   <if test="RESULT_ANNOUNCE_TIME != null" >
+       AND RESULT_ANNOUNCE_TIME = #{RESULT_ANNOUNCE_TIME}
+    </if>
+   <if test="BID_NUM != null" >
+       AND BID_NUM = #{BID_NUM}
+    </if>
+   <if test="PROCUREMENT_CONFIRM_FILE_ID != null" >
+       AND PROCUREMENT_CONFIRM_FILE_ID = #{PROCUREMENT_CONFIRM_FILE_ID}
+    </if>
+   <if test="PROCUREMENT_DOCUMENT_CONFIRM_URL != null" >
+       AND PROCUREMENT_DOCUMENT_CONFIRM_URL = #{PROCUREMENT_DOCUMENT_CONFIRM_URL}
+    </if>
+   <if test="EXPERT_TYPE != null" >
+       AND EXPERT_TYPE = #{EXPERT_TYPE}
+    </if>
+   <if test="BIDDING_ANNOUNCEMENT_TIME != null" >
+       AND BIDDING_ANNOUNCEMENT_TIME = #{BIDDING_ANNOUNCEMENT_TIME}
+    </if>
+   <if test="RESULTS_PRE_TIME != null" >
+       AND RESULTS_PRE_TIME = #{RESULTS_PRE_TIME}
+    </if>
+   <if test="BID_FILE_CUT_OFF_TIME != null" >
+       AND BID_FILE_CUT_OFF_TIME = #{BID_FILE_CUT_OFF_TIME}
+    </if>
+   <if test="SCALE != null" >
+       AND SCALE = #{SCALE}
+    </if>
+   <if test="OTHER != null" >
+       AND OTHER = #{OTHER}
+    </if>
+   <if test="BID_NOTICE_CHECK_TIME != null" >
+       AND BID_NOTICE_CHECK_TIME = #{BID_NOTICE_CHECK_TIME}
+    </if>
+   <if test="ENTRUST_STATUS != null" >
+       AND ENTRUST_STATUS = #{ENTRUST_STATUS}
+    </if>
+   <if test="FINANCE_STATUS != null" >
+       AND FINANCE_STATUS = #{FINANCE_STATUS}
+    </if>
+   <if test="IMPORTED_STATUS != null" >
+       AND IMPORTED_STATUS = #{IMPORTED_STATUS}
+    </if>
+   <if test="COMPLETE_TIME != null" >
+       AND COMPLETE_TIME = #{COMPLETE_TIME}
+    </if>
+   <if test="ACHIEVEMENT_ID != null" >
+       AND ACHIEVEMENT_ID = #{ACHIEVEMENT_ID}
+    </if>
+   <if test="PALN_NUMBER != null" >
+       AND PALN_NUMBER = #{PALN_NUMBER}
+    </if>
+   <if test="FUND_STATUS != null" >
+       AND FUND_STATUS = #{FUND_STATUS}
+    </if>
+   <if test="LAST_TIME != null" >
+       AND LAST_TIME = #{LAST_TIME}
+    </if>
+   <if test="BOOK_PRICE_CNY != null" >
+       AND BOOK_PRICE_CNY = #{BOOK_PRICE_CNY}
+    </if>
+   <if test="BOOK_PRICE_USD != null" >
+       AND BOOK_PRICE_USD = #{BOOK_PRICE_USD}
+    </if>
+   <if test="BOOK_COST_GET_WAY != null" >
+       AND BOOK_COST_GET_WAY = #{BOOK_COST_GET_WAY}
+    </if>
+   <if test="MAKE_STATUS != null" >
+       AND MAKE_STATUS = #{MAKE_STATUS}
+    </if>
+   <if test="NOTICE_CHANGE_TYPE != null" >
+       AND NOTICE_CHANGE_TYPE = #{NOTICE_CHANGE_TYPE}
+    </if>
+   <if test="OWNER != null" >
+       AND OWNER = #{OWNER}
+    </if>
+   <if test="ADMIN_AREA != null" >
+       AND ADMIN_AREA = #{ADMIN_AREA}
+    </if>
+   <if test="FINANCE_CODE != null" >
+       AND FINANCE_CODE = #{FINANCE_CODE}
+    </if>
+   <if test="CALIBRATION_TIME != null" >
+       AND CALIBRATION_TIME = #{CALIBRATION_TIME}
+    </if>
+   <if test="IS_UPLOAD_FILE_CONFIRM != null" >
+       AND IS_UPLOAD_FILE_CONFIRM = #{IS_UPLOAD_FILE_CONFIRM}
+    </if>
+   <if test="STATUS_STATEMENT != null" >
+       AND STATUS_STATEMENT = #{STATUS_STATEMENT}
+    </if>
+   <if test="NOTIFY_SUPPLIER != null" >
+       AND NOTIFY_SUPPLIER = #{NOTIFY_SUPPLIER}
+    </if>
+   <if test="NOTICE_CHANGE_CONTENT != null" >
+       AND NOTICE_CHANGE_CONTENT = #{NOTICE_CHANGE_CONTENT}
+    </if>
+   <if test="NOTICE_TYPE != null" >
+       AND NOTICE_TYPE = #{NOTICE_TYPE}
+    </if>
+   <if test="PRE_BID_DATA != null" >
+       AND PRE_BID_DATA = #{PRE_BID_DATA}
+    </if>
+   <if test="QUALIFICATION_USER_TYPE != null" >
+       AND QUALIFICATION_USER_TYPE = #{QUALIFICATION_USER_TYPE}
+    </if>
+   <if test="IS_PPP_PROJECT != null" >
+       AND IS_PPP_PROJECT = #{IS_PPP_PROJECT}
+    </if>
+   <if test="IS_CHECK_BUY_FILE != null" >
+       AND IS_CHECK_BUY_FILE = #{IS_CHECK_BUY_FILE}
+    </if>
+   <if test="IS_TRANSFER_TECHNICAL_CHECK != null" >
+       AND IS_TRANSFER_TECHNICAL_CHECK = #{IS_TRANSFER_TECHNICAL_CHECK}
+    </if>
+   <if test="QUALIFICATION_PRE_NOTICE_LINK != null" >
+       AND QUALIFICATION_PRE_NOTICE_LINK = #{QUALIFICATION_PRE_NOTICE_LINK}
+    </if>
+   <if test="DOMESTIC_PROCUREMENT != null" >
+       AND DOMESTIC_PROCUREMENT = #{DOMESTIC_PROCUREMENT}
+    </if>
+   <if test="PUBLICITY_NOTICE_LINK != null" >
+       AND PUBLICITY_NOTICE_LINK = #{PUBLICITY_NOTICE_LINK}
+    </if>
+   <if test="REASONS_EXPLANATIONS != null" >
+       AND REASONS_EXPLANATIONS = #{REASONS_EXPLANATIONS}
+    </if>
+   <if test="PURCHASE_HEADING != null" >
+       AND PURCHASE_HEADING = #{PURCHASE_HEADING}
+    </if>
+   <if test="INDUSTRY_DIVISION != null" >
+       AND INDUSTRY_DIVISION = #{INDUSTRY_DIVISION}
+    </if>
+   <if test="NOTICE_EXPERT_TIME != null" >
+       AND NOTICE_EXPERT_TIME = #{NOTICE_EXPERT_TIME}
+    </if>
+   <if test="CITY_ID != null" >
+       AND CITY_ID = #{CITY_ID}
+    </if>
+   <if test="COUNTY_ID != null" >
+       AND COUNTY_ID = #{COUNTY_ID}
+    </if>
+   <if test="IS_AGREEMENT_FIXED != null" >
+       AND IS_AGREEMENT_FIXED = #{IS_AGREEMENT_FIXED}
+    </if>
+   <if test="PUBLICITY_NOTICE_END_TIME != null" >
+       AND PUBLICITY_NOTICE_END_TIME = #{PUBLICITY_NOTICE_END_TIME}
+    </if>
+   <if test="OFFER_NUM != null" >
+       AND OFFER_NUM = #{OFFER_NUM}
+    </if>
+   <if test="CONSORTIUM != null" >
+       AND CONSORTIUM = #{CONSORTIUM}
+    </if>
+   <if test="BID_FILE_CUT_ON_TIME != null" >
+       AND BID_FILE_CUT_ON_TIME = #{BID_FILE_CUT_ON_TIME}
+    </if>
+   <if test="PROJECT_MANAGER != null" >
+       AND PROJECT_MANAGER = #{PROJECT_MANAGER}
+    </if>
+   <if test="SUPERVISE_OFFICE_ROOM != null" >
+       AND SUPERVISE_OFFICE_ROOM = #{SUPERVISE_OFFICE_ROOM}
+    </if>
+   <if test="SUPERVISE_PHONE != null" >
+       AND SUPERVISE_PHONE = #{SUPERVISE_PHONE}
+    </if>
+   <if test="SUPERVISE_ADDRESS != null" >
+       AND SUPERVISE_ADDRESS = #{SUPERVISE_ADDRESS}
+    </if>
+   <if test="SUPERVISE_POSTCODE != null" >
+       AND SUPERVISE_POSTCODE = #{SUPERVISE_POSTCODE}
+    </if>
+   <if test="SUPERVISE_OFFICE_ROOM_ID != null" >
+       AND SUPERVISE_OFFICE_ROOM_ID = #{SUPERVISE_OFFICE_ROOM_ID}
+    </if>
+   <if test="MAIN_DEVELOP_USERID != null" >
+       AND MAIN_DEVELOP_USERID = #{MAIN_DEVELOP_USERID}
+    </if>
+   <if test="MAIN_BROKERAGE != null" >
+       AND MAIN_BROKERAGE = #{MAIN_BROKERAGE}
+    </if>
+   <if test="CURRENT_USER_ID != null" >
+       AND CURRENT_USER_ID = #{CURRENT_USER_ID}
+    </if>
+   <if test="PAY_TYPE_REMARK != null" >
+       AND PAY_TYPE_REMARK = #{PAY_TYPE_REMARK}
+    </if>
+   <if test="IS_ALL_RETURN != null" >
+       AND IS_ALL_RETURN = #{IS_ALL_RETURN}
+    </if>
+	</select>
+</mapper>

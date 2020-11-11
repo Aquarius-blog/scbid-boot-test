@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scbid.sys.dao.BondUserDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.scbid.sys.entity.BondUserEntity" id="bondUserMap">
+        <result property="userId" column="user_id"/>
+        <result property="roleId" column="role_id"/>
+        <result property="entUuid" column="ent_uuid"/>
+        <result property="loginNo" column="login_no"/>
+        <result property="password" column="password"/>
+        <result property="userJob" column="user_job"/>
+        <result property="salt" column="salt"/>
+        <result property="userSurname" column="user_surname"/>
+        <result property="userName" column="user_name"/>
+        <result property="userEmail" column="user_email"/>
+        <result property="userMobile" column="user_mobile"/>
+        <result property="userStatus" column="user_status"/>
+        <result property="userTime" column="user_time"/>
+        <result property="updateUesrName" column="update_uesr_name"/>
+        <result property="updateDate" column="update_date"/>
+        
+        <!-- 翻译字段 -->
+        <result property="roleName" column="role_name"/>
+        <result property="entName" column="ent_name"/>
+        
+    </resultMap>
+	
+
+	<!-- 查询用户的所有权限 -->
+	<select id="queryAllPerms" resultType="string">
+		SELECT t_bond_menu.perms from t_bond_role_menu  
+			LEFT JOIN t_bond_menu ON t_bond_menu.menu_id = t_bond_role_menu.menu_id 
+		WHERE t_bond_role_menu.role_id = #{roleId}
+	</select>
+	
+	<!-- 查询用户的所有菜单ID --> 
+	<select id="queryAllMenuId" resultType="long">
+		SELECT distinct t_bond_role_menu.menu_id from t_bond_role_menu WHERE t_bond_role_menu.role_id  = #{roleId}
+	</select>
+	
+	<select id="queryByLoginNo" resultType="com.scbid.sys.entity.BondUserEntity">
+		select * from t_bond_user where login_no = #{loginNo}
+	</select>
+	
+	<select id="selectUserByEntUuid" resultType="com.scbid.sys.entity.BondUserEntity">
+		select * from t_bond_user where ent_uuid = #{entUuid}
+	</select>
+	
+	<select id="queryUserByRoleIds" resultMap="bondUserMap" parameterType="java.util.Map">
+ 	SELECT
+    t_bond_user.*,
+    (SELECT role_name from t_bond_role WHERE role_id = t_bond_user.role_id) as role_name,
+		CASE role_id 
+		WHEN 1 THEN (SELECT agency_name from t_bond_ent_agency WHERE agency_uuid = t_bond_user.ent_uuid)
+		WHEN 2 THEN (SELECT agency_name from t_bond_ent_agency WHERE agency_uuid = t_bond_user.ent_uuid)
+		WHEN 3 THEN (SELECT guarator_name from t_bond_ent_guarator WHERE guarator_uuid = t_bond_user.ent_uuid)
+		WHEN 5 THEN (SELECT agency_name from t_bond_ent_agency WHERE agency_uuid = t_bond_user.ent_uuid)
+		ELSE (select supplier_name from t_bond_ent_supplier WHERE supplier_uuid = t_bond_user.ent_uuid) END  
+		as ent_name
+    FROM t_bond_user
+    WHERE 1=1 AND role_id IN
+    <foreach collection="roleIds" index="index" item="item" open="(" separator="," close=")">
+      		 #{item}
+	</foreach>
+  	</select>
+
+	<select id="findByPage" resultMap="bondUserMap" parameterType="java.util.Map">
+ SELECT
+    t_bond_user.*,
+    (SELECT role_name from t_bond_role WHERE role_id = t_bond_user.role_id) as role_name,
+		CASE role_id 
+		WHEN 1 THEN (SELECT agency_name from t_bond_ent_agency WHERE agency_uuid = t_bond_user.ent_uuid)
+		WHEN 2 THEN (SELECT agency_name from t_bond_ent_agency WHERE agency_uuid = t_bond_user.ent_uuid)
+		WHEN 3 THEN (SELECT guarator_name from t_bond_ent_guarator WHERE guarator_uuid = t_bond_user.ent_uuid)
+		WHEN 5 THEN (SELECT agency_name from t_bond_ent_agency WHERE agency_uuid = t_bond_user.ent_uuid)
+		ELSE (select supplier_name from t_bond_ent_supplier WHERE supplier_uuid = t_bond_user.ent_uuid) END  
+		as ent_name
+    FROM t_bond_user
+    WHERE 1=1
+    <if test="userId != null and userId != ''" >
+        AND	user_id = #{userId}
+     </if>
+     <if test="roleId != null  and roleId != ''" >
+        AND	role_id = #{roleId}
+     </if>
+     <if test="roleIds != null and roleIds.size() > 0">
+     	AND	role_id IN
+        <foreach collection="roleIds" index="index" item="item" open="(" separator="," close=")">
+       		 #{item}
+		</foreach>
+     </if>
+     <if test="roleName != null and roleName != ''" >
+        AND	role_name = #{roleName}
+     </if>
+     <if test="entUuid != null and entUuid != ''" >
+        AND	ent_uuid = #{entUuid}
+     </if>
+     <if test="entName != null and entName != ''" >
+        AND	ent_name = #{entName}
+     </if>
+     <if test="loginNo != null and loginNo != ''" >
+        AND	login_no = #{loginNo}
+     </if>
+     <if test="userSurname != null and userSurname != ''" >
+        AND	user_surname = #{userSurname}
+     </if>
+     <if test="userName != null and userName != ''" >
+        AND	user_name = #{userName}
+     </if>
+     <if test="userEmail != null and userEmail != ''" >
+        AND	user_email = #{userEmail}
+     </if>
+     <if test="userMobile != null and userMobile != ''" >
+        AND	user_mobile = #{userMobile}
+     </if>
+      <if test="userStatus != null and userStatus != ''" >
+        AND	user_status = #{userStatus}
+     </if>
+      <if test="updateUesrName != null and updateUesrName != ''" >
+        AND	update_uesr_name = #{updateUesrName}
+     </if>
+  	</select>
+  	
+  	<!-- 查询所有user -->
+  	<select id="selectAll" resultType="com.scbid.sys.entity.BondUserEntity">
+  		select * from t_bond_user
+  	</select>
+
+</mapper>

@@ -1,0 +1,65 @@
+spring:
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        druid:
+            first:  #数据源1
+                url: jdbc:mysql://172.16.1.112:3306/bond_dve?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+                username: root
+                password: 123456
+            second:  #数据源2
+                url: jdbc:mysql://172.16.1.112:3306/scbid_pro?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+                username: root
+                password: 123456
+            third:  #数据源3
+                url: jdbc:mysql://172.16.1.112:3306/scbid-invoice?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+                username: root
+                password: 123456
+            initial-size: 10
+            max-active: 100
+            min-idle: 10
+            max-wait: 60000
+            pool-prepared-statements: true
+            max-pool-prepared-statement-per-connection-size: 20
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+            validation-query: SELECT 1 FROM DUAL
+            test-while-idle: true
+            test-on-borrow: false
+            test-on-return: false
+            stat-view-servlet:
+                enabled: true
+                url-pattern: /druid/*
+                #login-username: admin
+                #login-password: admin
+            filter:
+                stat:
+                    log-slow-sql: true
+                    slow-sql-millis: 1000
+                    merge-sql: true
+                wall:
+                    config:
+                        multi-statement-allow: true
+##eureka注册中心
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:1111/eureka/
+##支付服务接口地址
+admin-alipay-index: http://127.0.0.1:7005/alipay/qcPay
+##支付服务回执地址
+admin-return-alipay: http://127.0.0.1:7002/bond-admin/bond/returnAlipay
+##微信支付接口地址
+admin-weixin-index: http://127.0.0.1:7005/weixin/qcPay2
+##微信支付回执地址
+admin-return-weixin: http://127.0.0.1:7002/bond-admin/bond/returnWeixin
+#阿里云链接地址
+aliyun:
+  oss:
+    endpoint: oss-cn-shanghai.aliyuncs.com
+    access:
+      key: LTAIthmw84OneD5W
+      secret: 3qyxZguXqtU7gEV4hyfZ83YJoldCyJ
+      bucket: scbid-bond
+    extranet:
+      endpoint: oss-cn-shanghai.aliyuncs.com

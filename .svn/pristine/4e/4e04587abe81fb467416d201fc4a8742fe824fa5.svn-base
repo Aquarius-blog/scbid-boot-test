@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+<#include "/header.html">
+</head>
+<body>
+<div id="rrapp">
+	<!-- 数据列表工具栏（toolbar） -->
+    <div class="grid-btn">
+        <form id="queryForm" action="">
+       		<div class="form-group col-sm-2">
+				<input type="text" class="form-control" v-model="q.projectName" @keyup.enter="query" placeholder="项目名称">
+			</div>
+        	<a class="btn btn-default" @click="query">&nbsp;查询</a>
+			<a class="btn btn-primary" @click="add">&nbsp;新增</a>
+			<a class="btn btn-primary" @click="importPage">&nbsp;导入</a>
+			<a class="btn btn-primary" @click="exportPage">&nbsp;导出</a>
+			<a class="btn btn-primary" @click="guarantee">&nbsp;设为保函项目</a>
+			<a class="btn btn-primary" @click="del">&nbsp;批量删除</a>
+        </form>
+     </div>
+	 <!-- 数据列表（table） -->
+     <table id="table" data-toolbar="#toolbar"></table>
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+			</div>
+			<div class="modal-body">
+        	<form class="form-horizontal">
+                                                            <div class="form-group">
+            <div class="col-sm-2 control-label">创建人</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.creater" placeholder="创建人"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">创建时间</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.createTime" placeholder="创建时间"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">操作时间 </div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.operateTime" placeholder="操作时间 "/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">操作人 </div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.operator" placeholder="操作人 "/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">是否删除[BLDeleteEnum] </div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.isDelete" placeholder="是否删除[BLDeleteEnum] "/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">状态[BLStatusEnum]</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.domainAuth" placeholder="状态[BLStatusEnum]"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">创建人ID</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.creatorId" placeholder="创建人ID"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">采购项目编号</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.code" placeholder="采购项目编号"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">项目ID</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.projectId" placeholder="项目ID"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">项目名称</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.projectName" placeholder="项目名称"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">标书售卖开始时间</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.bidBookStartTime" placeholder="标书售卖开始时间"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">标书售卖结束时间</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.bidBookEndTime" placeholder="标书售卖结束时间"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">售卖方式[BidBookStyleEnum]</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.bidBookStyle" placeholder="售卖方式[BidBookStyleEnum]"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">标书售价</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.bidBookPrice" placeholder="标书售价"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">备注</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.remark" placeholder="备注"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">项目性质</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.projectNature" placeholder="项目性质"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">采购方式</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.purchaseWay" placeholder="采购方式"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">售卖方式[ApprovalSaleEnum]</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.saleStyle" placeholder="售卖方式[ApprovalSaleEnum]"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">开标时间</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.openBidTime" placeholder="开标时间"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">保证金收取截止时间</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.bzjEndTime" placeholder="保证金收取截止时间"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">老OA ID</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.infoId" placeholder="老OA ID"/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label"></div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.purchaseFileUrl" placeholder=""/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label"></div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.attachmentUrl" placeholder=""/>
+            </div>
+            </div>
+                                                <div class="form-group">
+            <div class="col-sm-2 control-label">是否允许邮寄</div>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="saleProject.isAllowedToMail" placeholder="是否允许邮寄"/>
+            </div>
+            </div>
+                                	</form>
+    		</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭 </button>
+				<input id="saveOrUpdate" type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div>
+<script src="${request.contextPath}/statics/js/modules/manage/saleproject.js"></script>
+</body>
+</html>

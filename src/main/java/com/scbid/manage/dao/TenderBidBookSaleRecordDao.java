@@ -1,0 +1,36 @@
+package com.scbid.manage.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
+import com.scbid.manage.entity.TenderBidBookSaleRecordEntity;
+
+/**
+ * 
+ * 
+ * @author wangyun
+ * @email 278812723
+ * @date 2018-05-17 16:28:02
+ */
+@Mapper
+public interface TenderBidBookSaleRecordDao extends BaseMapper<TenderBidBookSaleRecordEntity> {
+	List<TenderBidBookSaleRecordEntity> tenderBidBookSaleRecordPage(Pagination page, Map<String, Object> params);
+
+	boolean updatePayTheDeposit(Map<String, Object> params);
+
+	List<TenderBidBookSaleRecordEntity> selectByMapIn(Map<String, Object> params);
+
+	TenderBidBookSaleRecordEntity selectSaleByParams(Map<String, Object> params);
+
+	boolean updateStatusById(Map<String, Object> map);
+
+	boolean updateBondData(Map<String, Object> map);
+
+	List<TenderBidBookSaleRecordEntity> selectSalesByOrderId(String saleOrderId);
+
+	TenderBidBookSaleRecordEntity slectSlaeByBondOrderNo(String bondOrderNo);
+}

@@ -1,0 +1,305 @@
+package com.scbid.bond.controller;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.alibaba.fastjson.JSON;
+import com.scbid.bond.entity.BondEnagencyEntity;
+import com.scbid.bond.entity.BondProjectEntity;
+import com.scbid.bond.service.BondEnagencyService;
+import com.scbid.bond.service.BondEnsupplierService;
+import com.scbid.bond.service.BondOrderService;
+import com.scbid.bond.service.BondProjectService;
+import com.scbid.common.utils.Constant;
+import com.scbid.common.utils.Constant.DeleteStatus;
+import com.scbid.common.utils.DateUtils;
+import com.scbid.common.utils.PageUtils;
+import com.scbid.common.utils.R;
+import com.scbid.manage.entity.SaleProjectEntity;
+import com.scbid.manage.entity.TenderBidBookSaleRecordEntity;
+import com.scbid.manage.service.SaleProjectService;
+import com.scbid.manage.service.TenderBidBookSaleRecordService;
+import com.scbid.sys.controller.AbstractController;
+
+/**
+ * 
+ * @Title: BondEnagencyController.java
+ * @Description: 代理结构
+ * @Package com.scbid.bond.controller
+ * @Author: wangyun
+ * @Date: 2018年5月14日
+ * @Copyright: 四川国际招标有限责任公司 注意：本内容仅限于必朗科技内部传阅，禁止外泄以及用于其他的商业目的
+ */
+@RestController
+@RequestMapping("bond/bondenagency")
+public class BondEnagencyController extends AbstractController {
+	@Autowired
+	private BondEnagencyService bondEnagencyService;
+
+	@Autowired
+	private BondProjectService bondProjectService;
+
+	@Autowired
+	private TenderBidBookSaleRecordService tenderBidBookSaleRecordService;
+	
+	@Autowired
+    private SaleProjectService saleProjectService;
+
+	/**
+	 * 保函服务类
+	 */
+	@Autowired
+	private BondOrderService bondOrderService;
+
+	/**
+	 * 供应商服务类
+	 */
+	@Autowired
+	private BondEnsupplierService bondEnsupplierService;
+	/**
+	 * 列表
+	 */
+	@RequestMapping("/list")
+	// @RequiresPermissions("bond:bondenagency:list")
+	public R list(@RequestParam Map<String, Object> params) {
+		PageUtils page = bondEnagencyService.queryPage(params);
+
+		return R.ok().put("page", page);
+	}
+
+	/**
+	 * 信息
+	 */
+	@RequestMapping("/info/{agencyId}")
+	// @RequiresPermissions("bond:bondenagency:info")
+	public R info(@PathVariable("agencyId") Long agencyId) {
+		BondEnagencyEntity bondEnagency = bondEnagencyService.selectById(agencyId);
+
+		return R.ok().put("bondEnagency", bondEnagency);
+	}
+
+	/**
+	 * 保存
+	 */
+	@RequestMapping("/save")
+	// @RequiresPermissions("bond:bondenagency:save")
+	public R agencysupplierDeposit(@RequestBody BondEnagencyEntity bondEnagency) {
+		bondEnagencyService.insert(bondEnagency);
+		return R.ok();
+	}
+
+	/**
+	 * @Title: updateBondOrder
+	 * @Description: 修改供应商保函清单
+	 * @author: chengyun
+	 * @date: 2018-05-21 13:39:39
+	 */
+	@RequestMapping("/update")
+	// @RequiresPermissions("bond:bondenagency:update")
+	public R update(@RequestBody BondEnagencyEntity bondEnagency) {
+		if (bondEnagency != null) {
+			bondEnagency.setUpdateDate(DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
+			bondEnagency.setUpdateUesrName(getUser().getUserName());
+		}
+		bondEnagencyService.updateById(bondEnagency);
+
+		return R.ok();
+	}
+
+	/**
+	 * chengyun 供应商保函删除
+	 */
+	@RequestMapping("/delete")
+	@RequiresPermissions("bond:bondenagency:delete")
+	public R delete(@RequestBody Long[] agencyIds) {
+		List<BondEnagencyEntity> list = bondEnagencyService.selectBatchIds(Arrays.asList(agencyIds));
+		for (BondEnagencyEntity entity : list) {
+			entity.setUpdateUesrName(getUser().getUserSurname());
+			entity.setUpdateDate(DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
+			entity.setAgencyStatus(DeleteStatus.DELETED.getValue());
+		}
+		bondEnagencyService.updateBatchById(list);
+
+		return R.ok();
+	}
+
+	/**
+	 * 导入
+	 */
+	@RequestMapping("/import")
+	// @RequiresPermissions("bond:bondenagency:import")
+	public R importFile(@RequestParam Map<String, Object> params) {
+
+		return R.ok();
+	}
+
+	/**
+	 * 导出
+	 */
+	@RequestMapping("/export")
+	// @RequiresPermissions("bond:bondenagency:export")
+	public R exportFile(@RequestParam Map<String, Object> params) {
+
+		return R.ok();
+	}
+
+	/**
+	 * @Title: listPage
+	 * @Description: 进入代理机构供应商列表界面
+	 * @author: chengyun
+	 * @date: 2018-05-15 13:39:39
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/agencySupplierList")
+	// @RequiresPermissions("bond:bondensupplier:list")
+	public R agencySupplierList(@RequestParam Map<String, Object> params) {
+		PageUtils suppliers = new PageUtils();
+		if (Constant.RoleType.SYSTEM_ADMIN.getValue() == getRoleId()) {
+			suppliers = bondOrderService.queryPageOrders(params);
+			return R.ok().put("page", suppliers);
+		}
+		Map<String, Object> newParams = new HashMap<String, Object>();
+		newParams.put("agency_uuid", getEntUuid());
+		List<BondEnagencyEntity> list = bondEnagencyService.selectByMap(newParams);
+		if (list == null || list.size() == 0) {
+			return R.ok(getUser().getEntName() + "代理机构信息不存在");
+		}
+		newParams = new HashMap<String, Object>();
+		for (BondEnagencyEntity entity : list) {
+			newParams.put("agency_id", entity.getAgencyId());
+		}
+		List<BondProjectEntity> projects = bondProjectService.selectByMap(newParams);
+		
+		List<String> supplierUuids = new ArrayList<String>();
+		for (BondProjectEntity project : projects) {
+			supplierUuids.add(project.getSupplierUuid());
+		}
+		if (supplierUuids.isEmpty()) {
+			return R.ok().put("page", suppliers);
+		}
+		params.put("supplierUuids", supplierUuids);
+		suppliers = bondEnsupplierService.selectBatchUuids(params);
+		
+		return R.ok().put("page", suppliers);
+	}
+	/**
+	 * @Title: listPage
+	 * @Description: 进入代理机构下供应商项目列表界面
+	 * @author: chengyun
+	 * @date: 2018-05-16 13:39:39
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/agencySupplierPrejectList")
+	// @RequiresPermissions("bond:bondensupplier:list")
+	public R agencySupplierPrejectList(@RequestParam Map<String, Object> params) {
+		PageUtils projects = new PageUtils();
+		if (Constant.RoleType.SYSTEM_ADMIN.getValue() == getRoleId()) {
+			projects = bondOrderService.queryPageOrders(params);
+			return R.ok().put("page", projects);
+		}
+		Map<String, Object> newParams = new HashMap<String, Object>();
+		newParams.put("agency_uuid", getEntUuid());
+		List<BondEnagencyEntity> list = bondEnagencyService.selectByMap(newParams);
+		if (list == null || list.size() == 0) {
+			return R.ok(getUser().getEntName() + "代理机构信息不存在");
+		}
+		for (BondEnagencyEntity entity : list) {
+			params.put("agencyId", entity.getAgencyId());
+		}
+		projects = bondProjectService.queryPageProjects(params);
+		return R.ok().put("page", projects);
+	}
+
+	/**
+	 * @Title: listPage
+	 * @Description: 进入代理机构供应商保函清单列表界面
+	 * @author: chengyun
+	 * @date: 2018-05-16 13:39:39
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/agencysupplierOrderList")
+	// @RequiresPermissions("bond:bondensupplier:list")
+	public R agencysupplierOrderList(@RequestParam Map<String, Object> params) {
+		PageUtils orders = new PageUtils();
+		if (Constant.RoleType.SYSTEM_ADMIN.getValue() == getRoleId()) {
+			orders = bondOrderService.queryPageOrders(params);
+			return R.ok().put("page", orders);
+		}
+		Map<String, Object> newParams = new HashMap<String, Object>();
+		newParams.put("AGENCY_UUID", getEntUuid());
+		List<BondEnagencyEntity> list = bondEnagencyService.selectByMap(newParams);
+		if (list == null || list.size() == 0) {
+			return R.ok(getUser().getEntName() + "代理机构信息不存在");
+		}
+
+		for (BondEnagencyEntity entity : list) {
+			params.put("agencyId", entity.getAgencyId());
+		}
+		orders = bondOrderService.queryPageOrders(params);
+		return R.ok().put("page", orders);
+	}
+
+	@RequestMapping("/guarantee")
+	// @RequiresPermissions("manage:saleproject:guarantee")
+	public R guarantee(@RequestParam Map<String, Object> params) {
+
+		// 检查代理机构信息
+		Map<String, Object> newParams = new HashMap<String, Object>();
+		newParams.put("agency_uuid", getEntUuid());
+		List<BondEnagencyEntity> agencys = bondEnagencyService.selectByMap(newParams);
+		if (agencys == null || agencys.size() == 0) {
+			return R.ok(getUser().getEntName() + "代理机构信息不存在");
+		}
+
+		String listIds = (String) params.get("listIds");
+		String projectIds = (String) params.get("projectIds");
+
+		// 售卖项目信息列表
+		List<SaleProjectEntity> projectList = saleProjectService.selectBatchIds(JSON.parseArray(listIds, String.class));
+		Map<String, SaleProjectEntity> projectMap = new HashMap<String, SaleProjectEntity>();
+		// 售卖信息
+		Map<String, Object> columnMap = new HashMap<String, Object>();
+		columnMap.put("projectIds", JSON.parseArray(projectIds, String.class));
+		List<TenderBidBookSaleRecordEntity> saleRecords = tenderBidBookSaleRecordService.selectByMapIn(columnMap);
+		
+		//项目包号
+		
+		
+		Map<String, String> error = new HashMap<String, String>();
+		// 需要保函的项目列表
+		List<TenderBidBookSaleRecordEntity> success = new ArrayList<TenderBidBookSaleRecordEntity>();
+		for (SaleProjectEntity project : projectList) {
+			projectMap.put(project.getProjectId(), project);// 项目缓存
+			// 判断保证金缴纳时间
+			Date bzjEndTime = project.getBzjEndTime();
+			if (bzjEndTime.getTime() < new Date().getTime()) {
+				error.put(project.getProjectId(), project.getProjectName());
+			}
+		}
+		for (TenderBidBookSaleRecordEntity saleProject : saleRecords) {
+			if (!error.keySet().contains(saleProject.getProjectId())) {
+				success.add(saleProject);
+			}
+		}
+		// 代理机构选择需要保函的项目
+		bondProjectService.guarantee(agencys, projectMap, success);
+
+		return R.ok().put("error", error);
+	}
+
+}
